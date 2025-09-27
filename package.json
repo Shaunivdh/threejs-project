@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@react-three/drei": "^10.7.6",
+    "@react-three/fiber": "^9.3.0",
+    "leva": "^0.10.0",
+    "three": "^0.180.0",
+    "zustand": "^5.0.8"
+  }
+}
