@@ -1,21 +1,28 @@
 import { Canvas } from '@react-three/fiber'
 import { Suspense } from 'react'
 import { OrbitControls } from '@react-three/drei'
-import * as THREE from 'three'
-import Platform from './Platform.tsx' 
+import Platform from './Platform'
+import './app.css' 
 
 export default function App() {
   return (
-    <div style={{ width: '100%', height: '100vh' }}>
+    <div className="scene-wrap">
       <Canvas
+        gl={{ antialias: true, alpha: true }} 
+        style={{ background: 'transparent' }} 
         camera={{ position: [10, 10, 10], fov: 50 }}
-        onCreated={({ gl }) => gl.setClearColor(new THREE.Color('#202020'), 1)}
+        onCreated={(state) => {
+          state.scene.background = null
+          state.gl.setClearAlpha(0)
+          state.gl.setClearColor(0x000000, 0)
+        }}
       >
+   
         <ambientLight intensity={0.6} />
         <directionalLight position={[5, 10, 5]} intensity={1} />
 
         <Suspense fallback={null}>
-          <Platform /> 
+          <Platform />
         </Suspense>
 
         <OrbitControls enableDamping />
