@@ -54,7 +54,7 @@
         0.33333333333333337,
         1
       ],
-      "name": "Cube",
+      "name": "Platform",
       "mesh": 0
     },
     {
@@ -247,9 +247,9 @@
               "cornerSegments": 8,
               "height": 120,
               "depth": 120,
-              "type": "CubeGeometry"
+              "type": "=PlatformGeometry"
             },
-            "type": "CubeGeometry"
+            "type": "PlatformGeometry"
           },
           "indices": 3
         }
