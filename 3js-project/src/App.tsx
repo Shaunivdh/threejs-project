@@ -1,16 +1,17 @@
 import { Canvas } from '@react-three/fiber'
 import { Suspense } from 'react'
 import { OrbitControls, Environment } from '@react-three/drei' 
-import Platform from './Platform'
+import Platform from './components/Platform'
 import './app.css'
 
 export default function App() {
   return (
     <div className="scene-wrap">
       <Canvas
+      
         gl={{ antialias: true, alpha: true }}
         style={{ background: 'transparent' }}
-        camera={{ position: [10, 10, 10], fov: 50 }}
+        camera={{ position: [8, 5, 8], fov: 50 }}
         onCreated={(state) => {
           state.scene.background = null
           state.gl.setClearAlpha(0)
@@ -22,7 +23,7 @@ export default function App() {
         <directionalLight position={[5, 10, 5]} intensity={1} />
 
 
-        <Environment preset="park" />
+        <Environment preset="sunset" />
         {/* options: "sunset", "city", "dawn", "forest", "warehouse", "apartment", "studio", "park", "lobby" */}
 
         <Suspense fallback={null}>
