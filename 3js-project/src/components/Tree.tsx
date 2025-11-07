@@ -7,4 +7,4 @@ export default function Tree(props: JSX.IntrinsicElements['group']) {
   return <primitive object={gltf.scene} {...props} />;
 }
 
-useGLTF.preload("/models/tree.glb"); // Changed from .gltf to .glb
+useGLTF.preload("/models/tree.glb"); 

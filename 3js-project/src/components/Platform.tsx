@@ -1,10 +1,54 @@
-import { useGLTF } from "@react-three/drei";
 import type { JSX } from "react";
+import * as THREE from "three";
+import { useMemo } from "react";
 
 export default function Platform(props: JSX.IntrinsicElements['group']) {
-  const gltf = useGLTF("/models/platform.gltf");
+  const shape = useMemo(() => {
+    const roundedRectShape = new THREE.Shape();
+    const width = 12;
+    const height = 8;
+    const radius = 0.5;
 
-  return <primitive object={gltf.scene} position={[0, 0, 0]} {...props} />;
+    // Start at top-left corner (after the radius)
+    roundedRectShape.moveTo(-width / 2 + radius, height / 2);
+    
+    // Top edge
+    roundedRectShape.lineTo(width / 2 - radius, height / 2);
+    // Top-right corner
+    roundedRectShape.quadraticCurveTo(width / 2, height / 2, width / 2, height / 2 - radius);
+    
+    // Right edge
+    roundedRectShape.lineTo(width / 2, -height / 2 + radius);
+    // Bottom-right corner
+    roundedRectShape.quadraticCurveTo(width / 2, -height / 2, width / 2 - radius, -height / 2);
+    
+    // Bottom edge
+    roundedRectShape.lineTo(-width / 2 + radius, -height / 2);
+    // Bottom-left corner
+    roundedRectShape.quadraticCurveTo(-width / 2, -height / 2, -width / 2, -height / 2 + radius);
+    
+    // Left edge
+    roundedRectShape.lineTo(-width / 2, height / 2 - radius);
+    // Top-left corner
+    roundedRectShape.quadraticCurveTo(-width / 2, height / 2, -width / 2 + radius, height / 2);
+
+    return roundedRectShape;
+  }, []);
+
+  return (
+    <group {...props}>
+      <mesh position={[0, -0.15, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <extrudeGeometry
+          args={[
+            shape,
+            {
+              depth: 0.2,
+              bevelEnabled: false,
+            },
+          ]}
+        />
+        <meshStandardMaterial color="#4a7c59" roughness={0.8} />
+      </mesh>
+    </group>
+  );
 }
-
-useGLTF.preload("/models/platform.gltf");
