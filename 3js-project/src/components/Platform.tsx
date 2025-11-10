@@ -47,7 +47,16 @@ export default function Platform(props: JSX.IntrinsicElements['group']) {
             },
           ]}
         />
-        <meshStandardMaterial color="#4a7c59" roughness={0.8} />
+<meshStandardMaterial
+  color="#5da45c"          // a mid green
+  roughness={0.7}
+  metalness={0}
+  envMapIntensity={0.25}
+  toneMapped={false}       // <— prevents the washed-out look
+/>
+
+
+
       </mesh>
     </group>
   );
