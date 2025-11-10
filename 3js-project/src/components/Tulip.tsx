@@ -1,10 +1,11 @@
-import { useGLTF } from "@react-three/drei";
 import type { JSX } from "react";
+import { useGLTF } from "@react-three/drei";
+import { useNormalizedGLTF } from "../hooks/useNormalizedGLTF";
 
 export default function Tulip(props: JSX.IntrinsicElements["group"]) {
-  const gltf = useGLTF("/models/tulip.glb");
 
-  return <primitive object={gltf.scene.clone()} {...props} />;
+  const root = useNormalizedGLTF("/models/tulip.glb", { targetHeight: 0.35, sitOnGround: true });
+  return <primitive object={root} {...props} />;
 }
 
 useGLTF.preload("/models/tulip.glb");

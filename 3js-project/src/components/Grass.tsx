@@ -1,8 +1,9 @@
-import { useGLTF } from "@react-three/drei";
-import * as THREE from "three";
-import { useEffect, useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
 import type { JSX } from "react";
+import * as THREE from "three";
+import { useEffect, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import { useNormalizedGLTF } from "../hooks/useNormalizedGLTF";
+import { useGLTF } from "@react-three/drei";
 
 type UniformNumber = { value: number };
 type UniformVec2 = { value: THREE.Vector2 };
@@ -38,10 +39,10 @@ function isSupportedMaterial(mat: THREE.Material): mat is
   | THREE.MeshPhysicalMaterial {
   return Boolean(
     (mat as any).isMeshBasicMaterial ||
-      (mat as any).isMeshLambertMaterial ||
-      (mat as any).isMeshPhongMaterial ||
-      (mat as any).isMeshStandardMaterial ||
-      (mat as any).isMeshPhysicalMaterial
+    (mat as any).isMeshLambertMaterial ||
+    (mat as any).isMeshPhongMaterial ||
+    (mat as any).isMeshStandardMaterial ||
+    (mat as any).isMeshPhysicalMaterial
   );
 }
 
@@ -54,8 +55,7 @@ function patchMaterial(
   if (!isSupportedMaterial(mat)) return false;
 
   const uniforms: WindUniforms =
-    mat.userData.windUniforms ??
-    ({
+    mat.userData.windUniforms ?? ({
       uTime: { value: 0 },
       uAmplitudeBase: { value: 0.15 },
       uFrequency: { value: 1.3 },
@@ -106,51 +106,45 @@ function patchMaterial(
 }
 
 export default function Grass(props: JSX.IntrinsicElements["group"]) {
-  const { scene } = useGLTF("/models/grass.glb");
-  const root = useMemo(() => scene.clone(true), [scene]);
+  const root = useNormalizedGLTF("/models/grass.glb", { targetHeight: 0.25, sitOnGround: true });
   const windyMats = useRef<WindyMaterial[]>([]);
 
   useEffect(() => {
-    const id = requestAnimationFrame(() => {
-      windyMats.current = [];
-      root.updateWorldMatrix(true, true);
+    windyMats.current = [];
+    root.updateWorldMatrix(true, true);
 
-      const tmpScale = new THREE.Vector3();
+    const tmpScale = new THREE.Vector3();
 
-      root.traverse((obj) => {
-        const mesh = obj as THREE.Mesh;
-        if (!(mesh as any).isMesh || !mesh.geometry) return;
+    root.traverse((obj) => {
+      const mesh = obj as THREE.Mesh;
+      if (!(mesh as any).isMesh || !mesh.geometry) return;
 
-        tmpScale.setFromMatrixScale(mesh.matrixWorld);
-        const avgScale = (tmpScale.x + tmpScale.y + tmpScale.z) / 3;
-        const scaleComp = avgScale > 1e-6 ? 1 / avgScale : 1;
+      tmpScale.setFromMatrixScale(mesh.matrixWorld);
+      const avgScale = (tmpScale.x + tmpScale.y + tmpScale.z) / 3;
+      const scaleComp = avgScale > 1e-6 ? 1 / avgScale : 1;
 
-        const geo = mesh.geometry;
-        if (!geo.boundingBox) geo.computeBoundingBox();
-        const bb = geo.boundingBox!;
-        const minY = bb.min.y;
-        const maxY = bb.max.y;
+      const geo = mesh.geometry;
+      if (!geo.boundingBox) geo.computeBoundingBox();
+      const bb = geo.boundingBox!;
+      const minY = bb.min.y;
+      const maxY = bb.max.y;
 
-        const apply = (m: THREE.Material) => {
-          if (patchMaterial(m as WindyMaterial, minY, maxY, scaleComp)) {
-            windyMats.current.push(m as WindyMaterial);
-          }
-        };
+      const addMat = (m: THREE.Material) => {
+        if (patchMaterial(m as WindyMaterial, minY, maxY, scaleComp)) {
+          windyMats.current.push(m as WindyMaterial);
+        }
+      };
 
-        const material = mesh.material as THREE.Material | THREE.Material[];
-        if (Array.isArray(material)) material.forEach(apply);
-        else if (material) apply(material);
-      });
+      const material = mesh.material as THREE.Material | THREE.Material[];
+      if (Array.isArray(material)) material.forEach(addMat);
+      else if (material) addMat(material);
     });
-
-    return () => cancelAnimationFrame(id);
   }, [root]);
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
     for (const mat of windyMats.current) {
-      const u = mat.userData.windUniforms;
-      if (u) u.uTime.value = t;
+      mat.userData.windUniforms && (mat.userData.windUniforms.uTime.value = t);
     }
   });
 
