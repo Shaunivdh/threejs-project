@@ -26,10 +26,10 @@ export default function Platform(props: JSX.IntrinsicElements["group"]) {
       <mesh position={[0, -depth, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <extrudeGeometry args={[shape, { depth, bevelEnabled: false }]} />
         <meshStandardMaterial
-          color="#5da45c"
-          roughness={0.7}
+          color="#8fdc8a" 
+          roughness={0.9}
           metalness={0}
-          envMapIntensity={0.25}
+          envMapIntensity={0.50}
           toneMapped={false}
         />
       </mesh>

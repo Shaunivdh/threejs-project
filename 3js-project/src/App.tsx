@@ -8,7 +8,7 @@ export default function App() {
       <Canvas
         gl={{ antialias: true, alpha: true }}
         style={{ background: 'transparent' }}
-        camera={{ position: [8, 5, 8], fov: 50 }}
+        camera={{ position: [6  , 4, 7], fov: 40 }}
         onCreated={(state) => {
           state.scene.background = null
           state.gl.setClearAlpha(0)
