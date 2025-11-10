@@ -6,6 +6,8 @@ import GrassPatch from "./GrassPatch";
 import Tulip from "./Tulip";
 import Fence from "./Fence";
 import Grass from "./Grass";
+import Bike from "./Bike";
+import Windmill from "./Windmill";
 
 export default function Scene() {
   return (
@@ -32,10 +34,15 @@ export default function Scene() {
         <Platform />
         <Tree key="tree1" position={[-5, 2, -2]} rotation={[0, Math.PI / 4, 0]} />
         <Tree key="tree2" position={[-4, 2, -2.5]} />
-        <GrassPatch key="grass" position={[-4, -0.20, -1]} rotation={[0, -Math.PI / 2.25, 0]} />
-        <Tulip key="tulip1" position={[-2.5, 0, -1.5]} rotation={[0, Math.PI / 4, 0]} />
+        <GrassPatch key="grass" position={[1, -0.20, -0.5]} rotation={[0, -Math.PI / 2.25, 0]} />
+        <Tulip key="tulip1" position={[-2.5, 0, -1.8]} rotation={[0, Math.PI / 4, 0]} />
+            <Tulip key="tulip2" position={[-2.7, 0, -1.7]} rotation={[0, Math.PI / 4, 0]} />
         <Fence key="fence1" position={[-4, 0, -3.2]}  />
+        <Fence key="fence2" position={[-0.8, 0, -3.2]}  />
+          <Fence key="fence2" position={[1.6, 0, -3.2]}  />
         <Grass key="grass2" position={[4, 0, 3.2]}  />
+        <Bike key="bike" position={[0, 0, -3]} />  
+        <Windmill key="windmill" position={[-4.2, 0.5, 0.6]} />
       </Suspense>
 
       <OrbitControls enableDamping />
