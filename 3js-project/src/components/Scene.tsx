@@ -10,7 +10,6 @@ import Bike from "./Bike";
 import Windmill from "./Windmill";
 import YellowBush from "./YellowBush";
 import Trunk from "./Trunk";
-import Pond from "./Pond";
 
 export default function Scene() {
   return (
@@ -36,7 +35,6 @@ export default function Scene() {
       <Suspense fallback={null}>
         <Platform />
         {/* Netherlands */}
-        <Pond position={[-2.5, 0.6, 2.5]} />
         <Tree
           key="tree1"
           position={[-4, 2, -2]}
