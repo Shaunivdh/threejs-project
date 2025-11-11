@@ -5,7 +5,7 @@ import { useAutoShadows } from "../hooks/useAutoShadows";
 
 export default function Trunk(props: JSX.IntrinsicElements["group"]) {
   const root = useNormalizedGLTF("/models/trunk.glb", {
-    targetHeight: 0.75,
+    targetHeight: 0.55,
     sitOnGround: true,
   });
   useAutoShadows(root);

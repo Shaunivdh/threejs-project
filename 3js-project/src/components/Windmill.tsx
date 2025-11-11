@@ -5,7 +5,7 @@ import { useAutoShadows } from "../hooks/useAutoShadows";
 
 export default function Windmill(props: JSX.IntrinsicElements["group"]) {
   const root = useNormalizedGLTF("/models/windmill.glb", {
-    targetHeight: 1.6,
+    targetHeight: 1.9,
     sitOnGround: true,
   });
   useAutoShadows(root);

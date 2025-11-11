@@ -10,6 +10,7 @@ import Bike from "./Bike";
 import Windmill from "./Windmill";
 import YellowBush from "./YellowBush";
 import Trunk from "./Trunk";
+import Path from "./Path";
 
 export default function Scene() {
   return (
@@ -34,6 +35,9 @@ export default function Scene() {
 
       <Suspense fallback={null}>
         <Platform />
+        {/* Path */}
+        <Path key="path1" position={[-0, -0.02, -3]} />
+        <Path key="path2" position={[-0, -0.02, -2]} rotation={[0, 0, 0]} />
         {/* Netherlands */}
         <Tree
           key="tree1"
@@ -48,13 +52,14 @@ export default function Scene() {
         />
         <Tulip key="tulip1" position={[-2.1, 0, -2.8]} />
         <Tulip key="tulip2" position={[-1.9, 0, -2.4]} />
+        <Tulip key="tulip3" position={[-2.5, 0, -2.4]} />
         <Grass key="grass2" position={[-3.5, 0, -2.2]} />
         <Grass key="grass3" position={[-2.1, 0, 3.2]} />
         <Grass key="grass4" position={[-1.5, 0, 3.2]} />
         <Grass key="grass5" position={[-3.5, 0, 3.2]} />
         <Windmill
           key="windmill"
-          position={[-3, 0.75, -0.2]}
+          position={[-3, 1, -0.2]}
           rotation={[0, 0.4, 0]}
         />
         {/* UK */}
@@ -73,7 +78,7 @@ export default function Scene() {
         <Fence key="fence5" position={[4.2, 0, -2.2]} rotation={[0, 4.7, 0]} />
         <Fence key="fence6" position={[4.2, 0, 0.16]} rotation={[0, 4.7, 0]} />
         <Bike key="bike" position={[-1.5, 0, -3]} rotation={[-0.4, 0, 0]} />
-        <Trunk key="trunk" position={[-5, 0.3, 3]} />;
+        <Trunk key="trunk" position={[-4, 0.28, 2.6]} />;
       </Suspense>
 
       <OrbitControls enableDamping />
