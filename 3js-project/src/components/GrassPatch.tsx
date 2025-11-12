@@ -31,7 +31,9 @@ type WindyMaterial = THREE.Material & {
   };
 };
 
-function isSupportedMaterial(mat: THREE.Material): mat is
+function isSupportedMaterial(
+  mat: THREE.Material
+): mat is
   | THREE.MeshBasicMaterial
   | THREE.MeshLambertMaterial
   | THREE.MeshPhongMaterial
@@ -39,10 +41,10 @@ function isSupportedMaterial(mat: THREE.Material): mat is
   | THREE.MeshPhysicalMaterial {
   return Boolean(
     (mat as any).isMeshBasicMaterial ||
-    (mat as any).isMeshLambertMaterial ||
-    (mat as any).isMeshPhongMaterial ||
-    (mat as any).isMeshStandardMaterial ||
-    (mat as any).isMeshPhysicalMaterial
+      (mat as any).isMeshLambertMaterial ||
+      (mat as any).isMeshPhongMaterial ||
+      (mat as any).isMeshStandardMaterial ||
+      (mat as any).isMeshPhysicalMaterial
   );
 }
 
@@ -55,7 +57,8 @@ function patchMaterial(
   if (!isSupportedMaterial(mat)) return false;
 
   const uniforms: WindUniforms =
-    mat.userData.windUniforms ?? ({
+    mat.userData.windUniforms ??
+    ({
       uTime: { value: 0 },
       uAmplitudeBase: { value: 0.15 },
       uFrequency: { value: 1.3 },
@@ -106,7 +109,10 @@ function patchMaterial(
 }
 
 export default function GrassPatch(props: JSX.IntrinsicElements["group"]) {
-  const root = useNormalizedGLTF("/models/grasspatch.glb", { targetHeight: 0.25, sitOnGround: true });
+  const root = useNormalizedGLTF("/models/grass_patch.glb", {
+    targetHeight: 0.25,
+    sitOnGround: true,
+  });
   const windyMats = useRef<WindyMaterial[]>([]);
 
   useEffect(() => {
@@ -144,6 +150,7 @@ export default function GrassPatch(props: JSX.IntrinsicElements["group"]) {
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
     for (const mat of windyMats.current) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       mat.userData.windUniforms && (mat.userData.windUniforms.uTime.value = t);
     }
   });
@@ -151,4 +158,4 @@ export default function GrassPatch(props: JSX.IntrinsicElements["group"]) {
   return <primitive object={root} {...props} />;
 }
 
-useGLTF.preload("/models/grasspatch.glb");
+useGLTF.preload("/models/grass_patch.glb");

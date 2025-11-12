@@ -1,0 +1,27 @@
+0000000000000000000000000000000000000000 c7c0edd93d9c0545916bd46b439a000c1a36b75d Shaunivdh <shaunivanderhorst@gmail.com> 1759002513 +0100	clone: from https://github.com/Shaunivdh/threejs-project.git
+c7c0edd93d9c0545916bd46b439a000c1a36b75d af45a2023251568b96e3a71950ce0ab000f83f25 Shaunivdh <shaunivanderhorst@gmail.com> 1759002821 +0100	commit: Scaffolding
+af45a2023251568b96e3a71950ce0ab000f83f25 2470a5a47165cf020009de64eb62d538d5d4cf9b Shaunivdh <shaunivanderhorst@gmail.com> 1759082444 +0100	commit: Scaffolding pt2
+2470a5a47165cf020009de64eb62d538d5d4cf9b 44896a64b19f302e8bcd2a6837d20eb2f1d0156a Shaunivdh <shaunivanderhorst@gmail.com> 1759083185 +0100	commit: Extra helper and set up basic block
+44896a64b19f302e8bcd2a6837d20eb2f1d0156a cca396526f30f3143c2e650143d1a2bbbd0ae79d Shaunivdh <shaunivanderhorst@gmail.com> 1759084018 +0100	commit: Platform set up
+cca396526f30f3143c2e650143d1a2bbbd0ae79d be6da3f6a2862247c4b8abd03e0c7829c5fb1f61 Shaunivdh <shaunivanderhorst@gmail.com> 1759086669 +0100	commit: Adding color to platform
+be6da3f6a2862247c4b8abd03e0c7829c5fb1f61 679b38aaee2ffdb88e064080bdb80ac8b295a8bf Shaunivdh <shaunivanderhorst@gmail.com> 1759087190 +0100	commit: Gradient background set up
+679b38aaee2ffdb88e064080bdb80ac8b295a8bf e43818c2cb1cbb9d80a2e2edd38898a3d6e11eab Shaunivdh <shaunivanderhorst@gmail.com> 1759088772 +0100	commit: Adding environment
+e43818c2cb1cbb9d80a2e2edd38898a3d6e11eab a79f7ca782ad00a62563c2d476694ce223374b80 Shaunivdh <shaunivanderhorst@gmail.com> 1761077948 +0100	commit: Package lock update
+a79f7ca782ad00a62563c2d476694ce223374b80 5e6bb95936b77b16db807de4eeaec5a158d0b111 Shaunivdh <shaunivanderhorst@gmail.com> 1761079698 +0100	commit: Adding files and tidy up platform
+5e6bb95936b77b16db807de4eeaec5a158d0b111 7325c1a3db326cdbd16373ddf462b73a182be9b5 Shaunivdh <shaunivanderhorst@gmail.com> 1762434314 +0000	commit: Adding the props
+7325c1a3db326cdbd16373ddf462b73a182be9b5 8de708d51a035f27f7ffb06b488963032f083445 Shaunivdh <shaunivanderhorst@gmail.com> 1762532912 +0000	commit: Adding tree to platform
+8de708d51a035f27f7ffb06b488963032f083445 d25dff812738ee5554a96ac3374883d2e3570482 Shaunivdh <shaunivanderhorst@gmail.com> 1762533522 +0000	commit: Replace platform glb with js logic
+d25dff812738ee5554a96ac3374883d2e3570482 495e444c9256bec16ab4575b9fba08ef18b6a836 Shaunivdh <shaunivanderhorst@gmail.com> 1762807780 +0000	commit: Adding second tree and colour update
+495e444c9256bec16ab4575b9fba08ef18b6a836 e2103e4d1231be56e43a44df6d07a7795e8e4842 Shaunivdh <shaunivanderhorst@gmail.com> 1762808490 +0000	commit: Adding tulip and movement to grass
+e2103e4d1231be56e43a44df6d07a7795e8e4842 638f92c3f786f721a7b2b5de762c5f2217bf8637 Shaunivdh <shaunivanderhorst@gmail.com> 1762809563 +0000	commit: Set up of scaling hook
+638f92c3f786f721a7b2b5de762c5f2217bf8637 da9914b86ab19880345d0e335a04f794ae248fbb Shaunivdh <shaunivanderhorst@gmail.com> 1762810707 +0000	commit: Adding fence and styling updates
+da9914b86ab19880345d0e335a04f794ae248fbb 58ecbc589002ab1bc799ee39caa78e8396b8b411 Shaunivdh <shaunivanderhorst@gmail.com> 1762812165 +0000	commit: Adding grass patch
+58ecbc589002ab1bc799ee39caa78e8396b8b411 d74e8f5c524f80d9948f023fac33d94096b9a47a Shaunivdh <shaunivanderhorst@gmail.com> 1762813192 +0000	commit: Adding shadows
+d74e8f5c524f80d9948f023fac33d94096b9a47a a87e8327affe92fb24b445028db72f225bd0fce8 Shaunivdh <shaunivanderhorst@gmail.com> 1762814237 +0000	commit: Adding bike and windmill
+a87e8327affe92fb24b445028db72f225bd0fce8 b4291b127f46680230b38940caee7da18f447ba9 Shaunivdh <shaunivanderhorst@gmail.com> 1762893731 +0000	commit: Adding yellow bush
+b4291b127f46680230b38940caee7da18f447ba9 59c56cd151303e0d4f2d3845c1ec30281608a199 Shaunivdh <shaunivanderhorst@gmail.com> 1762896205 +0000	commit: Moving fences
+59c56cd151303e0d4f2d3845c1ec30281608a199 02cedc2a6055e62592f3174964cdffafba31a0c6 Shaunivdh <shaunivanderhorst@gmail.com> 1762896246 +0000	commit: Removing pond
+02cedc2a6055e62592f3174964cdffafba31a0c6 f750c787bff2cfbee3fe0cba4deacdce6437f8f3 Shaunivdh <shaunivanderhorst@gmail.com> 1762897553 +0000	commit: Adding path
+f750c787bff2cfbee3fe0cba4deacdce6437f8f3 73386299f97a77bfedca307ece23bfcf1250c80d Shaunivdh <shaunivanderhorst@gmail.com> 1762979570 +0000	commit: Changing file structure
+73386299f97a77bfedca307ece23bfcf1250c80d d2e51959f088e6935525ef533786c633d50ddc41 Shaunivdh <shaunivanderhorst@gmail.com> 1762979672 +0000	commit: London props
+d2e51959f088e6935525ef533786c633d50ddc41 d2e51959f088e6935525ef533786c633d50ddc41 Shaunivdh <shaunivanderhorst@gmail.com> 1762979894 +0000	checkout: moving from main to main
