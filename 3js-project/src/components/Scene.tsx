@@ -3,20 +3,20 @@ import { OrbitControls, Environment } from "@react-three/drei";
 import Platform from "./Platform";
 import Tree from "./Tree";
 import GrassPatch from "./GrassPatch";
-import Tulip from "./Tulip";
 import Fence from "./Fence";
 import Grass from "./Grass";
-import Bike from "./Bike";
-import Windmill from "./Windmill";
+import Bike from "./netherlands/Bike";
+import Windmill from "./netherlands/Windmill";
 import YellowBush from "./YellowBush";
 import Trunk from "./Trunk";
 import Path from "./Path";
 import Bush from "./Bush";
-import Cattail from "./Cattail";
-import Menu from "./Menu";
-import FireHydrant from "./FireHydrant";
-import Bench from "./Bench";
-import Postbox from "./Postbox";
+import Cattail from "./netherlands/Cattail";
+import Menu from "./uk/Menu";
+import FireHydrant from "./uk/FireHydrant";
+import Bench from "./uk/Bench";
+import Postbox from "./uk/Postbox";
+import Tulip from "./netherlands/Tulip";
 
 export default function Scene() {
   return (
@@ -95,27 +95,27 @@ export default function Scene() {
         <Trunk key="trunk" position={[-3.6, 0.2, 2.6]} />;
         <Bush key="bush1" position={[1.5, 0, 1.5]} />
         {/* fence top */}
-        {/* <Fence key="fence1" position={[-3, 0, -3.4]} />
+        <Fence key="fence1" position={[-3, 0, -3.4]} />
         <Fence key="fence2" position={[-1.8, 0, -3.4]} />
         <Fence key="fence3" position={[1.8, 0, -3.4]} />
-        <Fence key="fence4" position={[3, 0, -3.4]} /> */}
+        <Fence key="fence4" position={[3, 0, -3.4]} />
         {/* left */}
-        {/* <Fence key="fence5" position={[4.2, 0, -2.2]} rotation={[0, 4.7, 0]} />
+        <Fence key="fence5" position={[4.2, 0, -2.2]} rotation={[0, 4.7, 0]} />
         <Fence key="fence6" position={[4.2, 0, 0.16]} rotation={[0, 4.7, 0]} />
-        <Fence key="fence7" position={[4.2, 0, 2.49]} rotation={[0, 4.7, 0]} /> */}
+        <Fence key="fence7" position={[4.2, 0, 2.49]} rotation={[0, 4.7, 0]} />
         {/* right */}
-        {/* <Fence key="fence8" position={[-4.2, 0, 2.49]} rotation={[0, 4.7, 0]} />
+        <Fence key="fence8" position={[-4.2, 0, 2.49]} rotation={[0, 4.7, 0]} />
         <Fence key="fence9" position={[-4.2, 0, -2.2]} rotation={[0, 4.7, 0]} />
         <Fence
           key="fence10"
           position={[-4.2, 0, 0.16]}
           rotation={[0, 4.7, 0]}
-        /> */}
+        />
         {/* fence bottom */}
-        {/* <Fence key="fence11" position={[3, 0, 3.7]} />
+        <Fence key="fence11" position={[3, 0, 3.7]} />
         <Fence key="fence12" position={[-2.85, 0, 3.7]} />
         <Fence key="fence13" position={[-0.5, 0, 3.7]} />
-        <Fence key="fence14" position={[1.81, 0, 3.7]} /> */}
+        <Fence key="fence14" position={[1.81, 0, 3.7]} />
       </Suspense>
 
       <OrbitControls enableDamping />
