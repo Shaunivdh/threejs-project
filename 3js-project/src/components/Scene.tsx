@@ -17,6 +17,12 @@ import FireHydrant from "./uk/FireHydrant";
 import Bench from "./uk/Bench";
 import Postbox from "./uk/Postbox";
 import Tulip from "./netherlands/Tulip";
+import LoungeChair from "./barcelona/LoungeChair";
+import Pots from "./barcelona/Pots";
+import Laptop from "./barcelona/Laptop";
+import Coffee from "./barcelona/Coffee";
+import PalmTree from "./barcelona/PalmTree";
+import Books from "./barcelona/Books";
 
 export default function Scene() {
   return (
@@ -84,6 +90,28 @@ export default function Scene() {
         />
         <Postbox key="postbox" position={[0.4, 0.45, 2.5]} />
         {/* CodeOp */}
+        <LoungeChair
+          key="loungeChair"
+          position={[3, 0.25, 2]}
+          rotation={[0, 7.8, 0]}
+        />
+        <Pots key="pots" position={[2.2, 0, 3.3]} rotation={[0, 1.5, 0]} />
+        <Laptop
+          key="laptop"
+          position={[4.1, 0.38, 1.6]}
+          rotation={[0, -1.33, 0]}
+        />
+        <Coffee
+          key="coffee"
+          position={[3.7, 0.55, 2.2]}
+          rotation={[0, 0.5, 0]}
+        />
+        <PalmTree
+          key="palmTree"
+          position={[3.9, 0, 1.2]}
+          rotation={[0, 1.5, 0]}
+        />
+        <Books key="books" position={[3.7, 0.2, 2.2]} rotation={[0, 2, 0]} />
         {/* Worthing */}
         {/* Other */}
         <GrassPatch
@@ -93,7 +121,7 @@ export default function Scene() {
         />
         <Bike key="bike" position={[-1.5, -0, -3]} rotation={[-0.4, 0, 0]} />
         <Trunk key="trunk" position={[-3.6, 0.2, 2.6]} />;
-        <Bush key="bush1" position={[1.5, 0, 1.5]} />
+        <Bush key="bush1" position={[0.5, 0, 1.5]} />
         {/* fence top */}
         <Fence key="fence1" position={[-3, 0, -3.4]} />
         <Fence key="fence2" position={[-1.8, 0, -3.4]} />
