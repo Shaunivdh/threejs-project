@@ -122,7 +122,12 @@ export default function Scene() {
         {/* Other */}
         <GrassPatch
           key="grass"
-          position={[1, -0.2, -0.5]}
+          position={[1, 0, -0.5]}
+          rotation={[0, -Math.PI / 2.25, 0]}
+        />
+        <GrassPatch
+          key="grass3"
+          position={[1, 0, 0]}
           rotation={[0, -Math.PI / 2.25, 0]}
         />
         <Bike key="bike" position={[-1.5, -0, -3]} rotation={[-0.4, 0, 0]} />
