@@ -7,8 +7,6 @@ import Fence from "./Fence";
 import Grass from "./Grass";
 import Bike from "./netherlands/Bike";
 import Windmill from "./netherlands/Windmill";
-import YellowBush from "./YellowBush";
-import Trunk from "./Trunk";
 import Path from "./Path";
 import Cattail from "./netherlands/Cattail";
 import Menu from "./uk/Menu";
@@ -18,7 +16,7 @@ import Postbox from "./uk/Postbox";
 import Tulip from "./netherlands/Tulip";
 import LoungeChair from "./barcelona/LoungeChair";
 import Pots from "./barcelona/Pots";
-import Laptop from "./barcelona/Laptop";
+import Laptop from "./brighton/Laptop";
 import Coffee from "./barcelona/Coffee";
 import PalmTree from "./barcelona/PalmTree";
 import Books from "./barcelona/Books";
@@ -64,11 +62,6 @@ export default function Scene() {
           rotation={[0, Math.PI / 4, 0]}
         />
         <Tree key="tree2" position={[-3.5, 2, -2.5]} />
-        <YellowBush
-          key="yellowBush1"
-          position={[-2.5, 0.6, -2.8]}
-          rotation={[0, 0.4, 0]}
-        />
         <Tulip key="tulip1" position={[-2.1, 0, -2.8]} />
         <Tulip key="tulip2" position={[-1.9, 0, -2.4]} />
         <Tulip key="tulip3" position={[-2.5, 0, -2.4]} />
@@ -98,11 +91,6 @@ export default function Scene() {
           rotation={[0, 7.8, 0]}
         />
         <Pots key="pots" position={[2.2, 0, 3.3]} rotation={[0, 1.5, 0]} />
-        <Laptop
-          key="laptop"
-          position={[4.1, 0.38, 1.6]}
-          rotation={[0, -1.33, 0]}
-        />
         <Coffee
           key="coffee"
           position={[3.7, 0.55, 2.2]}
@@ -115,15 +103,20 @@ export default function Scene() {
         />
         <Books key="books" position={[3.7, 0.2, 2.2]} rotation={[0, 2, 0]} />
         {/* Brighton */}
-        <Corkboard
-          key="corkboard"
-          position={[-1.5, 0.7, 0]}
+        <Laptop
+          key="laptop"
+          position={[1.12, 0.69, -2.2]}
           rotation={[0, 1.5, 0]}
         />
-        <Desk key="desk" position={[-1.5, 0, 0]} rotation={[0, 1.5, 0]} />
+        <Corkboard
+          key="corkboard"
+          position={[2.5, 0.9, -3.4]}
+          rotation={[0, 0, 0]}
+        />
+        <Desk key="desk" position={[2.5, 0.45, -3]} rotation={[0, 0, 0]} />
         <Seagull
           key="seagull"
-          position={[-0.5, 2, -1]}
+          position={[2, 0.75, -3]}
           rotation={[0, 0.5, 0]}
         />
         {/* Other */}
@@ -133,7 +126,7 @@ export default function Scene() {
           rotation={[0, -Math.PI / 2.25, 0]}
         />
         <Bike key="bike" position={[-1.5, -0, -3]} rotation={[-0.4, 0, 0]} />
-        <Trunk key="trunk" position={[-3.6, 0.2, 2.6]} />;{/* fence top */}
+        {/* fence top */}
         <Fence key="fence1" position={[-3, 0, -3.4]} />
         <Fence key="fence2" position={[-1.8, 0, -3.4]} />
         <Fence key="fence3" position={[1.8, 0, -3.4]} />

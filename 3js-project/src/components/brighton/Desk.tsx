@@ -5,7 +5,7 @@ import { useAutoShadows } from "../../hooks/useAutoShadows";
 
 export default function Desk(props: JSX.IntrinsicElements["group"]) {
   const root = useNormalizedGLTF("/models/brighton/desk.glb", {
-    targetHeight: 0.4,
+    targetHeight: 0.7,
     sitOnGround: true,
   });
   useAutoShadows(root);
