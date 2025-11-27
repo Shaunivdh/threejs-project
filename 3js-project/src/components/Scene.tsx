@@ -10,7 +10,6 @@ import Windmill from "./netherlands/Windmill";
 import YellowBush from "./YellowBush";
 import Trunk from "./Trunk";
 import Path from "./Path";
-import Bush from "./Bush";
 import Cattail from "./netherlands/Cattail";
 import Menu from "./uk/Menu";
 import FireHydrant from "./uk/FireHydrant";
@@ -134,9 +133,7 @@ export default function Scene() {
           rotation={[0, -Math.PI / 2.25, 0]}
         />
         <Bike key="bike" position={[-1.5, -0, -3]} rotation={[-0.4, 0, 0]} />
-        <Trunk key="trunk" position={[-3.6, 0.2, 2.6]} />;
-        <Bush key="bush1" position={[0.5, 0, 1.5]} />
-        {/* fence top */}
+        <Trunk key="trunk" position={[-3.6, 0.2, 2.6]} />;{/* fence top */}
         <Fence key="fence1" position={[-3, 0, -3.4]} />
         <Fence key="fence2" position={[-1.8, 0, -3.4]} />
         <Fence key="fence3" position={[1.8, 0, -3.4]} />
