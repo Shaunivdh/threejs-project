@@ -23,6 +23,9 @@ import Laptop from "./barcelona/Laptop";
 import Coffee from "./barcelona/Coffee";
 import PalmTree from "./barcelona/PalmTree";
 import Books from "./barcelona/Books";
+import Corkboard from "./brighton/Corkboard";
+import Desk from "./brighton/Desk";
+import Seagull from "./brighton/Seagull";
 
 export default function Scene() {
   return (
@@ -112,7 +115,18 @@ export default function Scene() {
           rotation={[0, 1.5, 0]}
         />
         <Books key="books" position={[3.7, 0.2, 2.2]} rotation={[0, 2, 0]} />
-        {/* Worthing */}
+        {/* Brighton */}
+        <Corkboard
+          key="corkboard"
+          position={[-1.5, 0.7, 0]}
+          rotation={[0, 1.5, 0]}
+        />
+        <Desk key="desk" position={[-1.5, 0, 0]} rotation={[0, 1.5, 0]} />
+        <Seagull
+          key="seagull"
+          position={[-0.5, 2, -1]}
+          rotation={[0, 0.5, 0]}
+        />
         {/* Other */}
         <GrassPatch
           key="grass"
