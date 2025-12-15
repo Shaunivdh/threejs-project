@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { useEffect, useRef } from "react";
+import { useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { useNormalizedGLTF } from "../../hooks/useNormalizedGLTF";
@@ -14,26 +14,17 @@ export default function Windmill(props: JSX.IntrinsicElements["group"]) {
 
   useAutoShadows(root);
 
-  const bladesRef = useRef<THREE.Object3D | null>(null);
-
-  useEffect(() => {
-    // Your GLB shows this exact name:
-    const blades = root.getObjectByName("Windmill_Meshblades");
-
-    if (!blades) {
+  const blades = useMemo(() => {
+    const b = root.getObjectByName("Windmill_Meshblades");
+    if (!b) {
       console.warn("Blades not found. Available objects:");
       root.traverse((o) => o.name && console.log(o.name));
-      return;
     }
-
-    bladesRef.current = blades;
+    return b as THREE.Object3D | null;
   }, [root]);
 
   useFrame((_, delta) => {
-    if (bladesRef.current) {
-      // spin speed (radians per second)
-      bladesRef.current.rotation.z += delta * 1;
-    }
+    if (blades) blades.rotation.z += delta;
   });
 
   return <primitive object={root} {...props} />;

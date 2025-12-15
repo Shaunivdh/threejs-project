@@ -64,8 +64,8 @@ export default function Scene() {
         <Tulip position={[-2.1, 0, -2.8]} />
         <Tulip position={[-1.9, 0, -2.4]} />
         <Tulip position={[-2.5, 0, -2.4]} />
-        <Grass position={[-3.5, 0, -1.2]} />
-        <Windmill position={[-2.6, 0, -1.8]} rotation={[0, 0.4, 0]} />
+        <Grass position={[-4, 0, -0.2]} />
+        <Windmill position={[-2.6, 0, -1.5]} rotation={[0, 0.9, 0]} />
 
         {/* UK */}
         <Menu position={[-0.3, 0.45, 2.6]} />
@@ -95,22 +95,14 @@ export default function Scene() {
               scaleRange: [0.85, 1.2],
               rotationJitter: Math.PI * 1.2,
             },
+
             {
               key: "grass2",
-              position: [0.8, 0, 0],
-              rotation: [0, -Math.PI / 2.25, 0],
-              count: 8,
-              radius: 0.7,
-              scaleRange: [0.85, 1.15],
-              rotationJitter: Math.PI * 1.2,
-            },
-            {
-              key: "grass3",
               position: [-1.1, 0, -2.5],
-              rotation: [0, -Math.PI / 2.25, 0],
+              rotation: [0, -Math.PI / 1.25, 0],
               count: 12,
               radius: 0.8,
-              scaleRange: [0.8, 1.25],
+              scaleRange: [0.8, 0.8],
               rotationJitter: Math.PI * 1.2,
             },
           ]}
