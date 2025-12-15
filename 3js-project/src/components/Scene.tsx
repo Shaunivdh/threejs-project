@@ -68,6 +68,7 @@ export default function Scene() {
     const dy = p.position.y - center.current.y;
     const dz = p.position.z - center.current.z;
 
+    // where we'd like to be (parallax), relative to baseCam:
     desiredCam.current.set(
       baseCam.current.x + dx * parallax.current.x,
       baseCam.current.y + dy * parallax.current.y,
@@ -80,8 +81,16 @@ export default function Scene() {
       baseLook.current.z + dz * lookParallax.current.z
     );
 
+    // ✅ preserve user zoom distance:
+    const currentDist = camera.position.distanceTo(smoothedLook.current);
+    const dir = desiredCam.current.clone().sub(desiredLook.current).normalize();
+    const zoomAwareCam = desiredLook.current
+      .clone()
+      .add(dir.multiplyScalar(currentDist));
+
     const k = 1 - Math.pow(1 - stiffness, dt * 60);
-    camera.position.lerp(desiredCam.current, k);
+    camera.position.lerp(zoomAwareCam, k);
+
     smoothedLook.current.lerp(desiredLook.current, k);
     camera.lookAt(smoothedLook.current);
   });
@@ -206,7 +215,7 @@ export default function Scene() {
         <SMAA />
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
         <HueSaturation saturation={0.08} hue={-0.01} />
-        <BrightnessContrast brightness={-0.03} contrast={0.18} />
+        <BrightnessContrast brightness={0.08} contrast={0.19} />
         <Bloom
           mipmapBlur
           intensity={0.28}
