@@ -27,7 +27,7 @@ export default function Platform(props: JSX.IntrinsicElements["group"]) {
   return (
     <group {...props}>
       <mesh
-        position={[0, yOffset, 0]}
+        position={[1, yOffset, 0]}
         rotation={[-Math.PI / 2, 0, 0]}
         receiveShadow
       >
@@ -38,8 +38,7 @@ export default function Platform(props: JSX.IntrinsicElements["group"]) {
           metalness={0}
           transparent
           alphaMap={alphaMap}
-          envMapIntensity={0.5}
-          toneMapped={false}
+          depthWrite={false}
         />
       </mesh>
     </group>
