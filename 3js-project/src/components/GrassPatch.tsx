@@ -7,7 +7,11 @@ type GrassPatchConfig = {
   key: string;
   position: [number, number, number];
   rotation?: [number, number, number];
+  count?: number;
+  radius?: number;
   scale?: number;
+  scaleRange?: [number, number];
+  rotationJitter?: number;
 };
 
 type WindUniforms = {
@@ -97,6 +101,29 @@ function patchMaterial(
   return true;
 }
 
+// deterministic PRNG (so patches don't reshuffle every render)
+function xmur3(str: string) {
+  let h = 1779033703 ^ str.length;
+  for (let i = 0; i < str.length; i++) {
+    h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
+    h = (h << 13) | (h >>> 19);
+  }
+  return function () {
+    h = Math.imul(h ^ (h >>> 16), 2246822507);
+    h = Math.imul(h ^ (h >>> 13), 3266489909);
+    return (h ^= h >>> 16) >>> 0;
+  };
+}
+
+function mulberry32(seed: number) {
+  return function () {
+    let t = (seed += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
 export default function GrassPatches({
   patches,
 }: {
@@ -109,26 +136,49 @@ export default function GrassPatches({
   useEffect(() => {
     if (!groupRef.current) return;
 
-    // Clear previous instances
     while (groupRef.current.children.length > 0) {
       groupRef.current.remove(groupRef.current.children[0]);
     }
     windyMats.current = [];
 
-    // Create instances for each patch
-    patches.forEach((config) => {
+    const tmpScale = new THREE.Vector3();
+
+    const buildOneInstance = (
+      base: GrassPatchConfig,
+      idx: number,
+      rand: () => number
+    ) => {
+      const count = base.count ?? 1;
+      const radius = base.radius ?? 0;
+      const baseScale = base.scale ?? 1;
+      const scaleRange = base.scaleRange ?? [0.85, 1.15];
+      const rotationJitter = base.rotationJitter ?? Math.PI;
+
+      // scatter inside a disk (slightly biased to center for nicer "patch" feel)
+      const a = rand() * Math.PI * 2;
+      const r = Math.sqrt(rand()) * radius; // sqrt -> more even distribution
+      const ox = Math.cos(a) * r;
+      const oz = Math.sin(a) * r;
+
+      const sMul = scaleRange[0] + (scaleRange[1] - scaleRange[0]) * rand();
+      const s = baseScale * sMul;
+
       const instance = scene.clone(true);
-      instance.position.set(...config.position);
-      if (config.rotation) {
-        instance.rotation.set(...config.rotation);
-      }
-      if (config.scale) {
-        instance.scale.setScalar(config.scale);
-      }
+      instance.position.set(
+        base.position[0] + ox,
+        base.position[1],
+        base.position[2] + oz
+      );
 
+      const baseRot = base.rotation ?? [0, 0, 0];
+      instance.rotation.set(
+        baseRot[0],
+        baseRot[1] + (rand() - 0.5) * rotationJitter,
+        baseRot[2]
+      );
+
+      instance.scale.setScalar(s);
       instance.updateWorldMatrix(true, true);
-
-      const tmpScale = new THREE.Vector3();
 
       instance.traverse((obj) => {
         const mesh = obj as THREE.Mesh;
@@ -160,13 +210,21 @@ export default function GrassPatches({
       });
 
       groupRef.current!.add(instance);
+    };
+
+    patches.forEach((base) => {
+      const seedFn = xmur3(base.key);
+      const rand = mulberry32(seedFn());
+
+      const count = base.count ?? 1;
+      for (let i = 0; i < count; i++) buildOneInstance(base, i, rand);
     });
   }, [scene, patches]);
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
     for (const mat of windyMats.current) {
-      mat.userData.windUniforms && (mat.userData.windUniforms.uTime.value = t);
+      if (mat.userData.windUniforms) mat.userData.windUniforms.uTime.value = t;
     }
   });
 
@@ -174,9 +232,3 @@ export default function GrassPatches({
 }
 
 useGLTF.preload("/models/grass_patch.glb");
-
-// Usage in Scene.tsx:
-// <GrassPatches patches={[
-//   { key: "grass1", position: [1, 0, -0.5], rotation: [0, -Math.PI / 2.25, 0] },
-//   { key: "grass2", position: [1, 0, 0], rotation: [0, -Math.PI / 2.25, 0] }
-// ]} />

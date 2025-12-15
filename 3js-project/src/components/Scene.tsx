@@ -50,7 +50,6 @@ export default function Scene() {
 
       <Suspense fallback={null}>
         <Platform />
-
         <ContactShadows
           position={[0, 0.02, 0]}
           opacity={0.45}
@@ -58,48 +57,61 @@ export default function Scene() {
           blur={2.8}
           far={8}
         />
-
         {/* Netherlands */}
-        <Cattail position={[-3.5, 0.1, -2]} rotation={[0, 0.7, 0]} />
+        <Cattail position={[-3, 0.1, -0.9]} rotation={[0, 0.7, 0]} />
         <Tree position={[-4, 2, -2]} rotation={[0, Math.PI / 4, 0]} />
         <Tree position={[-3.5, 2, -2.5]} />
         <Tulip position={[-2.1, 0, -2.8]} />
         <Tulip position={[-1.9, 0, -2.4]} />
         <Tulip position={[-2.5, 0, -2.4]} />
-        <Grass position={[-3.5, 0, -2.2]} />
-        <Windmill position={[-3, 0.8, -0.2]} rotation={[0, 0.4, 0]} />
+        <Grass position={[-3.5, 0, -1.2]} />
+        <Windmill position={[-2.6, 0, -1.8]} rotation={[0, 0.4, 0]} />
 
         {/* UK */}
         <Menu position={[-0.3, 0.45, 2.6]} />
         <FireHydrant position={[-2.1, 0, 2.5]} rotation={[0, -1.5, 0]} />
         <Bench position={[-0.3, 0.3, 2.6]} rotation={[0, -1.5, 0]} />
         <Postbox position={[0.4, 0.45, 2.5]} />
-
         {/* Barcelona */}
         <LoungeChair position={[3, 0.25, 2]} rotation={[0, 7.8, 0]} />
         <Pots position={[2.2, 0, 3.3]} rotation={[0, 1.5, 0]} />
         <Coffee position={[3.7, 0.55, 2.2]} rotation={[0, 0.5, 0]} />
         <PalmTree position={[3.9, 0, 1.2]} rotation={[0, 1.5, 0]} />
         <Books position={[3.7, 0.2, 2.2]} rotation={[0, 2, 0]} />
-
         {/* Brighton */}
         <Laptop position={[1.12, 0.69, -2.2]} rotation={[0, 1.5, 0]} />
         <Corkboard position={[2.5, 0.9, -3.4]} />
         <Desk position={[2.5, 0.45, -3]} />
         <Seagull position={[2, 0.75, -3]} rotation={[0, 0.5, 0]} />
-
         {/* Other */}
         <GrassPatches
           patches={[
             {
               key: "grass1",
-              position: [1, 0, -0.5],
+              position: [0.9, 0, -0.5],
               rotation: [0, -Math.PI / 2.25, 0],
+              count: 10,
+              radius: 0.6,
+              scaleRange: [0.85, 1.2],
+              rotationJitter: Math.PI * 1.2,
             },
             {
               key: "grass2",
-              position: [1, 0, 0],
+              position: [0.8, 0, 0],
               rotation: [0, -Math.PI / 2.25, 0],
+              count: 8,
+              radius: 0.7,
+              scaleRange: [0.85, 1.15],
+              rotationJitter: Math.PI * 1.2,
+            },
+            {
+              key: "grass3",
+              position: [-1.1, 0, -2.5],
+              rotation: [0, -Math.PI / 2.25, 0],
+              count: 12,
+              radius: 0.8,
+              scaleRange: [0.8, 1.25],
+              rotationJitter: Math.PI * 1.2,
             },
           ]}
         />
