@@ -117,10 +117,10 @@ export default function Scene() {
         <Grass position={[-4, 0, -0.2]} />
         <Windmill position={[-2.6, 0, -1.5]} rotation={[0, 0.9, 0]} />
 
-        <Menu position={[-0.3, 0.45, 2.6]} />
-        <FireHydrant position={[-2.1, 0, 2.5]} rotation={[0, -1.5, 0]} />
-        <Bench position={[-0.3, 0.3, 2.6]} rotation={[0, -1.5, 0]} />
-        <Postbox position={[0.4, 0.45, 2.5]} />
+        <Menu position={[-0.9, 0.45, 2.9]} rotation={[0, 1.7, 0]} />
+        <FireHydrant position={[-3.2, 0, 3.1]} rotation={[0, -1.5, 0]} />
+        <Bench position={[-0.9, 0.3, 2.9]} rotation={[0, 0, 0]} />
+        <Postbox position={[-3.1, 0.45, 1.2]} rotation={[0, 1.5, 0]} />
 
         <LoungeChair position={[3, 0.25, 2]} rotation={[0, 7.8, 0]} />
         <Pots position={[2.2, 0, 3.3]} rotation={[0, 1.5, 0]} />
@@ -150,6 +150,15 @@ export default function Scene() {
               rotation: [0, -Math.PI / 1.25, 0],
               count: 12,
               radius: 0.8,
+              scaleRange: [0.8, 0.8],
+              rotationJitter: Math.PI * 1.2,
+            },
+            {
+              key: "grass3",
+              position: [-2.3, 0, 2.2],
+              rotation: [0, -Math.PI / 2.25, 0],
+              count: 18,
+              radius: 0.9,
               scaleRange: [0.8, 0.8],
               rotationJitter: Math.PI * 1.2,
             },

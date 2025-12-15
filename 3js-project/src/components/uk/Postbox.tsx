@@ -5,7 +5,7 @@ import { useAutoShadows } from "../../hooks/useAutoShadows";
 
 export default function Postbox(props: JSX.IntrinsicElements["group"]) {
   const root = useNormalizedGLTF("/models/uk/postbox.glb", {
-    targetHeight: 0.7,
+    targetHeight: 0.9,
     sitOnGround: true,
   });
   useAutoShadows(root);

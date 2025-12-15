@@ -1,24 +1,23 @@
-.scene-wrap {
-  position: fixed;
-  inset: 0;
+html,
+body,
+#root {
+  margin: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
-
-  background: radial-gradient(
-    circle at 50% 55%,
-    #f8dfcc 0%,   
-    #f4cbb2 45%, 
-    #efbfa5 70%,  
-    #eab099 100%  
-  );
-
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
 }
 
-/* iOS Safari quirk: avoid janky scroll on fixed backgrounds */
+.r3f-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: calc(var(--vh, 1vh) * 100);
+  display: block;
+}
+
+/* iOS Safari fix */
 @supports (-webkit-touch-callout: none) {
-  .scene-wrap { background-attachment: scroll; }
+  .r3f-canvas {
+    height: calc(var(--vh, 1vh) * 100);
+  }
 }
