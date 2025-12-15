@@ -7,7 +7,6 @@ import Fence from "./Fence";
 import Grass from "./Grass";
 import Bike from "./netherlands/Bike";
 import Windmill from "./netherlands/Windmill";
-import Path from "./Path";
 import Cattail from "./netherlands/Cattail";
 import Menu from "./uk/Menu";
 import FireHydrant from "./uk/FireHydrant";
@@ -59,10 +58,6 @@ export default function Scene() {
           blur={2.8}
           far={8}
         />
-
-        {/* Path */}
-        <Path position={[0, -0.02, -3]} />
-        <Path position={[0, -0.02, -2]} rotation={[0, 0, 0]} />
 
         {/* Netherlands */}
         <Cattail position={[-3.5, 0.1, -2]} rotation={[0, 0.7, 0]} />
