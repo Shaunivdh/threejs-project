@@ -2,128 +2,111 @@ import { useNormalizedGLTF } from "../hooks/useNormalizedGLTF";
 import type { JSX } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useAutoShadows } from "../hooks/useAutoShadows";
-import { useRef, useEffect } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-export default function Airplane(props: JSX.IntrinsicElements["group"]) {
-  const root = useNormalizedGLTF("/models/paper_airplane.glb", {
-    targetHeight: 0.1,
-    sitOnGround: true,
-  });
-  useAutoShadows(root);
+const Airplane = forwardRef<THREE.Group, JSX.IntrinsicElements["group"]>(
+  function Airplane(props, ref) {
+    const root = useNormalizedGLTF("/models/paper_airplane.glb", {
+      targetHeight: 0.1,
+      sitOnGround: true,
+    });
+    useAutoShadows(root);
 
-  const groupRef = useRef<THREE.Group>(null);
-  const timeRef = useRef(0);
-  const introStartTime = useRef(0);
-  const velocity = useRef(new THREE.Vector3(0, 0, 0));
-  const keysPressed = useRef<Set<string>>(new Set());
+    const groupRef = useRef<THREE.Group>(null);
+    useImperativeHandle(ref, () => groupRef.current as THREE.Group, []);
 
-  useEffect(() => {
-    introStartTime.current = Date.now();
+    const timeRef = useRef(0);
+    const introElapsedRef = useRef(0);
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      keysPressed.current.add(e.key.toLowerCase());
-    };
+    const velocity = useRef(new THREE.Vector3(0, 0, 0));
+    const keysPressed = useRef<Set<string>>(new Set());
 
-    const handleKeyUp = (e: KeyboardEvent) => {
-      keysPressed.current.delete(e.key.toLowerCase());
-    };
+    const MIN_X = -3.8;
+    const MAX_X = 3.8;
+    const MIN_Z = -3.0;
+    const MAX_Z = 3.2;
 
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
+    useEffect(() => {
+      const handleKeyDown = (e: KeyboardEvent) => {
+        keysPressed.current.add(e.key.toLowerCase());
+      };
 
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
-    };
-  }, []);
+      const handleKeyUp = (e: KeyboardEvent) => {
+        keysPressed.current.delete(e.key.toLowerCase());
+      };
 
-  useFrame((state, delta) => {
-    if (!groupRef.current) return;
+      window.addEventListener("keydown", handleKeyDown, { passive: true });
+      window.addEventListener("keyup", handleKeyUp, { passive: true });
 
-    timeRef.current += delta;
-    const elapsed = (Date.now() - introStartTime.current) / 1000;
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+        window.removeEventListener("keyup", handleKeyUp);
+      };
+    }, []);
 
-    //2 second wobble
-    if (elapsed < 2) {
-      groupRef.current.position.y = 0.75 + Math.sin(timeRef.current * 3) * 0.03;
-      groupRef.current.rotation.z = Math.sin(timeRef.current * 2) * 0.05;
-    } else {
+    useFrame((_, delta) => {
+      const g = groupRef.current;
+      if (!g) return;
+
+      timeRef.current += delta;
+      introElapsedRef.current += delta;
+
+      if (introElapsedRef.current < 2) {
+        g.position.y = 0.75 + Math.sin(timeRef.current * 3) * 0.03;
+        g.rotation.z = Math.sin(timeRef.current * 2) * 0.05;
+        return;
+      }
+
       const speed = 1;
       const damping = 0.92;
 
-      if (keysPressed.current.has("w") || keysPressed.current.has("arrowup")) {
+      const kp = keysPressed.current;
+
+      if (kp.has("w") || kp.has("arrowup")) velocity.current.z -= speed * delta;
+      if (kp.has("s") || kp.has("arrowdown"))
         velocity.current.z += speed * delta;
-      }
-      if (
-        keysPressed.current.has("s") ||
-        keysPressed.current.has("arrowdown")
-      ) {
-        velocity.current.z -= speed * delta;
-      }
-      if (
-        keysPressed.current.has("a") ||
-        keysPressed.current.has("arrowleft")
-      ) {
-        velocity.current.x += speed * delta;
-      }
-      if (
-        keysPressed.current.has("d") ||
-        keysPressed.current.has("arrowright")
-      ) {
+      if (kp.has("a") || kp.has("arrowleft"))
         velocity.current.x -= speed * delta;
-      }
+      if (kp.has("d") || kp.has("arrowright"))
+        velocity.current.x += speed * delta;
 
       velocity.current.multiplyScalar(damping);
-      groupRef.current.position.x += velocity.current.x;
-      groupRef.current.position.z += velocity.current.z;
 
-      // keep plane in bounds
-      groupRef.current.position.x = Math.max(
-        -3.8,
-        Math.min(3.8, groupRef.current.position.x)
-      );
-      groupRef.current.position.z = Math.max(
-        -3,
-        Math.min(3.2, groupRef.current.position.z)
-      );
+      g.position.x += velocity.current.x;
+      g.position.z += velocity.current.z;
 
-      // point direction of travel
-      if (velocity.current.length() > 0.01) {
+      g.position.x = THREE.MathUtils.clamp(g.position.x, MIN_X, MAX_X);
+      g.position.z = THREE.MathUtils.clamp(g.position.z, MIN_Z, MAX_Z);
+
+      if (velocity.current.lengthSq() > 0.0001) {
         const targetRotation = Math.atan2(
           velocity.current.x,
           velocity.current.z
         );
-        groupRef.current.rotation.y = THREE.MathUtils.lerp(
-          groupRef.current.rotation.y,
-          targetRotation,
-          0.1
-        );
 
-        groupRef.current.rotation.z = THREE.MathUtils.lerp(
-          groupRef.current.rotation.z,
+        g.rotation.y = THREE.MathUtils.lerp(g.rotation.y, targetRotation, 0.1);
+        g.rotation.z = THREE.MathUtils.lerp(
+          g.rotation.z,
           -velocity.current.x * 0.5,
           0.1
         );
       } else {
-        groupRef.current.rotation.z = THREE.MathUtils.lerp(
-          groupRef.current.rotation.z,
-          0,
-          0.05
-        );
+        g.rotation.z = THREE.MathUtils.lerp(g.rotation.z, 0, 0.05);
       }
 
-      groupRef.current.position.y =
-        0.75 + Math.sin(timeRef.current * 1.5) * 0.08;
-    }
-  });
+      g.position.y = 0.75 + Math.sin(timeRef.current * 1.5) * 0.08;
+    });
 
-  return (
-    <group ref={groupRef} {...props}>
-      <primitive object={root} />
-    </group>
-  );
-}
+    return (
+      <group ref={groupRef} {...props}>
+        <primitive object={root} />
+      </group>
+    );
+  }
+);
+
+export default Airplane;
 
 useGLTF.preload("/models/paper_airplane.glb");

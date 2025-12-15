@@ -1,5 +1,7 @@
-import { Suspense } from "react";
-import { OrbitControls, Environment, ContactShadows } from "@react-three/drei";
+import { Suspense, useRef } from "react";
+import { Environment, ContactShadows } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import * as THREE from "three";
 
 import Platform from "./Platform";
 import Tree from "./Tree";
@@ -26,6 +28,54 @@ import GrassPatches from "./GrassPatch";
 import Airplane from "./Airplane";
 
 export default function Scene() {
+  const airplaneRef = useRef(null);
+
+  const inited = useRef(false);
+  const baseCam = useRef(new THREE.Vector3());
+  const baseLook = useRef(new THREE.Vector3());
+  const desiredCam = useRef(new THREE.Vector3());
+  const desiredLook = useRef(new THREE.Vector3());
+  const smoothedLook = useRef(new THREE.Vector3());
+
+  const center = useRef(new THREE.Vector3(0, 0.8, 0));
+  const parallax = useRef(new THREE.Vector3(0.22, 0.08, 0.18));
+  const lookParallax = useRef(new THREE.Vector3(0.35, 0.12, 0.35));
+  const stiffness = 0.06;
+
+  useFrame(({ camera }, dt) => {
+    const p = airplaneRef.current;
+    if (!p) return;
+
+    if (!inited.current) {
+      baseCam.current.copy(camera.position);
+      baseLook.current.copy(center.current);
+      desiredCam.current.copy(baseCam.current);
+      smoothedLook.current.copy(baseLook.current);
+      inited.current = true;
+    }
+
+    const dx = p.position.x - center.current.x;
+    const dy = p.position.y - center.current.y;
+    const dz = p.position.z - center.current.z;
+
+    desiredCam.current.set(
+      baseCam.current.x + dx * parallax.current.x,
+      baseCam.current.y + dy * parallax.current.y,
+      baseCam.current.z + dz * parallax.current.z
+    );
+
+    desiredLook.current.set(
+      baseLook.current.x + dx * lookParallax.current.x,
+      baseLook.current.y + dy * lookParallax.current.y,
+      baseLook.current.z + dz * lookParallax.current.z
+    );
+
+    const k = 1 - Math.pow(1 - stiffness, dt * 60);
+    camera.position.lerp(desiredCam.current, k);
+    smoothedLook.current.lerp(desiredLook.current, k);
+    camera.lookAt(smoothedLook.current);
+  });
+
   return (
     <>
       <fog attach="fog" args={["#f3d5c9", 10, 32]} />
@@ -57,7 +107,7 @@ export default function Scene() {
           blur={2.8}
           far={8}
         />
-        {/* Netherlands */}
+
         <Cattail position={[-3, 0.1, -0.9]} rotation={[0, 0.7, 0]} />
         <Tree position={[-4, 2, -2]} rotation={[0, Math.PI / 4, 0]} />
         <Tree position={[-3.5, 2, -2.5]} />
@@ -67,23 +117,22 @@ export default function Scene() {
         <Grass position={[-4, 0, -0.2]} />
         <Windmill position={[-2.6, 0, -1.5]} rotation={[0, 0.9, 0]} />
 
-        {/* UK */}
         <Menu position={[-0.3, 0.45, 2.6]} />
         <FireHydrant position={[-2.1, 0, 2.5]} rotation={[0, -1.5, 0]} />
         <Bench position={[-0.3, 0.3, 2.6]} rotation={[0, -1.5, 0]} />
         <Postbox position={[0.4, 0.45, 2.5]} />
-        {/* Barcelona */}
+
         <LoungeChair position={[3, 0.25, 2]} rotation={[0, 7.8, 0]} />
         <Pots position={[2.2, 0, 3.3]} rotation={[0, 1.5, 0]} />
         <Coffee position={[3.7, 0.55, 2.2]} rotation={[0, 0.5, 0]} />
         <PalmTree position={[3.9, 0, 1.2]} rotation={[0, 1.5, 0]} />
         <Books position={[3.7, 0.2, 2.2]} rotation={[0, 2, 0]} />
-        {/* Brighton */}
+
         <Laptop position={[1.12, 0.69, -2.2]} rotation={[0, 1.5, 0]} />
         <Corkboard position={[2.5, 0.9, -3.4]} />
         <Desk position={[2.5, 0.45, -3]} />
         <Seagull position={[2, 0.75, -3]} rotation={[0, 0.5, 0]} />
-        {/* Other */}
+
         <GrassPatches
           patches={[
             {
@@ -95,7 +144,6 @@ export default function Scene() {
               scaleRange: [0.85, 1.2],
               rotationJitter: Math.PI * 1.2,
             },
-
             {
               key: "grass2",
               position: [-1.1, 0, -2.5],
@@ -107,40 +155,33 @@ export default function Scene() {
             },
           ]}
         />
+
         <Bike position={[-1.5, 0, -3]} rotation={[-0.4, 0, 0]} />
-        <Airplane position={[-0.2, 0.75, -3]} rotation={[0, 0, 0]} />
-        {/* Fence top */}
+
+        <Airplane
+          ref={airplaneRef}
+          position={[-0.2, 0.75, -3]}
+          rotation={[0, 0, 0]}
+        />
+
         <Fence position={[-3, 0, -3.4]} />
         <Fence position={[-1.8, 0, -3.4]} />
         <Fence position={[1.8, 0, -3.4]} />
         <Fence position={[3, 0, -3.4]} />
-        {/* left */}
+
         <Fence position={[4.2, 0, -2.2]} rotation={[0, 4.7, 0]} />
         <Fence position={[4.2, 0, 0.16]} rotation={[0, 4.7, 0]} />
         <Fence position={[4.2, 0, 2.49]} rotation={[0, 4.7, 0]} />
-        {/* right */}
+
         <Fence position={[-4.2, 0, 2.49]} rotation={[0, 4.7, 0]} />
         <Fence position={[-4.2, 0, -2.2]} rotation={[0, 4.7, 0]} />
         <Fence position={[-4.2, 0, 0.16]} rotation={[0, 4.7, 0]} />
-        {/* fence bottom */}
+
         <Fence position={[3, 0, 3.7]} />
         <Fence position={[-2.85, 0, 3.7]} />
         <Fence position={[-0.5, 0, 3.7]} />
         <Fence position={[1.81, 0, 3.7]} />
       </Suspense>
-
-      <OrbitControls
-        enableDamping
-        dampingFactor={0.08}
-        enablePan={false}
-        minDistance={5.5}
-        maxDistance={10}
-        minPolarAngle={0.65}
-        maxPolarAngle={1.25}
-        rotateSpeed={0.6}
-        zoomSpeed={0.7}
-        target={[0, 0.8, 0]}
-      />
     </>
   );
 }
