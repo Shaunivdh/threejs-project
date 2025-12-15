@@ -15,12 +15,9 @@ export default function App() {
         scene.background = null;
         gl.shadowMap.enabled = true;
         gl.shadowMap.type = PCFSoftShadowMap;
-
         gl.toneMapping = ACESFilmicToneMapping;
-        gl.toneMappingExposure = 0.7;
-
+        gl.toneMappingExposure = 0.62;
         gl.outputColorSpace = SRGBColorSpace;
-
         gl.setClearColor(0xf8dfcc, 1);
       }}
     >

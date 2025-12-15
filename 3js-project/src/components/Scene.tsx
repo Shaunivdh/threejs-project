@@ -2,6 +2,16 @@ import { Suspense, useRef } from "react";
 import { Environment, ContactShadows } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import {
+  EffectComposer,
+  Bloom,
+  Vignette,
+  HueSaturation,
+  BrightnessContrast,
+  SMAA,
+  ToneMapping,
+} from "@react-three/postprocessing";
+import { BlendFunction, ToneMappingMode } from "postprocessing";
 
 import Platform from "./Platform";
 import Tree from "./Tree";
@@ -78,12 +88,12 @@ export default function Scene() {
 
   return (
     <>
-      <fog attach="fog" args={["#f3d5c9", 10, 32]} />
-      <hemisphereLight intensity={0.5} groundColor="#f0c7a5" />
+      <fog attach="fog" args={["#f3d5c9", 16, 60]} />
+      <hemisphereLight intensity={0.42} groundColor="#f0c7a5" />
       <directionalLight
         castShadow
         position={[-8, 10, -6]}
-        intensity={1.05}
+        intensity={0.95}
         color="#ffd7b0"
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
@@ -102,9 +112,9 @@ export default function Scene() {
         <Platform />
         <ContactShadows
           position={[0, 0.02, 0]}
-          opacity={0.45}
+          opacity={0.5}
           scale={14}
-          blur={2.8}
+          blur={2.4}
           far={8}
         />
 
@@ -191,6 +201,20 @@ export default function Scene() {
         <Fence position={[-0.5, 0, 3.7]} />
         <Fence position={[1.81, 0, 3.7]} />
       </Suspense>
+
+      <EffectComposer multisampling={0}>
+        <SMAA />
+        <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
+        <HueSaturation saturation={0.08} hue={-0.01} />
+        <BrightnessContrast brightness={-0.03} contrast={0.18} />
+        <Bloom
+          mipmapBlur
+          intensity={0.28}
+          luminanceThreshold={0.58}
+          luminanceSmoothing={0.25}
+        />
+        <Vignette eskil={false} offset={0.28} darkness={0.2} />
+      </EffectComposer>
     </>
   );
 }
