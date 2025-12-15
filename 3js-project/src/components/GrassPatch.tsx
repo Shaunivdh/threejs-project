@@ -1,44 +1,33 @@
-import type { JSX } from "react";
-import * as THREE from "three";
 import { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { useNormalizedGLTF } from "../hooks/useNormalizedGLTF";
 import { useGLTF } from "@react-three/drei";
+import * as THREE from "three";
 
-type UniformNumber = { value: number };
-type UniformVec2 = { value: THREE.Vector2 };
-
-type ShaderLike = {
-  uniforms: Record<string, any>;
-  vertexShader: string;
-  fragmentShader: string;
+type GrassPatchConfig = {
+  key: string;
+  position: [number, number, number];
+  rotation?: [number, number, number];
+  scale?: number;
 };
 
 type WindUniforms = {
-  uTime: UniformNumber;
-  uAmplitudeBase: UniformNumber;
-  uFrequency: UniformNumber;
-  uWindDir: UniformVec2;
-  uMinY: UniformNumber;
-  uMaxY: UniformNumber;
-  uScaleComp: UniformNumber;
+  uTime: { value: number };
+  uAmplitudeBase: { value: number };
+  uFrequency: { value: number };
+  uWindDir: { value: THREE.Vector2 };
+  uMinY: { value: number };
+  uMaxY: { value: number };
+  uScaleComp: { value: number };
 };
 
 type WindyMaterial = THREE.Material & {
   userData: {
-    shader?: ShaderLike;
+    shader?: any;
     windUniforms?: WindUniforms;
   };
 };
 
-function isSupportedMaterial(
-  mat: THREE.Material
-): mat is
-  | THREE.MeshBasicMaterial
-  | THREE.MeshLambertMaterial
-  | THREE.MeshPhongMaterial
-  | THREE.MeshStandardMaterial
-  | THREE.MeshPhysicalMaterial {
+function isSupportedMaterial(mat: THREE.Material): boolean {
   return Boolean(
     (mat as any).isMeshBasicMaterial ||
       (mat as any).isMeshLambertMaterial ||
@@ -74,7 +63,7 @@ function patchMaterial(
 
   mat.userData.windUniforms = uniforms;
 
-  mat.onBeforeCompile = (shader: ShaderLike) => {
+  mat.onBeforeCompile = (shader: any) => {
     mat.userData.shader = shader;
     Object.assign(shader.uniforms, uniforms);
 
@@ -108,54 +97,86 @@ function patchMaterial(
   return true;
 }
 
-export default function GrassPatch(props: JSX.IntrinsicElements["group"]) {
-  const root = useNormalizedGLTF("/models/grass_patch.glb", {
-    targetHeight: 0.25,
-    sitOnGround: true,
-  });
+export default function GrassPatches({
+  patches,
+}: {
+  patches: GrassPatchConfig[];
+}) {
+  const { scene } = useGLTF("/models/grass_patch.glb");
+  const groupRef = useRef<THREE.Group>(null);
   const windyMats = useRef<WindyMaterial[]>([]);
 
   useEffect(() => {
+    if (!groupRef.current) return;
+
+    // Clear previous instances
+    while (groupRef.current.children.length > 0) {
+      groupRef.current.remove(groupRef.current.children[0]);
+    }
     windyMats.current = [];
-    root.updateWorldMatrix(true, true);
 
-    const tmpScale = new THREE.Vector3();
+    // Create instances for each patch
+    patches.forEach((config) => {
+      const instance = scene.clone(true);
+      instance.position.set(...config.position);
+      if (config.rotation) {
+        instance.rotation.set(...config.rotation);
+      }
+      if (config.scale) {
+        instance.scale.setScalar(config.scale);
+      }
 
-    root.traverse((obj) => {
-      const mesh = obj as THREE.Mesh;
-      if (!(mesh as any).isMesh || !mesh.geometry) return;
+      instance.updateWorldMatrix(true, true);
 
-      tmpScale.setFromMatrixScale(mesh.matrixWorld);
-      const avgScale = (tmpScale.x + tmpScale.y + tmpScale.z) / 3;
-      const scaleComp = avgScale > 1e-6 ? 1 / avgScale : 1;
+      const tmpScale = new THREE.Vector3();
 
-      const geo = mesh.geometry;
-      if (!geo.boundingBox) geo.computeBoundingBox();
-      const bb = geo.boundingBox!;
-      const minY = bb.min.y;
-      const maxY = bb.max.y;
+      instance.traverse((obj) => {
+        const mesh = obj as THREE.Mesh;
+        if (!(mesh as any).isMesh || !mesh.geometry) return;
 
-      const addMat = (m: THREE.Material) => {
-        if (patchMaterial(m as WindyMaterial, minY, maxY, scaleComp)) {
-          windyMats.current.push(m as WindyMaterial);
-        }
-      };
+        tmpScale.setFromMatrixScale(mesh.matrixWorld);
+        const avgScale = (tmpScale.x + tmpScale.y + tmpScale.z) / 3;
+        const scaleComp = avgScale > 1e-6 ? 1 / avgScale : 1;
 
-      const material = mesh.material as THREE.Material | THREE.Material[];
-      if (Array.isArray(material)) material.forEach(addMat);
-      else if (material) addMat(material);
+        const geo = mesh.geometry;
+        if (!geo.boundingBox) geo.computeBoundingBox();
+        const bb = geo.boundingBox!;
+        const minY = bb.min.y;
+        const maxY = bb.max.y;
+
+        const addMat = (m: THREE.Material) => {
+          const clonedMat = m.clone();
+          if (
+            patchMaterial(clonedMat as WindyMaterial, minY, maxY, scaleComp)
+          ) {
+            windyMats.current.push(clonedMat as WindyMaterial);
+            mesh.material = clonedMat;
+          }
+        };
+
+        const material = mesh.material as THREE.Material | THREE.Material[];
+        if (Array.isArray(material)) material.forEach(addMat);
+        else if (material) addMat(material);
+      });
+
+      groupRef.current!.add(instance);
     });
-  }, [root]);
+  }, [scene, patches]);
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
     for (const mat of windyMats.current) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       mat.userData.windUniforms && (mat.userData.windUniforms.uTime.value = t);
     }
   });
 
-  return <primitive object={root} {...props} />;
+  return <group ref={groupRef} />;
 }
 
 useGLTF.preload("/models/grass_patch.glb");
+
+// Usage in Scene.tsx:
+// <GrassPatches patches={[
+//   { key: "grass1", position: [1, 0, -0.5], rotation: [0, -Math.PI / 2.25, 0] },
+//   { key: "grass2", position: [1, 0, 0], rotation: [0, -Math.PI / 2.25, 0] }
+// ]} />

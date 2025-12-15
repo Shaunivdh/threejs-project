@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { OrbitControls, Environment } from "@react-three/drei";
 import Platform from "./Platform";
 import Tree from "./Tree";
-import GrassPatch from "./GrassPatch";
+
 import Fence from "./Fence";
 import Grass from "./Grass";
 import Bike from "./netherlands/Bike";
@@ -23,6 +23,7 @@ import Books from "./barcelona/Books";
 import Corkboard from "./brighton/Corkboard";
 import Desk from "./brighton/Desk";
 import Seagull from "./brighton/Seagull";
+import GrassPatches from "./GrassPatch";
 
 export default function Scene() {
   return (
@@ -120,15 +121,19 @@ export default function Scene() {
           rotation={[0, 0.5, 0]}
         />
         {/* Other */}
-        <GrassPatch
-          key="grass"
-          position={[1, 0, -0.5]}
-          rotation={[0, -Math.PI / 2.25, 0]}
-        />
-        <GrassPatch
-          key="grass3"
-          position={[1, 0, 0]}
-          rotation={[0, -Math.PI / 2.25, 0]}
+        <GrassPatches
+          patches={[
+            {
+              key: "grass1",
+              position: [1, 0, -0.5],
+              rotation: [0, -Math.PI / 2.25, 0],
+            },
+            {
+              key: "grass2",
+              position: [1, 0, 0],
+              rotation: [0, -Math.PI / 2.25, 0],
+            },
+          ]}
         />
         <Bike key="bike" position={[-1.5, -0, -3]} rotation={[-0.4, 0, 0]} />
         {/* fence top */}
