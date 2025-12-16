@@ -152,11 +152,11 @@ export default function Scene({ follow = true }) {
         <PalmTree position={[3.9, 0, 1.2]} rotation={[0, 1.5, 0]} />
         <Books position={[3.2, 0.1, 1.8]} rotation={[0, 2, 0]} />
 
-        <Laptop position={[1.12, 0.5, -2.2]} rotation={[0, 1.5, 0]} />
+        <Laptop position={[2.72, 0.52, -2.9]} rotation={[0, 4.7, 0]} />
         <Corkboard position={[3.65, -0.15, -3.2]} rotation={[-0.4, 0, 0]} />
         <Desk position={[2.5, 0.25, -3]} />
         <Seagull position={[2.1, -0.15, -1.2]} rotation={[0, 0.5, 0]} />
-        <Montsera position={[2, 0.5, -3]} rotation={[0, -1.5, 0]} />
+        <Montsera position={[2, 0.52, -3]} rotation={[0, -1.5, 0]} />
 
         <GrassPatches
           patches={[

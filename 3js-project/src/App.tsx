@@ -23,7 +23,7 @@ export default function App() {
       }}
     >
       {/* Set to true when prod ready  */}
-      <Scene follow={true} />
+      <Scene follow={false} />
 
       <OrbitControls
         makeDefault
