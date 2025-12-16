@@ -4,17 +4,14 @@ import type { Vector3Tuple } from "three";
 import WaypointBeacon from "./WaypointBeacon";
 
 export type WaypointDefinition = {
-  id: "windmill" | "postbox" | "loungechair";
+  id: "windmill" | "postbox" | "laptop" | "loungechair";
   title: string;
   message: string;
 
-  /** The target object position (typically the same as your model position) */
   targetPosition: Vector3Tuple;
 
-  /** Offset from targetPosition to place the beacon + label (so it floats above the object) */
   beaconOffset: Vector3Tuple;
 
-  /** Trigger radius for showing the message */
   triggerRadius: number;
 };
 
@@ -24,7 +21,7 @@ const WAYPOINTS: WaypointDefinition[] = [
     title: "Windmill",
     message: "You found the windmill! 🌾",
     targetPosition: [-2.6, -0.15, -1.5],
-    beaconOffset: [0, 2.8, 0],
+    beaconOffset: [0, 1.6, 0],
     triggerRadius: 1.25,
   },
   {
@@ -32,7 +29,7 @@ const WAYPOINTS: WaypointDefinition[] = [
     title: "Postbox",
     message: "Postbox reached! 📮",
     targetPosition: [-3.1, 0.45, 1.2],
-    beaconOffset: [0, 1.8, 0],
+    beaconOffset: [0, 0.95, 0],
     triggerRadius: 1.1,
   },
   {
@@ -40,7 +37,15 @@ const WAYPOINTS: WaypointDefinition[] = [
     title: "Lounge Chair",
     message: "Time to relax 😎",
     targetPosition: [2.6, 0.1, 2],
-    beaconOffset: [0, 1.6, 0],
+    beaconOffset: [0, 1.4, 0],
+    triggerRadius: 1.2,
+  },
+  {
+    id: "laptop",
+    title: "Laptop",
+    message: "Time to work 😎",
+    targetPosition: [2.72, 0.52, -2.9],
+    beaconOffset: [0, 1, 0],
     triggerRadius: 1.2,
   },
 ];
