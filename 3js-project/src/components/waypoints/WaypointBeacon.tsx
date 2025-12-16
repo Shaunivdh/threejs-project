@@ -17,6 +17,9 @@ export type WaypointBeaconProps = {
 
   onEnter?: () => void;
   onExit?: () => void;
+
+  bounceHeight?: number;
+  bounceSpeed?: number;
 };
 
 export default function WaypointBeacon({
@@ -28,6 +31,8 @@ export default function WaypointBeacon({
   triggerRadius = 1.2,
   onEnter,
   onExit,
+  bounceHeight = 0.05,
+  bounceSpeed = 3.0,
 }: WaypointBeaconProps) {
   const targetPos = useMemo(
     () => new THREE.Vector3(...targetPosition),
@@ -40,21 +45,36 @@ export default function WaypointBeacon({
     return p;
   }, [targetPosition, beaconOffset]);
 
+  const labelPos = useMemo<Vector3Tuple>(
+    () => [beaconPos.x, beaconPos.y + 0.6, beaconPos.z],
+    [beaconPos]
+  );
+
   const [isActive, setIsActive] = useState(false);
   const isActiveRef = useRef(false);
   const tmp = useMemo(() => new THREE.Vector3(), []);
 
-  useFrame(() => {
+  const markerGroupRef = useRef<THREE.Group>(null);
+
+  useFrame((state) => {
     const plane = airplaneRef.current;
-    if (!plane) return;
+    if (plane) {
+      const dist = tmp.copy(plane.position).distanceTo(targetPos);
+      const inside = dist <= triggerRadius;
 
-    const dist = tmp.copy(plane.position).distanceTo(targetPos);
-    const inside = dist <= triggerRadius;
+      if (inside !== isActiveRef.current) {
+        isActiveRef.current = inside;
+        setIsActive(inside);
+        inside ? onEnter?.() : onExit?.();
+      }
+    }
 
-    if (inside !== isActiveRef.current) {
-      isActiveRef.current = inside;
-      setIsActive(inside);
-      inside ? onEnter?.() : onExit?.();
+    // bounce animation (independent of plane existence)
+    const g = markerGroupRef.current;
+    if (g) {
+      const t = state.clock.getElapsedTime();
+      const y = Math.sin(t * bounceSpeed) * bounceHeight;
+      g.position.set(beaconPos.x, beaconPos.y + y, beaconPos.z);
     }
   });
 
@@ -68,34 +88,34 @@ export default function WaypointBeacon({
         color="#ffffff"
       />
 
-      <mesh position={beaconPos.toArray()}>
-        <sphereGeometry args={[0.09, 16, 16]} />
-        <meshBasicMaterial transparent opacity={0.95} />
-      </mesh>
+      <group ref={markerGroupRef}>
+        <mesh>
+          <sphereGeometry args={[0.12, 32, 32]} />
+          <meshStandardMaterial
+            color="#ffffff"
+            emissive="#ffffff"
+            emissiveIntensity={0.6}
+            roughness={0.6}
+            metalness={0.0}
+          />
+        </mesh>
+      </group>
 
-      <mesh position={[beaconPos.x, beaconPos.y - 0.7, beaconPos.z]}>
-        <coneGeometry args={[0.22, 1.4, 18, 1, true]} />
-        <meshBasicMaterial transparent opacity={0.18} side={THREE.DoubleSide} />
-      </mesh>
-
-      {/* GPU text instead of Html */}
-      {isActive && (
-        <group position={[beaconPos.x, beaconPos.y + 0.35, beaconPos.z]}>
-          <Text fontSize={0.18} color="white" anchorX="center" anchorY="bottom">
-            {title}
-          </Text>
-          <Text
-            position={[0, -0.22, 0]}
-            fontSize={0.14}
-            color="white"
-            opacity={0.9}
-            anchorX="center"
-            anchorY="top"
-          >
-            {message}
-          </Text>
-        </group>
-      )}
+      <group position={labelPos} visible={isActive}>
+        <Text fontSize={0.18} color="white" anchorX="center" anchorY="bottom">
+          {title}
+        </Text>
+        <Text
+          position={[0, -0.22, 0]}
+          fontSize={0.14}
+          color="white"
+          opacity={0.9}
+          anchorX="center"
+          anchorY="top"
+        >
+          {message}
+        </Text>
+      </group>
     </group>
   );
 }
