@@ -10,6 +10,7 @@ import {
   BrightnessContrast,
   SMAA,
   ToneMapping,
+  Noise,
 } from "@react-three/postprocessing";
 import { ToneMappingMode } from "postprocessing";
 
@@ -97,12 +98,12 @@ export default function Scene({ follow = true }) {
 
   return (
     <>
-      <fog attach="fog" args={["#f3d5c9", 16, 60]} />
-      <hemisphereLight intensity={0.42} groundColor="#f0c7a5" />
+      <fog attach="fog" args={["#f3d5c9", 16, 30]} />
+      <hemisphereLight intensity={0.3} groundColor="#f0c7a5" />
       <directionalLight
         castShadow
         position={[-8, 10, -6]}
-        intensity={0.95}
+        intensity={0.65}
         color="#ffd7b0"
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
@@ -238,11 +239,12 @@ export default function Scene({ follow = true }) {
         <BrightnessContrast brightness={0.08} contrast={0.19} />
         <Bloom
           mipmapBlur
-          intensity={0.28}
+          intensity={0.48}
           luminanceThreshold={0.58}
           luminanceSmoothing={0.25}
         />
-        <Vignette eskil={false} offset={0.28} darkness={0.2} />
+        <Vignette eskil={false} offset={0.58} darkness={0.4} />
+        <Noise opacity={0.05} />
       </EffectComposer>
     </>
   );
