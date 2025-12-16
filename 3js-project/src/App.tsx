@@ -22,11 +22,14 @@ export default function App() {
         gl.setClearColor(0xf8dfcc, 1);
       }}
     >
-      <Scene />
+      {/* Set to true when prod ready  */}
+      <Scene follow={false} />
+
       <OrbitControls
+        makeDefault
         enablePan={false}
-        enableRotate={false}
-        enableZoom
+        enableRotate={true}
+        enableZoom={true}
         minDistance={5.5}
         maxDistance={14}
       />

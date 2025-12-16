@@ -38,7 +38,7 @@ import GrassPatches from "./GrassPatch";
 import Airplane from "./Airplane";
 import Montsera from "./brighton/Montsera";
 
-export default function Scene() {
+export default function Scene({ follow = true }) {
   const airplaneRef = useRef(null);
 
   const inited = useRef(false);
@@ -54,6 +54,7 @@ export default function Scene() {
   const stiffness = 0.06;
 
   useFrame(({ camera }, dt) => {
+    if (!follow) return;
     const p = airplaneRef.current;
     if (!p) return;
 
@@ -127,37 +128,37 @@ export default function Scene() {
         />
 
         <Cattail position={[-3, 0.1, -0.9]} rotation={[0, 0.7, 0]} />
-        <Tree position={[-4, 2, -2]} rotation={[0, Math.PI / 4, 0]} />
-        <Tree position={[-3.5, 2, -2.5]} />
+        <Tree position={[-4, 1.8, -2]} rotation={[0, Math.PI / 4, 0]} />
+        <Tree position={[-3.5, 1.8, -2.5]} />
         <Tulip position={[-2.1, 0, -2.8]} />
         <Tulip position={[-1.9, 0, -2.4]} />
         <Tulip position={[-2.5, 0, -2.4]} />
-        <Grass position={[-4, 0, -0.2]} />
+        <Grass position={[-4, -0.15, -0.2]} />
 
-        <Windmill position={[-2.6, 0, -1.5]} rotation={[0, 0.9, 0]} />
+        <Windmill position={[-2.6, -0.15, -1.5]} rotation={[0, 0.9, 0]} />
 
-        <Menu position={[-0.9, 0.45, 2.9]} rotation={[0, 1.7, 0]} />
-        <FireHydrant position={[-3.2, 0, 3.1]} rotation={[0, -1.5, 0]} />
-        <Bench position={[-0.9, 0.3, 2.9]} rotation={[0, 0, 0]} />
+        <Menu position={[-0.9, 0.25, 2.9]} rotation={[0, 1.7, 0]} />
+        <FireHydrant position={[-3.2, -0.15, 3.1]} rotation={[0, -1.5, 0]} />
+        <Bench position={[-0.9, 0.1, 2.9]} rotation={[0, 0, 0]} />
         <Postbox position={[-3.1, 0.45, 1.2]} rotation={[0, 1.5, 0]} />
 
-        <LoungeChair position={[2.6, 0.25, 2]} rotation={[0, 2.4, 0]} />
-        <Pots position={[1.7, 0, 3.5]} rotation={[0, 1.5, 0]} />
-        <Coffee position={[3.2, 0.55, 1.8]} rotation={[0, 0.5, 0]} />
+        <LoungeChair position={[2.6, 0.1, 2]} rotation={[0, 2.4, 0]} />
+        <Pots position={[1.7, -0.15, 3.5]} rotation={[0, 1.5, 0]} />
+        <Coffee position={[3.2, 0.45, 1.8]} rotation={[0, 0.5, 0]} />
         <PalmTree position={[3.9, 0, 1.2]} rotation={[0, 1.5, 0]} />
-        <Books position={[3.2, 0.2, 1.8]} rotation={[0, 2, 0]} />
+        <Books position={[3.2, 0.1, 1.8]} rotation={[0, 2, 0]} />
 
-        <Laptop position={[1.12, 0.69, -2.2]} rotation={[0, 1.5, 0]} />
-        <Corkboard position={[3.65, 0.1, -3.2]} rotation={[-0.4, 0, 0]} />
-        <Desk position={[2.5, 0.45, -3]} />
-        <Seagull position={[2.6, 0.75, -0.5]} rotation={[0, 0.5, 0]} />
-        <Montsera position={[2, 0.75, -3]} rotation={[0, -1.5, 0]} />
+        <Laptop position={[1.12, 0.5, -2.2]} rotation={[0, 1.5, 0]} />
+        <Corkboard position={[3.65, -0.15, -3.2]} rotation={[-0.4, 0, 0]} />
+        <Desk position={[2.5, 0.25, -3]} />
+        <Seagull position={[2.1, -0.15, -1.2]} rotation={[0, 0.5, 0]} />
+        <Montsera position={[2, 0.5, -3]} rotation={[0, -1.5, 0]} />
 
         <GrassPatches
           patches={[
             {
               key: "grass1",
-              position: [0.9, 0, -0.5],
+              position: [0.9, -0.15, -0.5],
               rotation: [0, -Math.PI / 2.25, 0],
               count: 10,
               radius: 0.6,
@@ -166,7 +167,7 @@ export default function Scene() {
             },
             {
               key: "grass2",
-              position: [-1.1, 0, -2.5],
+              position: [-1.1, -0.15, -2.5],
               rotation: [0, -Math.PI / 1.25, 0],
               count: 12,
               radius: 0.8,
@@ -175,7 +176,7 @@ export default function Scene() {
             },
             {
               key: "grass3",
-              position: [-2.3, 0, 2.2],
+              position: [-2.3, -0.15, 2.2],
               rotation: [0, -Math.PI / 2.25, 0],
               count: 18,
               radius: 0.9,
@@ -184,7 +185,7 @@ export default function Scene() {
             },
             {
               key: "grass4",
-              position: [3.4, 0, 3],
+              position: [3.4, -0.15, 3],
               rotation: [0, -Math.PI / 2.25, 0],
               count: 18,
               radius: 0.5,
@@ -193,7 +194,7 @@ export default function Scene() {
             },
             {
               key: "grass5",
-              position: [3.4, 0, -0.7],
+              position: [3.4, -0.15, -0.7],
               rotation: [0, -Math.PI / 2.25, 0],
               count: 11,
               radius: 0.2,
@@ -203,7 +204,7 @@ export default function Scene() {
           ]}
         />
 
-        <Bike position={[-1.5, 0, -3]} rotation={[-0.4, 0, 0]} />
+        <Bike position={[-1.5, -0.15, -3]} rotation={[-0.4, 0, 0]} />
 
         <Airplane
           ref={airplaneRef}
@@ -211,23 +212,23 @@ export default function Scene() {
           rotation={[0, 0, 0]}
         />
 
-        <Fence position={[-3, 0, -3.4]} />
-        <Fence position={[-1.8, 0, -3.4]} />
-        <Fence position={[1.8, 0, -3.4]} />
-        <Fence position={[3, 0, -3.4]} />
+        <Fence position={[-3, -0.15, -3.4]} />
+        <Fence position={[-1.8, -0.15, -3.4]} />
+        <Fence position={[1.8, -0.15, -3.4]} />
+        <Fence position={[3, -0.15, -3.4]} />
 
-        <Fence position={[4.2, 0, -2.2]} rotation={[0, 4.7, 0]} />
-        <Fence position={[4.2, 0, 0.16]} rotation={[0, 4.7, 0]} />
-        <Fence position={[4.2, 0, 2.49]} rotation={[0, 4.7, 0]} />
+        <Fence position={[4.2, -0.15, -2.2]} rotation={[0, 4.7, 0]} />
+        <Fence position={[4.2, -0.15, 0.16]} rotation={[0, 4.7, 0]} />
+        <Fence position={[4.2, -0.15, 2.49]} rotation={[0, 4.7, 0]} />
 
-        <Fence position={[-4.2, 0, 2.49]} rotation={[0, 4.7, 0]} />
-        <Fence position={[-4.2, 0, -2.2]} rotation={[0, 4.7, 0]} />
-        <Fence position={[-4.2, 0, 0.16]} rotation={[0, 4.7, 0]} />
+        <Fence position={[-4.2, -0.15, 2.49]} rotation={[0, 4.7, 0]} />
+        <Fence position={[-4.2, -0.15, -2.2]} rotation={[0, 4.7, 0]} />
+        <Fence position={[-4.2, -0.15, 0.16]} rotation={[0, 4.7, 0]} />
 
-        <Fence position={[3, 0, 3.7]} />
-        <Fence position={[-2.85, 0, 3.7]} />
-        <Fence position={[-0.5, 0, 3.7]} />
-        <Fence position={[1.81, 0, 3.7]} />
+        <Fence position={[3, -0.15, 3.7]} />
+        <Fence position={[-2.85, -0.15, 3.7]} />
+        <Fence position={[-0.5, -0.15, 3.7]} />
+        <Fence position={[1.81, -0.15, 3.7]} />
       </Suspense>
 
       <EffectComposer multisampling={0}>
