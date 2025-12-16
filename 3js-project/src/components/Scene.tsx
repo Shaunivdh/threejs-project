@@ -38,6 +38,7 @@ import Seagull from "./brighton/Seagull";
 import GrassPatches from "./GrassPatch";
 import Airplane from "./Airplane";
 import Montsera from "./brighton/Montsera";
+import FlightWaypoints from "./waypoints/FlightWaypoints";
 
 export default function Scene({ follow = true }) {
   const airplaneRef = useRef(null);
@@ -119,6 +120,8 @@ export default function Scene({ follow = true }) {
       <Environment preset="sunset" />
 
       <Suspense fallback={null}>
+        <FlightWaypoints airplaneRef={airplaneRef} />
+
         <Platform />
         <ContactShadows
           position={[0, 0.02, 0]}
