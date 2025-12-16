@@ -5,7 +5,7 @@ import { useAutoShadows } from "../../hooks/useAutoShadows";
 
 export default function LoungeChair(props: JSX.IntrinsicElements["group"]) {
   const root = useNormalizedGLTF("/models/barcelona/lounge_chair.glb", {
-    targetHeight: 0.8,
+    targetHeight: 0.6,
     sitOnGround: true,
   });
   useAutoShadows(root);

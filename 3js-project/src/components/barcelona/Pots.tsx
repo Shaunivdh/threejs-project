@@ -5,7 +5,7 @@ import { useAutoShadows } from "../../hooks/useAutoShadows";
 
 export default function Pots(props: JSX.IntrinsicElements["group"]) {
   const root = useNormalizedGLTF("/models/barcelona/pots.glb", {
-    targetHeight: 0.6,
+    targetHeight: 0.4,
     sitOnGround: true,
   });
   useAutoShadows(root);

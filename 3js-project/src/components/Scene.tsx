@@ -11,7 +11,7 @@ import {
   SMAA,
   ToneMapping,
 } from "@react-three/postprocessing";
-import { BlendFunction, ToneMappingMode } from "postprocessing";
+import { ToneMappingMode } from "postprocessing";
 
 import Platform from "./Platform";
 import Tree from "./Tree";
@@ -36,6 +36,7 @@ import Desk from "./brighton/Desk";
 import Seagull from "./brighton/Seagull";
 import GrassPatches from "./GrassPatch";
 import Airplane from "./Airplane";
+import Montsera from "./brighton/Montsera";
 
 export default function Scene() {
   const airplaneRef = useRef(null);
@@ -68,7 +69,6 @@ export default function Scene() {
     const dy = p.position.y - center.current.y;
     const dz = p.position.z - center.current.z;
 
-    // where we'd like to be (parallax), relative to baseCam:
     desiredCam.current.set(
       baseCam.current.x + dx * parallax.current.x,
       baseCam.current.y + dy * parallax.current.y,
@@ -81,7 +81,6 @@ export default function Scene() {
       baseLook.current.z + dz * lookParallax.current.z
     );
 
-    // ✅ preserve user zoom distance:
     const currentDist = camera.position.distanceTo(smoothedLook.current);
     const dir = desiredCam.current.clone().sub(desiredLook.current).normalize();
     const zoomAwareCam = desiredLook.current
@@ -134,6 +133,7 @@ export default function Scene() {
         <Tulip position={[-1.9, 0, -2.4]} />
         <Tulip position={[-2.5, 0, -2.4]} />
         <Grass position={[-4, 0, -0.2]} />
+
         <Windmill position={[-2.6, 0, -1.5]} rotation={[0, 0.9, 0]} />
 
         <Menu position={[-0.9, 0.45, 2.9]} rotation={[0, 1.7, 0]} />
@@ -141,16 +141,17 @@ export default function Scene() {
         <Bench position={[-0.9, 0.3, 2.9]} rotation={[0, 0, 0]} />
         <Postbox position={[-3.1, 0.45, 1.2]} rotation={[0, 1.5, 0]} />
 
-        <LoungeChair position={[3, 0.25, 2]} rotation={[0, 7.8, 0]} />
-        <Pots position={[2.2, 0, 3.3]} rotation={[0, 1.5, 0]} />
-        <Coffee position={[3.7, 0.55, 2.2]} rotation={[0, 0.5, 0]} />
+        <LoungeChair position={[2.6, 0.25, 2]} rotation={[0, 2.4, 0]} />
+        <Pots position={[1.7, 0, 3.5]} rotation={[0, 1.5, 0]} />
+        <Coffee position={[3.2, 0.55, 1.8]} rotation={[0, 0.5, 0]} />
         <PalmTree position={[3.9, 0, 1.2]} rotation={[0, 1.5, 0]} />
-        <Books position={[3.7, 0.2, 2.2]} rotation={[0, 2, 0]} />
+        <Books position={[3.2, 0.2, 1.8]} rotation={[0, 2, 0]} />
 
         <Laptop position={[1.12, 0.69, -2.2]} rotation={[0, 1.5, 0]} />
-        <Corkboard position={[2.5, 0.9, -3.4]} />
+        <Corkboard position={[3.65, 0.1, -3.2]} rotation={[-0.4, 0, 0]} />
         <Desk position={[2.5, 0.45, -3]} />
-        <Seagull position={[2, 0.75, -3]} rotation={[0, 0.5, 0]} />
+        <Seagull position={[2.6, 0.75, -0.5]} rotation={[0, 0.5, 0]} />
+        <Montsera position={[2, 0.75, -3]} rotation={[0, -1.5, 0]} />
 
         <GrassPatches
           patches={[
@@ -178,6 +179,24 @@ export default function Scene() {
               rotation: [0, -Math.PI / 2.25, 0],
               count: 18,
               radius: 0.9,
+              scaleRange: [0.8, 0.8],
+              rotationJitter: Math.PI * 1.2,
+            },
+            {
+              key: "grass4",
+              position: [3.4, 0, 3],
+              rotation: [0, -Math.PI / 2.25, 0],
+              count: 18,
+              radius: 0.5,
+              scaleRange: [0.8, 0.8],
+              rotationJitter: Math.PI * 1.2,
+            },
+            {
+              key: "grass5",
+              position: [3.4, 0, -0.7],
+              rotation: [0, -Math.PI / 2.25, 0],
+              count: 11,
+              radius: 0.2,
               scaleRange: [0.8, 0.8],
               rotationJitter: Math.PI * 1.2,
             },
