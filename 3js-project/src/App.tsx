@@ -3,6 +3,7 @@ import { ACESFilmicToneMapping, PCFSoftShadowMap, SRGBColorSpace } from "three";
 import Scene from "./components/Scene";
 import "./App.css";
 import { OrbitControls } from "@react-three/drei";
+const FOLLOW_IN_DEV = true;
 
 export default function App() {
   return (
@@ -22,8 +23,7 @@ export default function App() {
         gl.setClearColor(0xf8dfcc, 1);
       }}
     >
-      {/* Set to true when prod ready  */}
-      <Scene follow={true} />
+      <Scene follow={import.meta.env.PROD || FOLLOW_IN_DEV} />
 
       <OrbitControls
         makeDefault
