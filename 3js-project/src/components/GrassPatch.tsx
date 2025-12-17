@@ -49,17 +49,15 @@ function patchMaterial(
 ): boolean {
   if (!isSupportedMaterial(mat)) return false;
 
-  const uniforms: WindUniforms =
-    mat.userData.windUniforms ??
-    ({
-      uTime: { value: 0 },
-      uAmplitudeBase: { value: 0.15 },
-      uFrequency: { value: 1.3 },
-      uWindDir: { value: new THREE.Vector2(1, 0).normalize() },
-      uMinY: { value: minY },
-      uMaxY: { value: maxY },
-      uScaleComp: { value: scaleComp },
-    } as WindUniforms);
+  const uniforms: WindUniforms = mat.userData.windUniforms ?? {
+    uTime: { value: 0 },
+    uAmplitudeBase: { value: 0.15 },
+    uFrequency: { value: 1.3 },
+    uWindDir: { value: new THREE.Vector2(1, 0).normalize() },
+    uMinY: { value: minY },
+    uMaxY: { value: maxY },
+    uScaleComp: { value: scaleComp },
+  };
 
   uniforms.uScaleComp.value = scaleComp;
   uniforms.uMinY.value = minY;
@@ -101,7 +99,7 @@ function patchMaterial(
   return true;
 }
 
-// deterministic PRNG (so patches don't reshuffle every render)
+// deterministic PRNG
 function xmur3(str: string) {
   let h = 1779033703 ^ str.length;
   for (let i = 0; i < str.length; i++) {
@@ -143,20 +141,14 @@ export default function GrassPatches({
 
     const tmpScale = new THREE.Vector3();
 
-    const buildOneInstance = (
-      base: GrassPatchConfig,
-      idx: number,
-      rand: () => number
-    ) => {
-      const count = base.count ?? 1;
+    const buildOneInstance = (base: GrassPatchConfig, rand: () => number) => {
       const radius = base.radius ?? 0;
       const baseScale = base.scale ?? 1;
       const scaleRange = base.scaleRange ?? [0.85, 1.15];
       const rotationJitter = base.rotationJitter ?? Math.PI;
 
-      // scatter inside a disk (slightly biased to center for nicer "patch" feel)
       const a = rand() * Math.PI * 2;
-      const r = Math.sqrt(rand()) * radius; // sqrt -> more even distribution
+      const r = Math.sqrt(rand()) * radius;
       const ox = Math.cos(a) * r;
       const oz = Math.sin(a) * r;
 
@@ -215,16 +207,19 @@ export default function GrassPatches({
     patches.forEach((base) => {
       const seedFn = xmur3(base.key);
       const rand = mulberry32(seedFn());
-
       const count = base.count ?? 1;
-      for (let i = 0; i < count; i++) buildOneInstance(base, i, rand);
+
+      for (let i = 0; i < count; i++) buildOneInstance(base, rand);
     });
   }, [scene, patches]);
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
     for (const mat of windyMats.current) {
-      if (mat.userData.windUniforms) mat.userData.windUniforms.uTime.value = t;
+      const uniforms = mat.userData.windUniforms;
+      if (uniforms) {
+        uniforms.uTime.value = t;
+      }
     }
   });
 

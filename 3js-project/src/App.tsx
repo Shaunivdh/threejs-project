@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { ACESFilmicToneMapping, PCFSoftShadowMap, SRGBColorSpace } from "three";
 import Scene from "./components/Scene";
-import "./app.css";
+import "./App.css";
 import { OrbitControls } from "@react-three/drei";
 
 export default function App() {

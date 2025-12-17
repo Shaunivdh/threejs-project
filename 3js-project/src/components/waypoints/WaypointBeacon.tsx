@@ -109,7 +109,6 @@ export default function WaypointBeacon({
           position={[0, -0.22, 0]}
           fontSize={0.14}
           color="white"
-          opacity={0.9}
           anchorX="center"
           anchorY="top"
         >

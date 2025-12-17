@@ -40,8 +40,8 @@ import Airplane from "./Airplane";
 import Montsera from "./brighton/Montsera";
 import FlightWaypoints from "./waypoints/FlightWaypoints";
 
-export default function Scene({ follow = true }) {
-  const airplaneRef = useRef(null);
+export default function Scene({ follow = true }: { follow?: boolean }) {
+  const airplaneRef = useRef<THREE.Object3D | null>(null);
 
   const inited = useRef(false);
   const baseCam = useRef(new THREE.Vector3());
@@ -211,7 +211,7 @@ export default function Scene({ follow = true }) {
         <Bike position={[-1.5, -0.15, -3]} rotation={[-0.4, 0, 0]} />
 
         <Airplane
-          ref={airplaneRef}
+          ref={airplaneRef as unknown as React.Ref<THREE.Group>}
           position={[-0.2, 0.75, -3]}
           rotation={[0, 0, 0]}
         />

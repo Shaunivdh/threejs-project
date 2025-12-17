@@ -14,10 +14,10 @@ const Airplane = forwardRef<THREE.Group, JSX.IntrinsicElements["group"]>(
     });
     useAutoShadows(root);
 
-    const groupRef = useRef<THREE.Group>(null);
+    const groupRef = useRef<THREE.Group | null>(null);
     useImperativeHandle(ref, () => groupRef.current as THREE.Group, []);
 
-    const visualRef = useRef<THREE.Group>(null);
+    const visualRef = useRef<THREE.Group | null>(null);
 
     const timeRef = useRef(0);
     const introElapsedRef = useRef(0);
