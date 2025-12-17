@@ -4,7 +4,7 @@ import { useNormalizedGLTF } from "../../hooks/useNormalizedGLTF";
 import { useAutoShadows } from "../../hooks/useAutoShadows";
 
 export default function Postbox(props: JSX.IntrinsicElements["group"]) {
-  const root = useNormalizedGLTF("/models/uk/postbox.glb", {
+  const root = useNormalizedGLTF("/models/uk/postbox.512.glb", {
     targetHeight: 0.9,
     sitOnGround: true,
   });
@@ -12,4 +12,4 @@ export default function Postbox(props: JSX.IntrinsicElements["group"]) {
   return <primitive object={root} {...props} />;
 }
 
-useGLTF.preload("/models/uk/postbox.glb");
+useGLTF.preload("/models/uk/postbox.512.glb");

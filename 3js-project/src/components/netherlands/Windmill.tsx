@@ -7,7 +7,7 @@ import { useAutoShadows } from "../../hooks/useAutoShadows";
 import * as THREE from "three";
 
 export default function Windmill(props: JSX.IntrinsicElements["group"]) {
-  const root = useNormalizedGLTF("/models/netherlands/windmill.glb", {
+  const root = useNormalizedGLTF("/models/netherlands/windmill.512.glb", {
     targetHeight: 1.9,
     sitOnGround: true,
   });
@@ -30,4 +30,4 @@ export default function Windmill(props: JSX.IntrinsicElements["group"]) {
   return <primitive object={root} {...props} />;
 }
 
-useGLTF.preload("/models/netherlands/windmill.glb");
+useGLTF.preload("/models/netherlands/windmill.512.glb");

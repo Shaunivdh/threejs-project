@@ -9,7 +9,7 @@ import * as THREE from "three";
 export default function PalmTree(props: JSX.IntrinsicElements["group"]) {
   const group = useRef<THREE.Group>(null);
 
-  const root = useNormalizedGLTF("/models/barcelona/palm_tree.glb", {
+  const root = useNormalizedGLTF("/models/barcelona/palm_tree.512.glb", {
     targetHeight: 1.8,
     sitOnGround: true,
   });
@@ -31,4 +31,4 @@ export default function PalmTree(props: JSX.IntrinsicElements["group"]) {
   );
 }
 
-useGLTF.preload("/models/barcelona/palm_tree.glb");
+useGLTF.preload("/models/barcelona/palm_tree.512.glb");
