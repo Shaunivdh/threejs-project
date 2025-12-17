@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Text } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
@@ -6,18 +6,13 @@ import type { Vector3Tuple } from "three";
 
 export type WaypointBeaconProps = {
   airplaneRef: React.RefObject<THREE.Object3D | null>;
-
   title: string;
   message: string;
-
   targetPosition: Vector3Tuple;
   beaconOffset?: Vector3Tuple;
-
   triggerRadius?: number;
-
   onEnter?: () => void;
   onExit?: () => void;
-
   bounceHeight?: number;
   bounceSpeed?: number;
 };
@@ -32,76 +27,71 @@ export default function WaypointBeacon({
   onEnter,
   onExit,
   bounceHeight = 0.05,
-  bounceSpeed = 3.0,
+  bounceSpeed = 3,
 }: WaypointBeaconProps) {
-  const targetPos = useMemo(
-    () => new THREE.Vector3(...targetPosition),
-    [targetPosition]
-  );
+  const [active, setActive] = useState(false);
 
-  const beaconPos = useMemo(() => {
-    const p = new THREE.Vector3(...targetPosition);
-    p.add(new THREE.Vector3(...beaconOffset));
-    return p;
+  const target = useRef(new THREE.Vector3());
+  const beacon = useRef(new THREE.Vector3());
+  const tmp = useRef(new THREE.Vector3());
+  const groupRef = useRef<THREE.Group>(null);
+  const insideRef = useRef(false);
+
+  useEffect(() => {
+    target.current.set(...targetPosition);
+    beacon.current
+      .set(...targetPosition)
+      .add(new THREE.Vector3(...beaconOffset));
   }, [targetPosition, beaconOffset]);
 
-  const labelPos = useMemo<Vector3Tuple>(
-    () => [beaconPos.x, beaconPos.y + 0.6, beaconPos.z],
-    [beaconPos]
-  );
-
-  const [isActive, setIsActive] = useState(false);
-  const isActiveRef = useRef(false);
-  const tmp = useMemo(() => new THREE.Vector3(), []);
-
-  const markerGroupRef = useRef<THREE.Group>(null);
-
-  useFrame((state) => {
+  useFrame(({ clock }) => {
     const plane = airplaneRef.current;
     if (plane) {
-      const dist = tmp.copy(plane.position).distanceTo(targetPos);
-      const inside = dist <= triggerRadius;
+      const inside =
+        tmp.current.copy(plane.position).distanceTo(target.current) <=
+        triggerRadius;
 
-      if (inside !== isActiveRef.current) {
-        isActiveRef.current = inside;
-        setIsActive(inside);
-        inside ? onEnter?.() : onExit?.();
+      if (inside !== insideRef.current) {
+        insideRef.current = inside;
+        setActive(inside);
+
+        if (inside) {
+          onEnter?.();
+        } else {
+          onExit?.();
+        }
       }
     }
 
-    // bounce animation (independent of plane existence)
-    const g = markerGroupRef.current;
+    const g = groupRef.current;
     if (g) {
-      const t = state.clock.getElapsedTime();
-      const y = Math.sin(t * bounceSpeed) * bounceHeight;
-      g.position.set(beaconPos.x, beaconPos.y + y, beaconPos.z);
+      g.position.set(
+        beacon.current.x,
+        beacon.current.y +
+          Math.sin(clock.getElapsedTime() * bounceSpeed) * bounceHeight,
+        beacon.current.z
+      );
     }
   });
 
   return (
     <group>
-      <pointLight
-        position={beaconPos.toArray()}
-        intensity={3.2}
-        distance={8}
-        decay={2}
-        color="#ffffff"
-      />
-
-      <group ref={markerGroupRef}>
+      <group ref={groupRef}>
         <mesh>
           <sphereGeometry args={[0.12, 32, 32]} />
           <meshStandardMaterial
-            color="#ffffff"
-            emissive="#ffffff"
-            emissiveIntensity={0.6}
+            color="white"
+            emissive="white"
+            emissiveIntensity={1.6}
             roughness={0.6}
-            metalness={0.0}
           />
         </mesh>
       </group>
 
-      <group position={labelPos} visible={isActive}>
+      <group
+        position={[beacon.current.x, beacon.current.y + 0.6, beacon.current.z]}
+        visible={active}
+      >
         <Text fontSize={0.18} color="white" anchorX="center" anchorY="bottom">
           {title}
         </Text>
