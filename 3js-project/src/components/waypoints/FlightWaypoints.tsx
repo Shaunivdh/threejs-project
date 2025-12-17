@@ -1,6 +1,5 @@
-import React from "react";
-import type * as THREE from "three";
-import type { Vector3Tuple } from "three";
+import type React from "react";
+import type { Vector3Tuple, Group } from "three";
 import WaypointBeacon from "./WaypointBeacon";
 
 export type WaypointDefinition = {
@@ -9,9 +8,7 @@ export type WaypointDefinition = {
   message: string;
 
   targetPosition: Vector3Tuple;
-
   beaconOffset: Vector3Tuple;
-
   triggerRadius: number;
 };
 
@@ -51,7 +48,7 @@ const WAYPOINTS: WaypointDefinition[] = [
 ];
 
 export type FlightWaypointsProps = {
-  airplaneRef: React.RefObject<THREE.Object3D | null>;
+  airplaneRef: React.RefObject<Group>;
   waypoints?: WaypointDefinition[];
 };
 
