@@ -50,7 +50,6 @@ export default function WaypointBeacon({
     const plane = airplaneRef.current;
 
     if (plane) {
-      // ✅ world-space plane position (robust)
       plane.getWorldPosition(planeWorld.current);
 
       const inside =
@@ -59,10 +58,6 @@ export default function WaypointBeacon({
       if (inside !== insideRef.current) {
         insideRef.current = inside;
         setActive(inside);
-
-        // uncomment if you want proof in console too:
-        // console.log(`[Beacon] ${inside ? "ENTER" : "EXIT"} ${title}`);
-
         if (inside) onEnter?.({ title, message });
         else onExit?.();
       }
