@@ -3,43 +3,61 @@ import * as THREE from "three";
 import { useMemo } from "react";
 
 export default function Platform(props: JSX.IntrinsicElements["group"]) {
-  const size = 150;
-  const yOffset = -0.2;
+  const fenceMinX = -4.2;
+  const fenceMaxX = 4.2;
+  const fenceMinZ = -3.4;
+  const fenceMaxZ = 3.7;
 
-  const alphaMap = useMemo(() => {
-    const canvas = document.createElement("canvas");
-    canvas.width = canvas.height = 256;
+  const margin = 0.7;
 
-    const ctx = canvas.getContext("2d")!;
-    const gradient = ctx.createRadialGradient(128, 128, 60, 128, 128, 128);
+  const width = fenceMaxX - fenceMinX + margin * 2;
+  const depth = fenceMaxZ - fenceMinZ + margin * 2;
 
-    gradient.addColorStop(0, "rgba(255,255,255,1)");
-    gradient.addColorStop(1, "rgba(255,255,255,0)");
+  const centerX = (fenceMinX + fenceMaxX) * 0.5;
+  const centerZ = (fenceMinZ + fenceMaxZ) * 0.5;
 
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 256, 256);
+  const y = -0.3;
+  const thickness = 0.25;
+  const radius = 0.6;
 
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
-    return texture;
-  }, []);
+  const shape = useMemo(() => {
+    const s = new THREE.Shape();
+    const hw = width / 2;
+    const hh = depth / 2;
+
+    s.moveTo(-hw + radius, -hh);
+    s.lineTo(hw - radius, -hh);
+    s.quadraticCurveTo(hw, -hh, hw, -hh + radius);
+    s.lineTo(hw, hh - radius);
+    s.quadraticCurveTo(hw, hh, hw - radius, hh);
+    s.lineTo(-hw + radius, hh);
+    s.quadraticCurveTo(-hw, hh, -hw, hh - radius);
+    s.lineTo(-hw, -hh + radius);
+    s.quadraticCurveTo(-hw, -hh, -hw + radius, -hh);
+
+    return s;
+  }, [width, depth, radius]);
 
   return (
     <group {...props}>
       <mesh
-        position={[1, yOffset, 0]}
+        position={[centerX, y - thickness * 0.5, centerZ]}
         rotation={[-Math.PI / 2, 0, 0]}
+        castShadow
         receiveShadow
       >
-        <planeGeometry args={[size, size]} />
-        <meshStandardMaterial
-          color="#8fdc8a"
-          roughness={0.9}
-          metalness={0}
-          transparent
-          alphaMap={alphaMap}
-          depthWrite={false}
+        <extrudeGeometry
+          args={[
+            shape,
+            {
+              depth: thickness,
+              bevelEnabled: false,
+              curveSegments: 16,
+              steps: 1,
+            },
+          ]}
         />
+        <meshStandardMaterial color="#97a86a" roughness={0.95} metalness={0} />
       </mesh>
     </group>
   );

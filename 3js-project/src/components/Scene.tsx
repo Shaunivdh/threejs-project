@@ -110,23 +110,29 @@ export default function Scene({
 
   return (
     <>
-      <fog attach="fog" args={["#f3d5c9", 16, 30]} />
-      <hemisphereLight intensity={0.3} groundColor="#f0c7a5" />
+      <fog attach="fog" args={["#e7cf67", 14, 34]} />
+
+      <ambientLight intensity={0.12} />
+      <hemisphereLight intensity={0.42} groundColor="#caa23d" color="#fff2c8" />
+
       <directionalLight
         castShadow
-        position={[-8, 10, -6]}
-        intensity={0.65}
-        color="#ffd7b0"
+        position={[-9, 12, -4]}
+        intensity={1.05}
+        color="#ffe3a6"
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
         shadow-camera-near={1}
-        shadow-camera-far={40}
-        shadow-camera-left={-10}
-        shadow-camera-right={10}
-        shadow-camera-top={10}
-        shadow-camera-bottom={-10}
+        shadow-camera-far={45}
+        shadow-camera-left={-12}
+        shadow-camera-right={12}
+        shadow-camera-top={12}
+        shadow-camera-bottom={-12}
         shadow-bias={-0.00025}
+        shadow-radius={4}
       />
+
+      <directionalLight position={[7, 6, 6]} intensity={0.22} color="#fff7dd" />
 
       <Environment preset="sunset" />
 
@@ -138,12 +144,13 @@ export default function Scene({
         />
 
         <Platform />
+
         <ContactShadows
           position={[0, 0.02, 0]}
-          opacity={0.5}
+          opacity={0.36}
           scale={14}
-          blur={2.4}
-          far={8}
+          blur={3.4}
+          far={7}
         />
 
         <Cattail position={[-3, 0.1, -0.9]} rotation={[0, 0.7, 0]} />
@@ -253,16 +260,16 @@ export default function Scene({
       <EffectComposer multisampling={0}>
         <SMAA />
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-        <HueSaturation saturation={0.08} hue={-0.01} />
-        <BrightnessContrast brightness={0.08} contrast={0.19} />
+        <HueSaturation saturation={0.12} hue={-0.02} />
+        <BrightnessContrast brightness={0.12} contrast={0.12} />
         <Bloom
           mipmapBlur
-          intensity={0.48}
-          luminanceThreshold={0.58}
+          intensity={0.36}
+          luminanceThreshold={0.62}
           luminanceSmoothing={0.25}
         />
-        <Vignette eskil={false} offset={0.58} darkness={0.4} />
-        <Noise opacity={0.05} />
+        <Vignette eskil={false} offset={0.52} darkness={0.52} />
+        <Noise opacity={0.035} />
       </EffectComposer>
     </>
   );

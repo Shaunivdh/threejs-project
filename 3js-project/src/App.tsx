@@ -1,12 +1,6 @@
 import { useState, type JSX } from "react";
 import { Canvas } from "@react-three/fiber";
-import {
-  ACESFilmicToneMapping,
-  PCFSoftShadowMap,
-  SRGBColorSpace,
-  WebGLRenderer,
-  Scene as ThreeScene,
-} from "three";
+import { ACESFilmicToneMapping, PCFSoftShadowMap, SRGBColorSpace } from "three";
 import { OrbitControls } from "@react-three/drei";
 import Scene from "./components/Scene";
 import "./App.css";
@@ -97,22 +91,19 @@ export default function App(): JSX.Element {
         className="r3f-canvas"
         shadows
         dpr={[1, 1.75]}
-        gl={{ antialias: true, alpha: false }}
+        gl={{ antialias: true, alpha: true }}
         camera={{ position: [5.2, 4.4, 4.0], fov: 38, near: 0.1, far: 80 }}
-        onCreated={({
-          gl,
-          scene,
-        }: {
-          gl: WebGLRenderer;
-          scene: ThreeScene;
-        }) => {
+        onCreated={({ gl, scene }) => {
           scene.background = null;
+
           gl.shadowMap.enabled = true;
           gl.shadowMap.type = PCFSoftShadowMap;
+
           gl.toneMapping = ACESFilmicToneMapping;
-          gl.toneMappingExposure = 0.62;
+          gl.toneMappingExposure = 0.78;
           gl.outputColorSpace = SRGBColorSpace;
-          gl.setClearColor(0xf8dfcc, 1);
+
+          gl.setClearColor(0x000000, 0);
         }}
       >
         <Scene
