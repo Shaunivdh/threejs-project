@@ -110,31 +110,32 @@ export default function Scene({
 
   return (
     <>
-      <fog attach="fog" args={["#e7cf67", 14, 34]} />
+      <fog attach="fog" args={["#d4b85e", 16, 38]} />
 
-      <ambientLight intensity={0.12} />
-      <hemisphereLight intensity={0.42} groundColor="#caa23d" color="#fff2c8" />
+      <ambientLight intensity={2.18} color="#ffedb3" />
+
+      <hemisphereLight intensity={0.28} groundColor="#8a6e2f" color="#ffd88a" />
 
       <directionalLight
         castShadow
-        position={[-9, 12, -4]}
-        intensity={1.05}
-        color="#ffe3a6"
+        position={[-11, 15, -6]}
+        intensity={1.8}
+        color="#ffdb8a"
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
         shadow-camera-near={1}
-        shadow-camera-far={45}
-        shadow-camera-left={-12}
-        shadow-camera-right={12}
-        shadow-camera-top={12}
-        shadow-camera-bottom={-12}
-        shadow-bias={-0.00025}
-        shadow-radius={4}
+        shadow-camera-far={50}
+        shadow-camera-left={-14}
+        shadow-camera-right={14}
+        shadow-camera-top={14}
+        shadow-camera-bottom={-14}
+        shadow-bias={-0.0003}
+        shadow-radius={5}
       />
 
-      <directionalLight position={[7, 6, 6]} intensity={0.22} color="#fff7dd" />
+      <directionalLight position={[8, 4, 8]} intensity={0.15} color="#ffe0a8" />
 
-      <Environment preset="sunset" />
+      <Environment preset="sunset" environmentIntensity={0.3} />
 
       <Suspense fallback={null}>
         <FlightWaypoints
@@ -147,10 +148,11 @@ export default function Scene({
 
         <ContactShadows
           position={[0, 0.02, 0]}
-          opacity={0.36}
-          scale={14}
-          blur={3.4}
-          far={7}
+          opacity={0.5}
+          scale={16}
+          blur={4}
+          far={8}
+          color="#3d2f1a"
         />
 
         <Cattail position={[-3, 0.1, -0.9]} rotation={[0, 0.7, 0]} />
@@ -260,16 +262,16 @@ export default function Scene({
       <EffectComposer multisampling={0}>
         <SMAA />
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-        <HueSaturation saturation={0.12} hue={-0.02} />
-        <BrightnessContrast brightness={0.12} contrast={0.12} />
+        <HueSaturation saturation={0.04} hue={-0.01} />
+        <BrightnessContrast brightness={-0.08} contrast={0.22} />
         <Bloom
           mipmapBlur
-          intensity={0.36}
-          luminanceThreshold={0.62}
-          luminanceSmoothing={0.25}
+          intensity={0.28}
+          luminanceThreshold={0.75}
+          luminanceSmoothing={0.2}
         />
-        <Vignette eskil={false} offset={0.52} darkness={0.52} />
-        <Noise opacity={0.035} />
+        <Vignette eskil={false} offset={0.38} darkness={0.68} />
+        <Noise opacity={0.045} />
       </EffectComposer>
     </>
   );
