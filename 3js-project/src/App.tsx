@@ -11,7 +11,7 @@ import { OrbitControls } from "@react-three/drei";
 import Scene from "./components/Scene";
 import "./App.css";
 
-const FOLLOW_IN_DEV = true;
+const FOLLOW_IN_DEV = false;
 
 function TopMenu(): JSX.Element {
   return (
@@ -27,17 +27,22 @@ function TopMenu(): JSX.Element {
 }
 
 interface BottomRightPopupProps {
+  title?: string;
   message: string;
   onClose: () => void;
 }
 
 function BottomRightPopup({
+  title,
   message,
   onClose,
 }: BottomRightPopupProps): JSX.Element {
   return (
     <div className="popup" role="status" aria-live="polite">
-      <div className="popup__message">{message}</div>
+      <div className="popup__message">
+        {title ? <div className="popup__title">{title}</div> : null}
+        <div>{message}</div>
+      </div>
       <button
         type="button"
         className="popup__close"
@@ -50,13 +55,25 @@ function BottomRightPopup({
   );
 }
 
+type BeaconPopupState = {
+  open: boolean;
+  title: string;
+  message: string;
+};
+
 export default function App(): JSX.Element {
-  const [showPopup, setShowPopup] = useState<boolean>(true);
+  const [showTipPopup, setShowTipPopup] = useState<boolean>(true);
+  const [beaconPopup, setBeaconPopup] = useState<BeaconPopupState>({
+    open: false,
+    title: "",
+    message: "",
+  });
+
+  const [beaconDismissed, setBeaconDismissed] = useState(false);
 
   return (
     <div className="app">
       <Canvas
-        className="r3f-canvas"
         shadows
         dpr={[1, 1.75]}
         gl={{ antialias: true, alpha: false }}
@@ -77,7 +94,17 @@ export default function App(): JSX.Element {
           gl.setClearColor(0xf8dfcc, 1);
         }}
       >
-        <Scene follow={import.meta.env.PROD || FOLLOW_IN_DEV} />
+        <Scene
+          follow={import.meta.env.PROD || FOLLOW_IN_DEV}
+          onBeaconEnter={({ title, message }) => {
+            if (beaconDismissed) return;
+            setBeaconPopup({ open: true, title, message });
+          }}
+          onBeaconExit={() => {
+            setBeaconPopup((p) => ({ ...p, open: false }));
+            setBeaconDismissed(false);
+          }}
+        />
         <OrbitControls
           makeDefault
           enablePan={false}
@@ -90,10 +117,21 @@ export default function App(): JSX.Element {
 
       <TopMenu />
 
-      {showPopup && (
+      {showTipPopup && (
         <BottomRightPopup
           message="Tip: drag to orbit, scroll to zoom."
-          onClose={() => setShowPopup(false)}
+          onClose={() => setShowTipPopup(false)}
+        />
+      )}
+
+      {beaconPopup.open && (
+        <BottomRightPopup
+          title={beaconPopup.title}
+          message={beaconPopup.message}
+          onClose={() => {
+            setBeaconPopup((p) => ({ ...p, open: false }));
+            setBeaconDismissed(true);
+          }}
         />
       )}
     </div>

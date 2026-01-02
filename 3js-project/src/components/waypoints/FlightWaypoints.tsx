@@ -50,11 +50,16 @@ const WAYPOINTS: WaypointDefinition[] = [
 export type FlightWaypointsProps = {
   airplaneRef: React.RefObject<Group>;
   waypoints?: WaypointDefinition[];
+
+  onBeaconEnter?: (payload: { title: string; message: string }) => void;
+  onBeaconExit?: () => void;
 };
 
 export default function FlightWaypoints({
   airplaneRef,
   waypoints = WAYPOINTS,
+  onBeaconEnter,
+  onBeaconExit,
 }: FlightWaypointsProps) {
   return (
     <>
@@ -67,6 +72,8 @@ export default function FlightWaypoints({
           targetPosition={wp.targetPosition}
           beaconOffset={wp.beaconOffset}
           triggerRadius={wp.triggerRadius}
+          onEnter={onBeaconEnter}
+          onExit={onBeaconExit}
         />
       ))}
     </>

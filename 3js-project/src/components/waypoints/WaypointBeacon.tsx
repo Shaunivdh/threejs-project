@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Text } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import type { Vector3Tuple } from "three";
@@ -11,8 +10,10 @@ export type WaypointBeaconProps = {
   targetPosition: Vector3Tuple;
   beaconOffset?: Vector3Tuple;
   triggerRadius?: number;
-  onEnter?: () => void;
+
+  onEnter?: (payload: { title: string; message: string }) => void;
   onExit?: () => void;
+
   bounceHeight?: number;
   bounceSpeed?: number;
 };
@@ -33,7 +34,8 @@ export default function WaypointBeacon({
 
   const target = useRef(new THREE.Vector3());
   const beacon = useRef(new THREE.Vector3());
-  const tmp = useRef(new THREE.Vector3());
+
+  const planeWorld = useRef(new THREE.Vector3());
   const groupRef = useRef<THREE.Group>(null);
   const insideRef = useRef(false);
 
@@ -46,20 +48,23 @@ export default function WaypointBeacon({
 
   useFrame(({ clock }) => {
     const plane = airplaneRef.current;
+
     if (plane) {
+      // ✅ world-space plane position (robust)
+      plane.getWorldPosition(planeWorld.current);
+
       const inside =
-        tmp.current.copy(plane.position).distanceTo(target.current) <=
-        triggerRadius;
+        planeWorld.current.distanceTo(target.current) <= triggerRadius;
 
       if (inside !== insideRef.current) {
         insideRef.current = inside;
         setActive(inside);
 
-        if (inside) {
-          onEnter?.();
-        } else {
-          onExit?.();
-        }
+        // uncomment if you want proof in console too:
+        // console.log(`[Beacon] ${inside ? "ENTER" : "EXIT"} ${title}`);
+
+        if (inside) onEnter?.({ title, message });
+        else onExit?.();
       }
     }
 
@@ -80,30 +85,12 @@ export default function WaypointBeacon({
         <mesh>
           <sphereGeometry args={[0.12, 32, 32]} />
           <meshStandardMaterial
-            color="white"
-            emissive="white"
-            emissiveIntensity={1.6}
+            color={active ? "orange" : "white"}
+            emissive={active ? "orange" : "white"}
+            emissiveIntensity={1.8}
             roughness={0.6}
           />
         </mesh>
-      </group>
-
-      <group
-        position={[beacon.current.x, beacon.current.y + 0.6, beacon.current.z]}
-        visible={active}
-      >
-        <Text fontSize={0.18} color="white" anchorX="center" anchorY="bottom">
-          {title}
-        </Text>
-        <Text
-          position={[0, -0.22, 0]}
-          fontSize={0.14}
-          color="white"
-          anchorX="center"
-          anchorY="top"
-        >
-          {message}
-        </Text>
       </group>
     </group>
   );

@@ -40,7 +40,17 @@ import Airplane from "./Airplane";
 import Montsera from "./brighton/Montsera";
 import FlightWaypoints from "./waypoints/FlightWaypoints";
 
-export default function Scene({ follow = true }: { follow?: boolean }) {
+export type SceneProps = {
+  follow?: boolean;
+  onBeaconEnter?: (payload: { title: string; message: string }) => void;
+  onBeaconExit?: () => void;
+};
+
+export default function Scene({
+  follow = true,
+  onBeaconEnter,
+  onBeaconExit,
+}: SceneProps) {
   const airplaneRef = useRef<THREE.Group>(null!);
 
   const inited = useRef(false);
@@ -121,7 +131,11 @@ export default function Scene({ follow = true }: { follow?: boolean }) {
       <Environment preset="sunset" />
 
       <Suspense fallback={null}>
-        <FlightWaypoints airplaneRef={airplaneRef} />
+        <FlightWaypoints
+          airplaneRef={airplaneRef}
+          onBeaconEnter={onBeaconEnter}
+          onBeaconExit={onBeaconExit}
+        />
 
         <Platform />
         <ContactShadows
