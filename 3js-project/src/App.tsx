@@ -26,21 +26,42 @@ function TopMenu(): JSX.Element {
   );
 }
 
-interface BottomRightPopupProps {
+interface PopupProps {
   title?: string;
   message: string;
   onClose: () => void;
+  variant?: "toast" | "modal";
 }
 
-function BottomRightPopup({
+function Popup({
   title,
   message,
   onClose,
-}: BottomRightPopupProps): JSX.Element {
+  variant = "toast",
+}: PopupProps): JSX.Element {
+  if (variant === "modal") {
+    return (
+      <div className="popup-overlay">
+        <div className="popup popup--modal">
+          {title && <div className="popup__title">{title}</div>}
+          <div className="popup__message">{message}</div>
+          <button
+            type="button"
+            className="popup__close popup__close--modal"
+            onClick={onClose}
+            aria-label="Close"
+          >
+            ×
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="popup" role="status" aria-live="polite">
+    <div className="popup popup--toast" role="status" aria-live="polite">
       <div className="popup__message">
-        {title ? <div className="popup__title">{title}</div> : null}
+        {title && <div className="popup__title">{title}</div>}
         <div>{message}</div>
       </div>
       <button
@@ -62,18 +83,18 @@ type BeaconPopupState = {
 };
 
 export default function App(): JSX.Element {
-  const [showTipPopup, setShowTipPopup] = useState<boolean>(true);
+  const [showTipPopup, setShowTipPopup] = useState(true);
   const [beaconPopup, setBeaconPopup] = useState<BeaconPopupState>({
     open: false,
     title: "",
     message: "",
   });
-
   const [beaconDismissed, setBeaconDismissed] = useState(false);
 
   return (
     <div className="app">
       <Canvas
+        className="r3f-canvas"
         shadows
         dpr={[1, 1.75]}
         gl={{ antialias: true, alpha: false }}
@@ -108,8 +129,6 @@ export default function App(): JSX.Element {
         <OrbitControls
           makeDefault
           enablePan={false}
-          enableRotate
-          enableZoom
           minDistance={5.5}
           maxDistance={14}
         />
@@ -118,14 +137,16 @@ export default function App(): JSX.Element {
       <TopMenu />
 
       {showTipPopup && (
-        <BottomRightPopup
+        <Popup
+          variant="toast"
           message="Tip: drag to orbit, scroll to zoom."
           onClose={() => setShowTipPopup(false)}
         />
       )}
 
       {beaconPopup.open && (
-        <BottomRightPopup
+        <Popup
+          variant="modal"
           title={beaconPopup.title}
           message={beaconPopup.message}
           onClose={() => {
