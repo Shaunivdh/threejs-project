@@ -11,13 +11,15 @@ body,
   position: relative;
   width: 100vw;
   height: 100vh;
+
   background: radial-gradient(
-    1200px 700px at 45% 30%,
-    #eaf2ff 0%,
-    #cfe2ff 38%,
-    #a9c6f2 68%,
-    #6f95d8 100%
+    1100px 650px at 70% 40%,
+    #fff2dc 0%,
+    #ffd3b0 32%,
+    #d6b3c2 62%,
+    #8fa2c9 100%
   );
+
   overflow: hidden;
 }
 
