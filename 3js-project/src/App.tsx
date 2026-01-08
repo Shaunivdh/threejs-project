@@ -1,6 +1,6 @@
 import { useState, type JSX } from "react";
 import { Canvas } from "@react-three/fiber";
-import { ACESFilmicToneMapping, PCFSoftShadowMap, SRGBColorSpace } from "three";
+import { NoToneMapping, PCFSoftShadowMap, SRGBColorSpace } from "three";
 import { OrbitControls } from "@react-three/drei";
 import Scene from "./components/Scene";
 import "./App.css";
@@ -99,8 +99,8 @@ export default function App(): JSX.Element {
           gl.shadowMap.enabled = true;
           gl.shadowMap.type = PCFSoftShadowMap;
 
-          gl.toneMapping = ACESFilmicToneMapping;
-          gl.toneMappingExposure = 0.78;
+          gl.toneMapping = NoToneMapping;
+          gl.toneMappingExposure = 1.0;
           gl.outputColorSpace = SRGBColorSpace;
 
           gl.setClearColor(0x000000, 0);

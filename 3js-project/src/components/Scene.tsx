@@ -110,32 +110,30 @@ export default function Scene({
 
   return (
     <>
-      <fog attach="fog" args={["#d4b85e", 16, 38]} />
-
-      <ambientLight intensity={2.18} color="#ffedb3" />
-
-      <hemisphereLight intensity={0.28} groundColor="#8a6e2f" color="#ffd88a" />
-
       <directionalLight
         castShadow
         position={[-11, 15, -6]}
-        intensity={1.8}
-        color="#ffdb8a"
+        intensity={2.15}
+        color="#fff2d8"
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
         shadow-camera-near={1}
-        shadow-camera-far={50}
+        shadow-camera-far={60}
         shadow-camera-left={-14}
         shadow-camera-right={14}
         shadow-camera-top={14}
         shadow-camera-bottom={-14}
-        shadow-bias={-0.0003}
-        shadow-radius={5}
+        shadow-bias={-0.00025}
+        shadow-radius={6}
       />
 
-      <directionalLight position={[8, 4, 8]} intensity={0.15} color="#ffe0a8" />
+      <hemisphereLight intensity={0.35} groundColor="#6f7f90" color="#d8e6ff" />
 
-      <Environment preset="sunset" environmentIntensity={0.3} />
+      <directionalLight position={[8, 4, 8]} intensity={0.12} color="#d7e7ff" />
+
+      <ambientLight intensity={0.7} color="#ffffff" />
+
+      <Environment preset="dawn" environmentIntensity={0.25} />
 
       <Suspense fallback={null}>
         <FlightWaypoints
@@ -262,16 +260,16 @@ export default function Scene({
       <EffectComposer multisampling={0}>
         <SMAA />
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-        <HueSaturation saturation={0.04} hue={-0.01} />
-        <BrightnessContrast brightness={-0.08} contrast={0.22} />
+        <HueSaturation saturation={0.02} hue={0.0} />
+        <BrightnessContrast brightness={-0.03} contrast={0.12} />
         <Bloom
           mipmapBlur
-          intensity={0.28}
-          luminanceThreshold={0.75}
-          luminanceSmoothing={0.2}
+          intensity={0.22}
+          luminanceThreshold={0.82}
+          luminanceSmoothing={0.25}
         />
-        <Vignette eskil={false} offset={0.38} darkness={0.68} />
-        <Noise opacity={0.045} />
+        <Vignette eskil={false} offset={0.32} darkness={0.55} />
+        <Noise opacity={0.03} />
       </EffectComposer>
     </>
   );

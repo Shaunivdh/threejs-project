@@ -57,7 +57,8 @@ export default function Platform(props: JSX.IntrinsicElements["group"]) {
             },
           ]}
         />
-        <meshStandardMaterial color="#97a86a" roughness={0.95} metalness={0} />
+
+        <meshStandardMaterial color="#c7ea74" roughness={0.6} metalness={0} />
       </mesh>
     </group>
   );
