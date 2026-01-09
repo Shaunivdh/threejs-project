@@ -118,7 +118,6 @@ export default function Scene({
         castShadow
         position={[-10, 18, -10]}
         intensity={2.05}
-        color="#110a01ff"
         shadow-mapSize-width={4096}
         shadow-mapSize-height={4096}
         shadow-camera-near={5}

@@ -37,7 +37,7 @@ export default function CloudBackground() {
           opacity={0.22}
           fade={1}
           speed={0.04}
-          color="#ffffffff"
+          color="#fff3e9"
         />
       </Clouds>
     </group>

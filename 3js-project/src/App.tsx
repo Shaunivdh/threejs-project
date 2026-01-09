@@ -4,19 +4,48 @@ import { NoToneMapping, PCFShadowMap, SRGBColorSpace } from "three";
 import { OrbitControls } from "@react-three/drei";
 import Scene from "./components/Scene";
 import "./App.css";
+import linkedinIcon from "./assets/icons/linkedin.svg";
+import githubIcon from "./assets/icons/github.svg";
+import mailIcon from "./assets/icons/mail.svg";
 
 const FOLLOW_IN_DEV = false;
 
 function TopMenu(): JSX.Element {
   return (
-    <header className="topbar">
-      <div className="topbar__brand">Your Name</div>
-      <nav className="topbar__nav">
-        <a href="#about">About</a>
-        <a href="#work">Work</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </header>
+    <div className="identity-hud" aria-label="Identity and social links">
+      <span className="identity-hud__name" style={{ color: "rgb(18, 18, 18)" }}>
+        Shauni van der Horst - Full Stack Developer
+      </span>
+
+      <div className="identity-hud__icons">
+        <a
+          href="#linkedin"
+          className="identity-hud__icon"
+          aria-label="LinkedIn"
+          title="LinkedIn"
+        >
+          <img src={linkedinIcon} alt="" aria-hidden="true" />
+        </a>
+
+        <a
+          href="#github"
+          className="identity-hud__icon"
+          aria-label="GitHub"
+          title="GitHub"
+        >
+          <img src={githubIcon} alt="" aria-hidden="true" />
+        </a>
+
+        <a
+          href="#contact"
+          className="identity-hud__icon"
+          aria-label="Email"
+          title="Email"
+        >
+          <img src={mailIcon} alt="" aria-hidden="true" />
+        </a>
+      </div>
+    </div>
   );
 }
 
@@ -37,13 +66,20 @@ function Popup({
     return (
       <div className="popup-overlay">
         <div className="popup popup--modal">
-          {title && <div className="popup__title">{title}</div>}
-          <div className="popup__message">{message}</div>
+          {title && (
+            <div className="popup__title" style={{ color: "rgb(18, 18, 18)" }}>
+              {title}
+            </div>
+          )}
+          <div className="popup__message" style={{ color: "rgb(18, 18, 18)" }}>
+            {message}
+          </div>
           <button
             type="button"
             className="popup__close popup__close--modal"
             onClick={onClose}
             aria-label="Close"
+            style={{ color: "rgb(18, 18, 18)" }}
           >
             ×
           </button>
@@ -54,8 +90,12 @@ function Popup({
 
   return (
     <div className="popup popup--toast" role="status" aria-live="polite">
-      <div className="popup__message">
-        {title && <div className="popup__title">{title}</div>}
+      <div className="popup__message" style={{ color: "rgb(18, 18, 18)" }}>
+        {title && (
+          <div className="popup__title" style={{ color: "rgb(18, 18, 18)" }}>
+            {title}
+          </div>
+        )}
         <div>{message}</div>
       </div>
       <button
@@ -63,6 +103,7 @@ function Popup({
         className="popup__close"
         onClick={onClose}
         aria-label="Close"
+        style={{ color: "rgb(18, 18, 18)" }}
       >
         ×
       </button>
