@@ -4,7 +4,7 @@ import { useNormalizedGLTF } from "../../hooks/useNormalizedGLTF";
 import { useAutoShadows } from "../../hooks/useAutoShadows";
 
 export default function LoungeChair(props: JSX.IntrinsicElements["group"]) {
-  const root = useNormalizedGLTF("/models/barcelona/lounge_chair.glb", {
+  const root = useNormalizedGLTF("/models/codeop/lounge_chair.glb", {
     targetHeight: 0.6,
     sitOnGround: true,
   });
@@ -12,4 +12,4 @@ export default function LoungeChair(props: JSX.IntrinsicElements["group"]) {
   return <primitive object={root} {...props} />;
 }
 
-useGLTF.preload("/models/barcelona/lounge_chair.glb");
+useGLTF.preload("/models/codeop/lounge_chair.glb");

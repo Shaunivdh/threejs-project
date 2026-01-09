@@ -18,16 +18,19 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
   });
   useAutoShadows(root);
   useEffect(() => {
-    root.traverse((obj: any) => {
-      if (obj.isMesh && obj.material) {
-        const mat = obj.material as THREE.MeshStandardMaterial;
+    root.traverse((obj: THREE.Object3D) => {
+      if (!(obj instanceof THREE.Mesh)) return;
+      const materials = Array.isArray(obj.material)
+        ? obj.material
+        : [obj.material];
 
-        mat.color.set("#9bb7d4");
+      for (const m of materials) {
+        if (!(m instanceof THREE.MeshStandardMaterial)) continue;
 
-        mat.roughness = Math.min(mat.roughness ?? 0.6, 0.65);
-        mat.metalness = 0;
-
-        mat.needsUpdate = true;
+        m.color.set("#9bb7d4");
+        m.roughness = Math.min(m.roughness ?? 0.6, 0.65);
+        m.metalness = 0;
+        m.needsUpdate = true;
       }
     });
   }, [root]);

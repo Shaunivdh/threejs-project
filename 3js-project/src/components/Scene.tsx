@@ -38,6 +38,11 @@ import Airplane from "./waypoints/Airplane";
 import Montsera from "./brighton/Montsera";
 import FlightWaypoints from "./waypoints/FlightWaypoints";
 import CloudBackground from "./experience/CloudBackground";
+import Plant from "./Plant";
+import Daisy from "./Daisy";
+import Rose from "./Rose";
+import RoseBush from "./RoseBush";
+import Marigold from "./Marigold";
 
 export type SceneProps = {
   follow?: boolean;
@@ -148,7 +153,11 @@ export default function Scene({
         <Tulip position={[-2.1, 0, -2.8]} />
         <Tulip position={[-1.9, 0, -2.4]} />
         <Tulip position={[-2.5, 0, -2.4]} />
+        <Tulip position={[-2.8, 0, -0.4]} />
         <Grass position={[-4, -0.15, -0.2]} />
+        <Grass position={[1, -0.15, 2.8]} />
+        <Grass position={[3.2, -0.15, 1.2]} />
+        <Bike position={[-1.5, -0.15, -3]} rotation={[-0.4, 0, 0]} />
 
         <Windmill position={[-2.6, -0.15, -1.5]} rotation={[0, 0.9, 0]} />
 
@@ -159,7 +168,7 @@ export default function Scene({
 
         <LoungeChair position={[2.6, 0.1, 2]} rotation={[0, 2.4, 0]} />
         <Pots position={[1.7, -0.15, 3.5]} rotation={[0, 1.5, 0]} />
-        <Coffee position={[3.2, 0.45, 1.8]} rotation={[0, 0.5, 0]} />
+        <Coffee position={[3.2, 0.43, 1.8]} rotation={[0, 0.5, 0]} />
         <PalmTree position={[3.9, 0, 1.2]} rotation={[0, 1.5, 0]} />
         <Books position={[3.2, 0.1, 1.8]} rotation={[0, 2, 0]} />
 
@@ -168,6 +177,19 @@ export default function Scene({
         <Desk position={[2.5, 0.25, -3]} />
         <Seagull position={[2.1, -0.15, -1.2]} rotation={[0, 0.5, 0]} />
         <Montsera position={[2, 0.52, -3]} rotation={[0, -1.5, 0]} />
+
+        <Plant position={[-3.9, -0.15, 1.7]} rotation={[0, 1.2, 0]} />
+        <Daisy position={[-2.7, -0.15, 0.5]} />
+        <Daisy position={[1, -0.15, 1.8]} />
+        <Daisy position={[1.7, -0.15, -1.7]} />
+        <Rose position={[-2, 0.15, 1]} />
+        <Rose position={[3.2, 0.15, 1]} />
+        <Rose position={[-2, 0.15, 1]} />
+
+        <RoseBush position={[-3.8, -0.31, 0.3]} />
+        <RoseBush position={[1.2, -0.31, 3.2]} />
+        <RoseBush position={[3.7, -0.31, -1.7]} />
+        <Marigold position={[-0.8, -0.15, 2]} />
 
         <GrassPatches
           patches={[
@@ -218,8 +240,6 @@ export default function Scene({
             },
           ]}
         />
-
-        <Bike position={[-1.5, -0.15, -3]} rotation={[-0.4, 0, 0]} />
 
         <Airplane
           ref={airplaneRef}
