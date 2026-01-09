@@ -112,28 +112,33 @@ export default function Scene({
     <>
       <directionalLight
         castShadow
-        position={[-11, 15, -6]}
-        intensity={2.15}
-        color="#fff2d8"
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+        position={[-10, 18, -10]}
+        intensity={3.05}
+        color="#ffe2bf"
+        shadow-mapSize-width={4096}
+        shadow-mapSize-height={4096}
         shadow-camera-near={1}
-        shadow-camera-far={60}
-        shadow-camera-left={-14}
-        shadow-camera-right={14}
-        shadow-camera-top={14}
-        shadow-camera-bottom={-14}
-        shadow-bias={-0.00025}
-        shadow-radius={6}
+        shadow-camera-far={70}
+        shadow-camera-left={-18}
+        shadow-camera-right={18}
+        shadow-camera-top={18}
+        shadow-camera-bottom={-18}
+        shadow-bias={-0.00018}
+        shadow-normalBias={0.02}
+        shadow-radius={2}
       />
 
-      <hemisphereLight intensity={0.35} groundColor="#6f7f90" color="#d8e6ff" />
+      <hemisphereLight intensity={0.62} groundColor="#7b6a60" color="#d6e6ff" />
 
-      <directionalLight position={[8, 4, 8]} intensity={0.12} color="#d7e7ff" />
+      <directionalLight
+        position={[-10, 7, 10]}
+        intensity={0.22}
+        color="#cfe0ff"
+      />
 
-      <ambientLight intensity={0.7} color="#ffffff" />
+      <ambientLight intensity={0.12} color="#ffffff" />
 
-      <Environment preset="dawn" environmentIntensity={0.25} />
+      <Environment preset="sunset" environmentIntensity={0.38} />
 
       <Suspense fallback={null}>
         <FlightWaypoints
@@ -146,11 +151,11 @@ export default function Scene({
 
         <ContactShadows
           position={[0, 0.02, 0]}
-          opacity={0.5}
+          opacity={0.38}
           scale={16}
-          blur={4}
-          far={8}
-          color="#3d2f1a"
+          blur={2.2}
+          far={7}
+          color="#3a2a18"
         />
 
         <Cattail position={[-3, 0.1, -0.9]} rotation={[0, 0.7, 0]} />
@@ -264,8 +269,8 @@ export default function Scene({
         <BrightnessContrast brightness={-0.03} contrast={0.12} />
         <Bloom
           mipmapBlur
-          intensity={0.22}
-          luminanceThreshold={0.82}
+          intensity={0.24}
+          luminanceThreshold={0.78}
           luminanceSmoothing={0.25}
         />
         <Vignette eskil={false} offset={0.32} darkness={0.55} />
