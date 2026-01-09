@@ -39,6 +39,7 @@ import GrassPatches from "./GrassPatch";
 import Airplane from "./Airplane";
 import Montsera from "./brighton/Montsera";
 import FlightWaypoints from "./waypoints/FlightWaypoints";
+import CloudBackground from "./CloudBackground";
 
 export type SceneProps = {
   follow?: boolean;
@@ -120,7 +121,7 @@ export default function Scene({
         shadow-camera-near={1}
         shadow-camera-far={70}
         shadow-camera-left={-18}
-        shadow-camera-right={18}
+        shadow-camera-rigsht={18}
         shadow-camera-top={18}
         shadow-camera-bottom={-18}
         shadow-bias={-0.00018}
@@ -139,7 +140,7 @@ export default function Scene({
       <ambientLight intensity={0.12} color="#ffffff" />
 
       <Environment preset="sunset" environmentIntensity={0.38} />
-
+      <CloudBackground />
       <Suspense fallback={null}>
         <FlightWaypoints
           airplaneRef={airplaneRef}

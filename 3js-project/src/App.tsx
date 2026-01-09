@@ -91,7 +91,13 @@ export default function App(): JSX.Element {
         className="r3f-canvas"
         shadows
         dpr={[1, 1.75]}
-        gl={{ antialias: true, alpha: true }}
+        gl={{
+          antialias: true,
+          alpha: true,
+          premultipliedAlpha: false,
+          powerPreference: "high-performance",
+          depth: true,
+        }}
         camera={{ position: [5.2, 4.4, 4.0], fov: 38, near: 0.1, far: 80 }}
         onCreated={({ gl, scene }) => {
           scene.background = null;
@@ -103,7 +109,7 @@ export default function App(): JSX.Element {
           gl.toneMappingExposure = 1.0;
           gl.outputColorSpace = SRGBColorSpace;
 
-          gl.setClearColor(0x000000, 0);
+          gl.setClearColor(0xffffff, 0);
         }}
       >
         <Scene
