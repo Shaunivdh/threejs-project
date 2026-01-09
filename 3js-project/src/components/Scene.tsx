@@ -118,24 +118,18 @@ export default function Scene({
         color="#ffe2bf"
         shadow-mapSize-width={4096}
         shadow-mapSize-height={4096}
-        shadow-camera-near={1}
-        shadow-camera-far={70}
-        shadow-camera-left={-18}
-        shadow-camera-rigsht={18}
-        shadow-camera-top={18}
-        shadow-camera-bottom={-18}
-        shadow-bias={-0.00018}
+        shadow-camera-near={5}
+        shadow-camera-far={35}
+        shadow-camera-left={-6}
+        shadow-camera-right={6}
+        shadow-camera-top={6}
+        shadow-camera-bottom={-6}
+        shadow-bias={-0.0001}
         shadow-normalBias={0.02}
-        shadow-radius={2}
+        shadow-radius={1}
       />
 
       <hemisphereLight intensity={0.62} groundColor="#7b6a60" color="#d6e6ff" />
-
-      <directionalLight
-        position={[-10, 7, 10]}
-        intensity={0.22}
-        color="#cfe0ff"
-      />
 
       <ambientLight intensity={0.12} color="#ffffff" />
 
@@ -149,15 +143,6 @@ export default function Scene({
         />
 
         <Platform />
-
-        <ContactShadows
-          position={[0, 0.02, 0]}
-          opacity={0.38}
-          scale={16}
-          blur={2.2}
-          far={7}
-          color="#3a2a18"
-        />
 
         <Cattail position={[-3, 0.1, -0.9]} rotation={[0, 0.7, 0]} />
         <Tree position={[-4, 1.8, -2]} rotation={[0, Math.PI / 4, 0]} />
