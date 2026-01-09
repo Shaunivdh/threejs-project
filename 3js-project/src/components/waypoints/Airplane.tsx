@@ -1,7 +1,7 @@
-import { useNormalizedGLTF } from "../hooks/useNormalizedGLTF";
+import { useNormalizedGLTF } from "../../hooks/useNormalizedGLTF";
 import type { JSX } from "react";
 import { useGLTF } from "@react-three/drei";
-import { useAutoShadows } from "../hooks/useAutoShadows";
+import { useAutoShadows } from "../../hooks/useAutoShadows";
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
@@ -17,6 +17,20 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
     sitOnGround: true,
   });
   useAutoShadows(root);
+  useEffect(() => {
+    root.traverse((obj: any) => {
+      if (obj.isMesh && obj.material) {
+        const mat = obj.material as THREE.MeshStandardMaterial;
+
+        mat.color.set("#9bb7d4");
+
+        mat.roughness = Math.min(mat.roughness ?? 0.6, 0.65);
+        mat.metalness = 0;
+
+        mat.needsUpdate = true;
+      }
+    });
+  }, [root]);
 
   const groupRef = useRef<THREE.Group>(null!);
   useImperativeHandle(ref, () => groupRef.current, []);

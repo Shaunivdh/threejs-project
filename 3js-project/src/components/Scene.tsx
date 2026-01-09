@@ -24,20 +24,20 @@ import FireHydrant from "./uk/FireHydrant";
 import Bench from "./uk/Bench";
 import Postbox from "./uk/Postbox";
 import Tulip from "./netherlands/Tulip";
-import LoungeChair from "./barcelona/LoungeChair";
-import Pots from "./barcelona/Pots";
+import LoungeChair from "./codeop/LoungeChair";
+import Pots from "./codeop/Pots";
 import Laptop from "./brighton/Laptop";
-import Coffee from "./barcelona/Coffee";
-import PalmTree from "./barcelona/PalmTree";
-import Books from "./barcelona/Books";
+import Coffee from "./codeop/Coffee";
+import PalmTree from "./codeop/PalmTree";
+import Books from "./codeop/Books";
 import Corkboard from "./brighton/Corkboard";
 import Desk from "./brighton/Desk";
 import Seagull from "./brighton/Seagull";
 import GrassPatches from "./GrassPatch";
-import Airplane from "./Airplane";
+import Airplane from "./waypoints/Airplane";
 import Montsera from "./brighton/Montsera";
 import FlightWaypoints from "./waypoints/FlightWaypoints";
-import CloudBackground from "./CloudBackground";
+import CloudBackground from "./experience/CloudBackground";
 
 export type SceneProps = {
   follow?: boolean;
