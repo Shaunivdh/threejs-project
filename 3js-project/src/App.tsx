@@ -103,7 +103,7 @@ export default function App(): JSX.Element {
           scene.background = null;
 
           gl.shadowMap.enabled = true;
-          gl.shadowMap.type = PCFShadowMap; // crisper than PCFSoftShadowMap
+          gl.shadowMap.type = PCFShadowMap;
 
           gl.toneMapping = NoToneMapping;
           gl.toneMappingExposure = 1.0;

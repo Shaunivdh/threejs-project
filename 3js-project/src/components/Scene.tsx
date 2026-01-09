@@ -1,5 +1,5 @@
 import { Suspense, useRef } from "react";
-import { Environment, ContactShadows } from "@react-three/drei";
+import { Environment } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import {
@@ -8,12 +8,10 @@ import {
   Vignette,
   HueSaturation,
   BrightnessContrast,
-  SMAA,
   ToneMapping,
   Noise,
 } from "@react-three/postprocessing";
 import { ToneMappingMode } from "postprocessing";
-
 import Platform from "./Platform";
 import Tree from "./Tree";
 import Fence from "./Fence";
@@ -114,8 +112,8 @@ export default function Scene({
       <directionalLight
         castShadow
         position={[-10, 18, -10]}
-        intensity={3.05}
-        color="#ffe2bf"
+        intensity={2.05}
+        color="#110a01ff"
         shadow-mapSize-width={4096}
         shadow-mapSize-height={4096}
         shadow-camera-near={5}
@@ -249,13 +247,12 @@ export default function Scene({
       </Suspense>
 
       <EffectComposer multisampling={0}>
-        <SMAA />
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
         <HueSaturation saturation={0.02} hue={0.0} />
-        <BrightnessContrast brightness={-0.03} contrast={0.12} />
+        <BrightnessContrast brightness={-0.03} contrast={0.18} />
         <Bloom
           mipmapBlur
-          intensity={0.24}
+          intensity={0.12}
           luminanceThreshold={0.78}
           luminanceSmoothing={0.25}
         />
