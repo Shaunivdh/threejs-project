@@ -40,17 +40,14 @@ body,
 
 .hud {
   position: fixed;
-  inset: 14px 14px auto 14px;
+  top: 14px;
+  right: 14px;
   z-index: 10;
 
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-
   pointer-events: none;
 }
 
-.hud__identity,
 .hud__actions {
   pointer-events: auto;
 }

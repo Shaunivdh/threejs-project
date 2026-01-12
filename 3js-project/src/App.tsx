@@ -1,6 +1,6 @@
 import { useState, type JSX } from "react";
 import { Canvas } from "@react-three/fiber";
-import { NoToneMapping, PCFShadowMap, SRGBColorSpace } from "three";
+import { NoToneMapping, PCFSoftShadowMap, SRGBColorSpace } from "three";
 import { OrbitControls } from "@react-three/drei";
 import Scene from "./components/Scene";
 import "./App.css";
@@ -12,15 +12,10 @@ const FOLLOW_IN_DEV = false;
 
 function TopMenu(): JSX.Element {
   return (
-    <div className="hud" aria-label="Identity and social links">
-      <div className="hud__identity" aria-label="Identity">
-        <div className="hud__name">Shauni van der Horst</div>
-        <div className="hud__title">Full Stack Developer</div>
-      </div>
-
+    <div className="hud" aria-label="Social links">
       <div className="hud__actions" aria-label="Social links">
         <a
-          href="#linkedin"
+          href="https://www.linkedin.com/in/shaunivanderhorst/"
           className="hud__icon"
           aria-label="LinkedIn"
           title="LinkedIn"
@@ -29,7 +24,7 @@ function TopMenu(): JSX.Element {
         </a>
 
         <a
-          href="#github"
+          href="https://github.com/Shaunivdh"
           className="hud__icon"
           aria-label="GitHub"
           title="GitHub"
@@ -145,7 +140,7 @@ export default function App(): JSX.Element {
           scene.background = null;
 
           gl.shadowMap.enabled = true;
-          gl.shadowMap.type = PCFShadowMap;
+          gl.shadowMap.type = PCFSoftShadowMap;
 
           gl.toneMapping = NoToneMapping;
           gl.toneMappingExposure = 1.0;

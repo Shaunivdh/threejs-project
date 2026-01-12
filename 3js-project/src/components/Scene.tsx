@@ -43,6 +43,7 @@ import Daisy from "./Daisy";
 import Rose from "./Rose";
 import RoseBush from "./RoseBush";
 import Marigold from "./Marigold";
+import SceneText from "./SceneText";
 
 export type SceneProps = {
   follow?: boolean;
@@ -189,12 +190,13 @@ export default function Scene({
         <RoseBush position={[1.2, -0.31, 3.2]} />
         <RoseBush position={[3.7, -0.31, -1.7]} />
         <Marigold position={[-0.8, -0.15, 2]} />
+        <Marigold position={[0.1, -0.15, -0.3]} />
 
         <GrassPatches
           patches={[
             {
               key: "grass1",
-              position: [0.9, -0.15, -0.5],
+              position: [1.6, -0.15, -0.4],
               rotation: [0, -Math.PI / 2.25, 0],
               count: 10,
               radius: 0.6,
@@ -245,6 +247,16 @@ export default function Scene({
           position={[-0.2, 0.75, -3]}
           rotation={[0, 0, 0]}
         />
+        <group position={[-0.9, -0.17, 0.9]} rotation={[0, 0.9, 0]}>
+          <SceneText
+            text="FULL STACK DEVELOPER"
+            scale={0.4}
+            position={[0.82, 0, 0.29]}
+            rotation={[0, 0, 0]}
+          />
+
+          <SceneText text="SHAUNI" position={[0, 0, 0]} rotation={[0, 0, 0]} />
+        </group>
 
         <Fence position={[-3, -0.15, -3.4]} />
         <Fence position={[-1.8, -0.15, -3.4]} />
