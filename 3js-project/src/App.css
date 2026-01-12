@@ -309,8 +309,11 @@ canvas {
 
 @media (max-width: 520px) {
   .hud {
-    inset: 10px 10px auto 10px;
+    left: auto;
+    inset: 10px 10px auto auto;
   }
+}
+
 
   .hud__identity {
     padding: 9px 12px;

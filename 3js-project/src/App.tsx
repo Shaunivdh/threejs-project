@@ -19,6 +19,8 @@ function TopMenu(): JSX.Element {
           className="hud__icon"
           aria-label="LinkedIn"
           title="LinkedIn"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           <img src={linkedinIcon} alt="" aria-hidden="true" />
         </a>
@@ -28,12 +30,14 @@ function TopMenu(): JSX.Element {
           className="hud__icon"
           aria-label="GitHub"
           title="GitHub"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           <img src={githubIcon} alt="" aria-hidden="true" />
         </a>
 
         <a
-          href="#contact"
+          href="mailto:youremail@example.com"
           className="hud__icon"
           aria-label="Email"
           title="Email"
