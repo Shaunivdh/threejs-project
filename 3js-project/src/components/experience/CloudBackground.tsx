@@ -24,7 +24,7 @@ export default function CloudBackground() {
           volume={7}
           opacity={0.16}
           fade={1}
-          speed={0.045}
+          speed={0.055}
           color="#fff3e9"
         />
 
@@ -36,7 +36,7 @@ export default function CloudBackground() {
           volume={6}
           opacity={0.22}
           fade={1}
-          speed={0.04}
+          speed={0.055}
           color="#fff3e9"
         />
       </Clouds>

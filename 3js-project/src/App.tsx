@@ -12,15 +12,16 @@ const FOLLOW_IN_DEV = false;
 
 function TopMenu(): JSX.Element {
   return (
-    <div className="identity-hud" aria-label="Identity and social links">
-      <span className="identity-hud__name" style={{ color: "rgb(18, 18, 18)" }}>
-        Shauni van der Horst - Full Stack Developer
-      </span>
+    <div className="hud" aria-label="Identity and social links">
+      <div className="hud__identity" aria-label="Identity">
+        <div className="hud__name">Shauni van der Horst</div>
+        <div className="hud__title">Full Stack Developer</div>
+      </div>
 
-      <div className="identity-hud__icons">
+      <div className="hud__actions" aria-label="Social links">
         <a
           href="#linkedin"
-          className="identity-hud__icon"
+          className="hud__icon"
           aria-label="LinkedIn"
           title="LinkedIn"
         >
@@ -29,7 +30,7 @@ function TopMenu(): JSX.Element {
 
         <a
           href="#github"
-          className="identity-hud__icon"
+          className="hud__icon"
           aria-label="GitHub"
           title="GitHub"
         >
@@ -38,7 +39,7 @@ function TopMenu(): JSX.Element {
 
         <a
           href="#contact"
-          className="identity-hud__icon"
+          className="hud__icon"
           aria-label="Email"
           title="Email"
         >
@@ -51,7 +52,7 @@ function TopMenu(): JSX.Element {
 
 interface PopupProps {
   title?: string;
-  message: string;
+  message: React.ReactNode;
   onClose: () => void;
   variant?: "toast" | "modal";
 }
@@ -173,11 +174,30 @@ export default function App(): JSX.Element {
       </Canvas>
 
       <TopMenu />
-
       {showTipPopup && (
         <Popup
           variant="toast"
-          message="Tip: drag to orbit, scroll to zoom."
+          title="Welcome to my garden 🌱"
+          message={
+            <div className="popup__intro">
+              <p>Explore my interactive portfolio.</p>
+
+              <ul>
+                <li>
+                  🖱 <strong>Drag</strong> to rotate
+                </li>
+                <li>
+                  🔍 <strong>Scroll</strong> to zoom
+                </li>
+                <li>
+                  ⌨️ <strong>WASD</strong> or <strong>Arrow keys</strong> to
+                  move
+                </li>
+              </ul>
+
+              <p>Look out for glowing beacons to discover more.</p>
+            </div>
+          }
           onClose={() => setShowTipPopup(false)}
         />
       )}

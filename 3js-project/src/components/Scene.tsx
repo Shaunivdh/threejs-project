@@ -275,7 +275,7 @@ export default function Scene({
           luminanceThreshold={0.78}
           luminanceSmoothing={0.25}
         />
-        <Vignette eskil={false} offset={0.32} darkness={0.55} />
+        <Vignette eskil={false} offset={0.2} darkness={0.55} />
         <Noise opacity={0.03} />
       </EffectComposer>
     </>

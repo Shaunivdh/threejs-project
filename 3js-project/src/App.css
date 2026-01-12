@@ -38,12 +38,26 @@ body,
   display: block;
 }
 
-.identity-hud {
+.hud {
   position: fixed;
-  top: 14px;
-  right: 14px;
+  inset: 14px 14px auto 14px;
   z-index: 10;
 
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  pointer-events: none;
+}
+
+.hud__identity,
+.hud__actions {
+  pointer-events: auto;
+}
+
+.hud__identity,
+.hud__actions {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -58,9 +72,12 @@ body,
   border: 1px solid rgba(255, 255, 255, 0.32);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
+
+  isolation: isolate;
 }
 
-.identity-hud::before {
+.hud__identity::before,
+.hud__actions::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -73,21 +90,42 @@ body,
     rgba(255, 255, 255, 0.08) 55%,
     transparent 70%
   );
+  z-index: 0;
 }
 
-.identity-hud__name {
-  font-size: 0.9rem;
-  font-weight: 500;
+.hud__identity > *,
+.hud__actions > * {
+  z-index: 1;
+}
+
+.hud__identity {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  padding: 10px 14px;
+}
+
+.hud__name {
+  font-size: 0.95rem;
+  font-weight: 600;
   letter-spacing: 0.2px;
   color: rgb(18, 18, 18);
+  line-height: 1.2;
 }
 
-.identity-hud__icons {
-  display: flex;
+.hud__title {
+  font-size: 0.82rem;
+  font-weight: 500;
+  opacity: 0.78;
+  color: rgb(18, 18, 18);
+  line-height: 1.2;
+}
+
+.hud__actions {
   gap: 6px;
 }
 
-.identity-hud__icon {
+.hud__icon {
   width: 28px;
   height: 28px;
 
@@ -106,13 +144,13 @@ body,
   transition: transform 140ms ease, background 140ms ease, box-shadow 140ms ease;
 }
 
-.identity-hud__icon img {
+.hud__icon img {
   width: 15px;
   height: 15px;
   opacity: 0.9;
 }
 
-.identity-hud__icon:hover {
+.hud__icon:hover {
   transform: translateY(-1px);
   background: rgba(255, 255, 255, 0.28);
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12),
@@ -260,20 +298,47 @@ canvas {
   height: 100%;
 }
 
-.identity-hud,
+.hud__identity,
+.hud__actions,
 .popup--toast,
 .popup--modal {
   isolation: isolate;
 }
-
-.identity-hud::before,
-.popup--toast::before,
-.popup--modal::before {
-  z-index: 0;
-}
-
 .identity-hud > *,
 .popup--toast > *,
 .popup--modal > * {
   z-index: 1;
+}
+
+@media (max-width: 520px) {
+  .hud {
+    inset: 10px 10px auto 10px;
+  }
+
+  .hud__identity {
+    padding: 9px 12px;
+    max-width: calc(100vw - 10px - 10px - 140px);
+  }
+
+  .hud__name {
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .hud__title {
+    display: none;
+  }
+
+  .hud__icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .hud__icon img {
+    width: 17px;
+    height: 17px;
+  }
 }
