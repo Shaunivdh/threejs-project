@@ -244,7 +244,7 @@ export default function Scene({
 
         <Airplane
           ref={airplaneRef}
-          position={[-0.2, 0.75, -3]}
+          position={[-0.1, 0.75, -0.6]}
           rotation={[0, 0, 0]}
         />
         <group position={[-0.9, -0.17, 0.9]} rotation={[0, 0.9, 0]}>
