@@ -314,31 +314,29 @@ canvas {
   }
 }
 
+.hud__identity {
+  padding: 9px 12px;
+  max-width: calc(100vw - 10px - 10px - 140px);
+}
 
-  .hud__identity {
-    padding: 9px 12px;
-    max-width: calc(100vw - 10px - 10px - 140px);
-  }
+.hud__name {
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
 
-  .hud__name {
-    font-size: 0.9rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-  }
+.hud__title {
+  display: none;
+}
 
-  .hud__title {
-    display: none;
-  }
+.hud__icon {
+  width: 34px;
+  height: 34px;
+}
 
-  .hud__icon {
-    width: 34px;
-    height: 34px;
-  }
-
-  .hud__icon img {
-    width: 17px;
-    height: 17px;
-  }
+.hud__icon img {
+  width: 17px;
+  height: 17px;
 }
