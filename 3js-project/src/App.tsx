@@ -1,5 +1,12 @@
-import { useEffect, useState, type JSX } from "react";
-import { Canvas } from "@react-three/fiber";
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type JSX,
+} from "react";
+import { Canvas, type RootState } from "@react-three/fiber";
 import { NoToneMapping, PCFSoftShadowMap, SRGBColorSpace } from "three";
 import { OrbitControls } from "@react-three/drei";
 import Scene from "./components/Scene";
@@ -10,7 +17,7 @@ import mailIcon from "./assets/icons/mail.svg";
 
 const FOLLOW_IN_DEV = true;
 
-function TopMenu(): JSX.Element {
+const TopMenu = memo(function TopMenu(): JSX.Element {
   return (
     <div className="hud" aria-label="Social links">
       <div className="hud__actions" aria-label="Social links">
@@ -47,7 +54,7 @@ function TopMenu(): JSX.Element {
       </div>
     </div>
   );
-}
+});
 
 interface PopupProps {
   title?: string;
@@ -56,7 +63,7 @@ interface PopupProps {
   variant?: "toast" | "modal";
 }
 
-function Popup({
+const Popup = memo(function Popup({
   title,
   message,
   onClose,
@@ -66,20 +73,13 @@ function Popup({
     return (
       <div className="popup-overlay">
         <div className="popup popup--modal">
-          {title && (
-            <div className="popup__title" style={{ color: "rgb(18, 18, 18)" }}>
-              {title}
-            </div>
-          )}
-          <div className="popup__message" style={{ color: "rgb(18, 18, 18)" }}>
-            {message}
-          </div>
+          {title && <div className="popup__title">{title}</div>}
+          <div className="popup__message">{message}</div>
           <button
             type="button"
             className="popup__close popup__close--modal"
             onClick={onClose}
             aria-label="Close"
-            style={{ color: "rgb(18, 18, 18)" }}
           >
             ×
           </button>
@@ -90,12 +90,8 @@ function Popup({
 
   return (
     <div className="popup popup--toast" role="status" aria-live="polite">
-      <div className="popup__message" style={{ color: "rgb(18, 18, 18)" }}>
-        {title && (
-          <div className="popup__title" style={{ color: "rgb(18, 18, 18)" }}>
-            {title}
-          </div>
-        )}
+      <div className="popup__message">
+        {title && <div className="popup__title">{title}</div>}
         <div>{message}</div>
       </div>
       <button
@@ -103,13 +99,12 @@ function Popup({
         className="popup__close"
         onClick={onClose}
         aria-label="Close"
-        style={{ color: "rgb(18, 18, 18)" }}
       >
         ×
       </button>
     </div>
   );
-}
+});
 
 type BeaconPopupState = {
   open: boolean;
@@ -117,16 +112,20 @@ type BeaconPopupState = {
   message: string;
 };
 
-export default function App(): JSX.Element {
-  const [showTipPopup, setShowTipPopup] = useState(true);
-  const [beaconPopup, setBeaconPopup] = useState<BeaconPopupState>({
-    open: false,
-    title: "",
-    message: "",
-  });
-  const [beaconDismissed, setBeaconDismissed] = useState(false);
+const EMPTY_BEACON: BeaconPopupState = { open: false, title: "", message: "" };
 
+type BeaconPayload = {
+  title: string;
+  message: string;
+};
+
+export default function App(): JSX.Element {
   const isDev = import.meta.env.DEV;
+
+  const [showTipPopup, setShowTipPopup] = useState(true);
+  const [beaconPopup, setBeaconPopup] =
+    useState<BeaconPopupState>(EMPTY_BEACON);
+  const [beaconDismissed, setBeaconDismissed] = useState(false);
   const [useOrbit, setUseOrbit] = useState(false);
 
   useEffect(() => {
@@ -139,6 +138,71 @@ export default function App(): JSX.Element {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [isDev]);
+
+  const follow = useMemo(
+    () => import.meta.env.PROD || (FOLLOW_IN_DEV && !useOrbit),
+    [useOrbit]
+  );
+
+  const handleTipClose = useCallback(() => {
+    setShowTipPopup(false);
+  }, []);
+
+  const handleBeaconEnter = useCallback(
+    ({ title, message }: BeaconPayload) => {
+      if (beaconDismissed) return;
+      setBeaconPopup({ open: true, title, message });
+    },
+    [beaconDismissed]
+  );
+
+  const handleBeaconExit = useCallback(() => {
+    setBeaconPopup((p) => ({ ...p, open: false }));
+    setBeaconDismissed(false);
+  }, []);
+
+  const handleBeaconClose = useCallback(() => {
+    setBeaconPopup((p) => ({ ...p, open: false }));
+    setBeaconDismissed(true);
+  }, []);
+
+  const handleCanvasCreated = useCallback((state: RootState) => {
+    const { gl, scene } = state;
+
+    scene.background = null;
+
+    gl.shadowMap.enabled = true;
+    gl.shadowMap.type = PCFSoftShadowMap;
+
+    gl.toneMapping = NoToneMapping;
+    gl.toneMappingExposure = 1.0;
+    gl.outputColorSpace = SRGBColorSpace;
+
+    gl.setClearColor(0xffffff, 0);
+  }, []);
+
+  const tipMessage = useMemo(
+    () => (
+      <div className="popup__intro">
+        <p>Explore my interactive portfolio.</p>
+
+        <ul>
+          <li>
+            🖱 <strong>Drag</strong> to rotate
+          </li>
+          <li>
+            🔍 <strong>Scroll</strong> to zoom
+          </li>
+          <li>
+            ⌨️ <strong>WASD</strong> or <strong>Arrow keys</strong> to move
+          </li>
+        </ul>
+
+        <p>Look out for glowing beacons to discover more.</p>
+      </div>
+    ),
+    []
+  );
 
   return (
     <div className="app">
@@ -154,30 +218,14 @@ export default function App(): JSX.Element {
           depth: true,
         }}
         camera={{ position: [5.2, 4.4, 4.0], fov: 38, near: 0.1, far: 80 }}
-        onCreated={({ gl, scene }) => {
-          scene.background = null;
-
-          gl.shadowMap.enabled = true;
-          gl.shadowMap.type = PCFSoftShadowMap;
-
-          gl.toneMapping = NoToneMapping;
-          gl.toneMappingExposure = 1.0;
-          gl.outputColorSpace = SRGBColorSpace;
-
-          gl.setClearColor(0xffffff, 0);
-        }}
+        onCreated={handleCanvasCreated}
       >
         <Scene
-          follow={import.meta.env.PROD || (FOLLOW_IN_DEV && !useOrbit)}
-          onBeaconEnter={({ title, message }) => {
-            if (beaconDismissed) return;
-            setBeaconPopup({ open: true, title, message });
-          }}
-          onBeaconExit={() => {
-            setBeaconPopup((p) => ({ ...p, open: false }));
-            setBeaconDismissed(false);
-          }}
+          follow={follow}
+          onBeaconEnter={handleBeaconEnter}
+          onBeaconExit={handleBeaconExit}
         />
+
         {isDev && useOrbit && (
           <OrbitControls
             makeDefault
@@ -189,31 +237,13 @@ export default function App(): JSX.Element {
       </Canvas>
 
       <TopMenu />
+
       {showTipPopup && (
         <Popup
           variant="toast"
           title="Welcome to my garden 🌱"
-          message={
-            <div className="popup__intro">
-              <p>Explore my interactive portfolio.</p>
-
-              <ul>
-                <li>
-                  🖱 <strong>Drag</strong> to rotate
-                </li>
-                <li>
-                  🔍 <strong>Scroll</strong> to zoom
-                </li>
-                <li>
-                  ⌨️ <strong>WASD</strong> or <strong>Arrow keys</strong> to
-                  move
-                </li>
-              </ul>
-
-              <p>Look out for glowing beacons to discover more.</p>
-            </div>
-          }
-          onClose={() => setShowTipPopup(false)}
+          message={tipMessage}
+          onClose={handleTipClose}
         />
       )}
 
@@ -222,10 +252,7 @@ export default function App(): JSX.Element {
           variant="modal"
           title={beaconPopup.title}
           message={beaconPopup.message}
-          onClose={() => {
-            setBeaconPopup((p) => ({ ...p, open: false }));
-            setBeaconDismissed(true);
-          }}
+          onClose={handleBeaconClose}
         />
       )}
     </div>
