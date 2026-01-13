@@ -70,7 +70,7 @@ export default function Scene({
   const lookParallax = useRef(new THREE.Vector3(0.35, 0.12, 0.35));
   const stiffness = 0.06;
 
-  useFrame(({ camera }, dt) => {
+  useFrame(({ camera, size }, dt) => {
     if (!follow) return;
 
     const p = airplaneRef.current;
@@ -84,20 +84,23 @@ export default function Scene({
       inited.current = true;
     }
 
+    const aspect = size.width / size.height;
+    const frameBoost = THREE.MathUtils.clamp(1.35 / aspect, 1, 1.85);
+
     const dx = p.position.x - center.current.x;
     const dy = p.position.y - center.current.y;
     const dz = p.position.z - center.current.z;
 
     desiredCam.current.set(
-      baseCam.current.x + dx * parallax.current.x,
-      baseCam.current.y + dy * parallax.current.y,
-      baseCam.current.z + dz * parallax.current.z
+      baseCam.current.x + dx * (parallax.current.x * frameBoost),
+      baseCam.current.y + dy * (parallax.current.y * frameBoost),
+      baseCam.current.z + dz * (parallax.current.z * frameBoost)
     );
 
     desiredLook.current.set(
-      baseLook.current.x + dx * lookParallax.current.x,
-      baseLook.current.y + dy * lookParallax.current.y,
-      baseLook.current.z + dz * lookParallax.current.z
+      baseLook.current.x + dx * (lookParallax.current.x * frameBoost),
+      baseLook.current.y + dy * (lookParallax.current.y * frameBoost),
+      baseLook.current.z + dz * (lookParallax.current.z * frameBoost)
     );
 
     const currentDist = camera.position.distanceTo(smoothedLook.current);

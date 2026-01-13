@@ -1,4 +1,4 @@
-import { useState, type JSX } from "react";
+import { useEffect, useState, type JSX } from "react";
 import { Canvas } from "@react-three/fiber";
 import { NoToneMapping, PCFSoftShadowMap, SRGBColorSpace } from "three";
 import { OrbitControls } from "@react-three/drei";
@@ -126,6 +126,20 @@ export default function App(): JSX.Element {
   });
   const [beaconDismissed, setBeaconDismissed] = useState(false);
 
+  const isDev = import.meta.env.DEV;
+  const [useOrbit, setUseOrbit] = useState(false);
+
+  useEffect(() => {
+    if (!isDev) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.code === "KeyO") setUseOrbit((v) => !v);
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isDev]);
+
   return (
     <div className="app">
       <Canvas
@@ -154,7 +168,7 @@ export default function App(): JSX.Element {
         }}
       >
         <Scene
-          follow={import.meta.env.PROD || FOLLOW_IN_DEV}
+          follow={import.meta.env.PROD || (FOLLOW_IN_DEV && !useOrbit)}
           onBeaconEnter={({ title, message }) => {
             if (beaconDismissed) return;
             setBeaconPopup({ open: true, title, message });
@@ -164,12 +178,14 @@ export default function App(): JSX.Element {
             setBeaconDismissed(false);
           }}
         />
-        <OrbitControls
-          makeDefault
-          enablePan={false}
-          minDistance={5.5}
-          maxDistance={14}
-        />
+        {isDev && useOrbit && (
+          <OrbitControls
+            makeDefault
+            enablePan={false}
+            minDistance={5.5}
+            maxDistance={14}
+          />
+        )}
       </Canvas>
 
       <TopMenu />
