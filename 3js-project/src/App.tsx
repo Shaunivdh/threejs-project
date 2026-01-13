@@ -8,7 +8,7 @@ import linkedinIcon from "./assets/icons/linkedin.svg";
 import githubIcon from "./assets/icons/github.svg";
 import mailIcon from "./assets/icons/mail.svg";
 
-const FOLLOW_IN_DEV = false;
+const FOLLOW_IN_DEV = true;
 
 function TopMenu(): JSX.Element {
   return (
