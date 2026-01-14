@@ -15,8 +15,6 @@ import linkedinIcon from "./assets/icons/linkedin.svg";
 import githubIcon from "./assets/icons/github.svg";
 import mailIcon from "./assets/icons/mail.svg";
 
-const FOLLOW_IN_DEV = true;
-
 const TopMenu = memo(function TopMenu(): JSX.Element {
   return (
     <div className="hud" aria-label="Social links">
@@ -139,10 +137,10 @@ export default function App(): JSX.Element {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [isDev]);
 
-  const follow = useMemo(
-    () => import.meta.env.PROD || (FOLLOW_IN_DEV && !useOrbit),
-    [useOrbit]
-  );
+  const follow = useMemo(() => {
+    if (!isDev) return true;
+    return !useOrbit;
+  }, [isDev, useOrbit]);
 
   const handleTipClose = useCallback(() => {
     setShowTipPopup(false);
