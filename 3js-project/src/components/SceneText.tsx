@@ -29,7 +29,7 @@ export default function SceneText({
   return (
     <group ref={group} position={position} rotation={rotation} scale={scale}>
       <Text3D
-        font="public/fonts/englebert-medium.typeface.json"
+        font="fonts/englebert-medium.typeface.json"
         size={0.35}
         height={0.12}
         curveSegments={16}
