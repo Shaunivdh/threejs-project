@@ -26,14 +26,17 @@ export default function SceneText({
     });
   }, []);
 
+  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
   return (
     <group ref={group} position={position} rotation={rotation} scale={scale}>
+      const isMobile = /Mobi|Android/i.test(navigator.userAgent);
       <Text3D
         font="fonts/englebert-medium.typeface.json"
         size={0.35}
         height={0.12}
-        curveSegments={16}
-        bevelEnabled
+        curveSegments={isMobile ? 24 : 16}
+        bevelEnabled={!isMobile}
         bevelThickness={0.012}
         bevelSize={0.006}
         bevelSegments={4}

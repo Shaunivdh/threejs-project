@@ -205,9 +205,9 @@ export default function App(): JSX.Element {
   return (
     <div className="app">
       <Canvas
+        dpr={Math.min(window.devicePixelRatio, 2)}
         className="r3f-canvas"
         shadows
-        dpr={[1, 1.75]}
         gl={{
           antialias: true,
           alpha: true,

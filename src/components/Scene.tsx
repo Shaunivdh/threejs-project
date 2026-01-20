@@ -9,7 +9,6 @@ import {
   HueSaturation,
   BrightnessContrast,
   ToneMapping,
-  Noise,
 } from "@react-three/postprocessing";
 import { ToneMappingMode } from "postprocessing";
 import Platform from "./Platform";
@@ -115,6 +114,8 @@ export default function Scene({
     smoothedLook.current.lerp(desiredLook.current, k);
     camera.lookAt(smoothedLook.current);
   });
+
+  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
 
   return (
     <>
@@ -280,18 +281,18 @@ export default function Scene({
         <Fence position={[1.81, -0.15, 3.7]} />
       </Suspense>
 
-      <EffectComposer multisampling={0}>
+      <EffectComposer multisampling={2}>
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
         <HueSaturation saturation={0.02} hue={0.0} />
         <BrightnessContrast brightness={-0.03} contrast={0.18} />
         <Bloom
           mipmapBlur
-          intensity={0.12}
-          luminanceThreshold={0.78}
+          intensity={isMobile ? 0.06 : 0.12}
+          luminanceThreshold={isMobile ? 0.85 : 0.78}
           luminanceSmoothing={0.25}
         />
+
         <Vignette eskil={false} offset={0.2} darkness={0.55} />
-        <Noise opacity={0.03} />
       </EffectComposer>
     </>
   );
