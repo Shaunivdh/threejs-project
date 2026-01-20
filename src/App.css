@@ -137,8 +137,7 @@ canvas {
 }
 
 .popup--toast,
-.popup--modal,
-.popup__close {
+.popup--modal {
   background: rgba(255, 255, 255, 0.22);
   border: 1px solid rgba(255, 255, 255, 0.32);
   backdrop-filter: blur(18px) saturate(180%);
@@ -223,17 +222,22 @@ canvas {
 .popup__close {
   width: 28px;
   height: 28px;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   display: grid;
   place-items: center;
   font-size: 18px;
+  line-height: 1;
+  padding: 0;
   color: rgb(18, 18, 18);
   cursor: pointer;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.45);
   transition: transform 140ms ease, background 140ms ease, box-shadow 140ms ease;
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.28);
 }
 
 .popup__close:hover {
