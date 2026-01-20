@@ -1,9 +1,11 @@
 import { Clouds, Cloud } from "@react-three/drei";
 
 export default function CloudBackground() {
+  if (typeof window !== "undefined" && window.innerWidth < 768) return null;
+
   return (
     <group renderOrder={10}>
-      <Clouds frustumCulled={true}>
+      <Clouds frustumCulled>
         <Cloud
           position={[-12, 1.9, -14]}
           scale={0.66}

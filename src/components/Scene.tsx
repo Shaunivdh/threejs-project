@@ -290,9 +290,10 @@ export default function Scene({
         <BrightnessContrast brightness={-0.03} contrast={0.18} />
         <Bloom
           mipmapBlur
-          intensity={isMobile ? 0.06 : 0.12}
-          luminanceThreshold={isMobile ? 0.85 : 0.78}
-          luminanceSmoothing={0.25}
+          intensity={isMobile ? 0.18 : 0.12}
+          luminanceThreshold={isMobile ? 0.65 : 0.78}
+          luminanceSmoothing={isMobile ? 0.4 : 0.25}
+          levels={isMobile ? 6 : 8}
         />
 
         <Vignette eskil={false} offset={0.2} darkness={0.55} />

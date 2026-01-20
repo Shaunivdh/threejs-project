@@ -222,7 +222,10 @@ export default function App(): JSX.Element {
           depth: true,
         }}
         camera={{ position: [5.2, 4.4, 4.0], fov: 38, near: 0.1, far: 80 }}
-        onCreated={handleCanvasCreated}
+        onCreated={({ gl }) => {
+          gl.setClearColor(0x000000, 0);
+          gl.clearDepth();
+        }}
       >
         <Scene
           follow={follow}
