@@ -8,7 +8,6 @@ import React, {
 } from "react";
 import { Canvas, type RootState } from "@react-three/fiber";
 import { NoToneMapping, PCFSoftShadowMap, SRGBColorSpace } from "three";
-import { OrbitControls } from "@react-three/drei";
 import Scene from "./components/Scene";
 import "./App.css";
 import linkedinIcon from "./assets/icons/linkedin.svg";
@@ -179,6 +178,8 @@ export default function App(): JSX.Element {
     gl.setClearColor(0xffffff, 0);
   }, []);
 
+  const isMobile = useMemo(() => /Mobi|Android/i.test(navigator.userAgent), []);
+
   const tipMessage = useMemo(
     () => (
       <div className="popup__intro">
@@ -186,13 +187,18 @@ export default function App(): JSX.Element {
 
         <ul>
           <li>
-            🖱 <strong>Drag</strong> to rotate
+            🖱 <strong>Drag</strong> to rotate (desktop)
           </li>
           <li>
-            🔍 <strong>Scroll</strong> to zoom
+            🔍 <strong>Scroll</strong> to zoom (desktop)
           </li>
           <li>
             ⌨️ <strong>WASD</strong> or <strong>Arrow keys</strong> to move
+            (desktop)
+          </li>
+          <li>
+            📱 <strong>Touch</strong> &amp; <strong>drag</strong> to fly
+            (mobile)
           </li>
         </ul>
 
@@ -222,16 +228,8 @@ export default function App(): JSX.Element {
           follow={follow}
           onBeaconEnter={handleBeaconEnter}
           onBeaconExit={handleBeaconExit}
+          inputMode={isMobile ? "touch" : "keyboard"}
         />
-
-        {isDev && useOrbit && (
-          <OrbitControls
-            makeDefault
-            enablePan={false}
-            minDistance={5.5}
-            maxDistance={14}
-          />
-        )}
       </Canvas>
 
       <TopMenu />

@@ -6,10 +6,12 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-type AirplaneProps = JSX.IntrinsicElements["group"];
+type AirplaneProps = JSX.IntrinsicElements["group"] & {
+  inputMode?: "keyboard" | "touch";
+};
 
 const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
-  props,
+  { inputMode = "keyboard", ...props },
   ref
 ) {
   const root = useNormalizedGLTF("/models/paper_airplane.glb", {
@@ -17,6 +19,7 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
     sitOnGround: true,
   });
   useAutoShadows(root);
+
   useEffect(() => {
     root.traverse((obj: THREE.Object3D) => {
       if (!(obj instanceof THREE.Mesh)) return;
@@ -46,6 +49,11 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
   const velocity = useRef(new THREE.Vector3(0, 0, 0));
   const keysPressed = useRef<Set<string>>(new Set());
 
+  const touchActive = useRef(false);
+  const touchId = useRef<number | null>(null);
+  const touchStart = useRef({ x: 0, y: 0 });
+  const touchDelta = useRef({ x: 0, y: 0 });
+
   const MIN_X = -3.8;
   const MAX_X = 3.8;
   const MIN_Z = -3.0;
@@ -56,6 +64,8 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
   const didInitRef = useRef(false);
 
   useEffect(() => {
+    if (inputMode !== "keyboard") return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       keysPressed.current.add(e.key.toLowerCase());
     };
@@ -71,7 +81,55 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, []);
+  }, [inputMode]);
+
+  useEffect(() => {
+    if (inputMode !== "touch") return;
+
+    const el = document.querySelector(".r3f-canvas") as HTMLElement | null;
+    if (!el) return;
+
+    const onPointerDown = (e: PointerEvent) => {
+      if (touchActive.current) return;
+      touchActive.current = true;
+      touchId.current = e.pointerId;
+      touchStart.current = { x: e.clientX, y: e.clientY };
+      touchDelta.current = { x: 0, y: 0 };
+      el.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (!touchActive.current) return;
+      if (touchId.current !== e.pointerId) return;
+
+      touchDelta.current = {
+        x: e.clientX - touchStart.current.x,
+        y: e.clientY - touchStart.current.y,
+      };
+      e.preventDefault();
+    };
+
+    const end = (e: PointerEvent) => {
+      if (touchId.current !== e.pointerId) return;
+      touchActive.current = false;
+      touchId.current = null;
+      touchDelta.current = { x: 0, y: 0 };
+      e.preventDefault();
+    };
+
+    el.addEventListener("pointerdown", onPointerDown, { passive: false });
+    el.addEventListener("pointermove", onPointerMove, { passive: false });
+    el.addEventListener("pointerup", end, { passive: false });
+    el.addEventListener("pointercancel", end, { passive: false });
+
+    return () => {
+      el.removeEventListener("pointerdown", onPointerDown);
+      el.removeEventListener("pointermove", onPointerMove);
+      el.removeEventListener("pointerup", end);
+      el.removeEventListener("pointercancel", end);
+    };
+  }, [inputMode]);
 
   useFrame((_, dt) => {
     const g = groupRef.current;
@@ -155,17 +213,28 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
     const PITCH_STRENGTH = 0.16;
     const PITCH_LERP = 0.1;
 
-    const kp = keysPressed.current;
+    let inputX = 0;
+    let inputZ = 0;
 
-    const left = kp.has("a") || kp.has("arrowleft");
-    const right = kp.has("d") || kp.has("arrowright");
-    const steer = (right ? 1 : 0) - (left ? 1 : 0);
+    if (inputMode === "keyboard") {
+      const kp = keysPressed.current;
+      if (kp.has("w") || kp.has("arrowup")) inputZ -= 1;
+      if (kp.has("s") || kp.has("arrowdown")) inputZ += 1;
+      if (kp.has("a") || kp.has("arrowleft")) inputX -= 1;
+      if (kp.has("d") || kp.has("arrowright")) inputX += 1;
+    } else {
+      const dx = touchDelta.current.x;
+      const dy = touchDelta.current.y;
 
-    if (kp.has("w") || kp.has("arrowup")) velocity.current.z -= SPEED * delta;
-    if (kp.has("s") || kp.has("arrowdown")) velocity.current.z += SPEED * delta;
-    if (kp.has("a") || kp.has("arrowleft")) velocity.current.x -= SPEED * delta;
-    if (kp.has("d") || kp.has("arrowright"))
-      velocity.current.x += SPEED * delta;
+      const nx = THREE.MathUtils.clamp(dx / 140, -1, 1);
+      const nz = THREE.MathUtils.clamp(dy / 140, -1, 1);
+
+      inputX = nx;
+      inputZ = nz;
+    }
+
+    velocity.current.x += inputX * SPEED * delta;
+    velocity.current.z += inputZ * SPEED * delta;
 
     velocity.current.multiplyScalar(DAMPING);
 
@@ -179,6 +248,16 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
     g.position.z = THREE.MathUtils.clamp(g.position.z, MIN_Z, MAX_Z);
 
     const speedSq = velocity.current.lengthSq();
+
+    const steer =
+      inputMode === "keyboard"
+        ? (keysPressed.current.has("d") || keysPressed.current.has("arrowright")
+            ? 1
+            : 0) -
+          (keysPressed.current.has("a") || keysPressed.current.has("arrowleft")
+            ? 1
+            : 0)
+        : THREE.MathUtils.clamp(inputX, -1, 1);
 
     if (speedSq > 0.000001) {
       const heading = Math.atan2(velocity.current.x, velocity.current.z);

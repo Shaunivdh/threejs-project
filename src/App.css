@@ -41,6 +41,7 @@ canvas {
 
 .r3f-canvas {
   position: fixed;
+  touch-action: none;
   inset: 0;
   width: 100vw;
   height: calc(var(--vh, 1vh) * 100);

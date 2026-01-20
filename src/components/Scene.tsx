@@ -48,12 +48,14 @@ export type SceneProps = {
   follow?: boolean;
   onBeaconEnter?: (payload: { title: string; message: string }) => void;
   onBeaconExit?: () => void;
+  inputMode?: "keyboard" | "touch";
 };
 
 export default function Scene({
   follow = true,
   onBeaconEnter,
   onBeaconExit,
+  inputMode = "keyboard",
 }: SceneProps) {
   const airplaneRef = useRef<THREE.Group>(null!);
 
@@ -250,6 +252,7 @@ export default function Scene({
           ref={airplaneRef}
           position={[-1.1, 0.75, -0.6]}
           rotation={[0, 0, 0]}
+          inputMode={inputMode}
         />
         <group position={[-0.9, -0.17, 0.9]} rotation={[0, 0.9, 0]}>
           <SceneText
