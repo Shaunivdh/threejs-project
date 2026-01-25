@@ -299,7 +299,10 @@ canvas {
   width: 100%;
   background-repeat: repeat-x;
   background-position: 0 0;
-  background-size: auto 100%;
+
+  /* match the SVG's 1200/400 = 3:1 ratio */
+  --tileW: calc(45vh * 3);
+  background-size: var(--tileW) 100%;
 }
 
 .clouds__bg--far {
@@ -325,7 +328,7 @@ canvas {
     background-position-x: 0;
   }
   to {
-    background-position-x: -2400px;
+    background-position-x: calc(var(--tileW) * -1);
   }
 }
 
