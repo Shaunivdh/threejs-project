@@ -177,8 +177,8 @@ canvas {
 
 .popup--modal {
   position: relative;
-  width: min(70vw, 960px);
-  height: min(70vh, 720px);
+  width: min(50vw, 960px);
+  height: min(50vw, 720px);
   padding: 26px 30px;
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.26);
@@ -190,6 +190,22 @@ canvas {
     inset 0 1px 0 rgba(255, 255, 255, 0.55);
   display: flex;
   flex-direction: column;
+}
+
+@media (max-width: 1024px) {
+  .popup--modal {
+    width: min(78vw, 720px);
+    max-height: 75vh;
+    padding: 22px 22px;
+  }
+}
+
+@media (max-width: 520px) {
+  .popup--modal {
+    width: 80vw;
+    height: 50vh;
+    padding: 16px 16px;
+  }
 }
 
 .popup--toast::before,
@@ -299,8 +315,6 @@ canvas {
   width: 100%;
   background-repeat: repeat-x;
   background-position: 0 0;
-
-  /* match the SVG's 1200/400 = 3:1 ratio */
   --tileW: calc(45vh * 3);
   background-size: var(--tileW) 100%;
 }
@@ -463,17 +477,9 @@ canvas {
   padding-right: 6px;
 }
 
-@media (max-width: 520px) {
-  .popup--modal {
-    width: min(92vw, 960px);
-    height: min(78vh, 720px);
-    padding: 18px 16px;
-  }
-
-  .popup__title {
-    font-size: 1.25rem;
-    margin-bottom: 10px;
-  }
+.popup__title {
+  font-size: 1.25rem;
+  margin-bottom: 10px;
 }
 
 @media (max-width: 520px) {
