@@ -206,6 +206,10 @@ export default function App(): JSX.Element {
     [isMobile],
   );
 
+  const handleAirplaneMoveStart = useCallback(() => {
+    setShowTipPopup(false);
+  }, []);
+
   return (
     <div className="app">
       <CloudOverlay />
@@ -233,6 +237,7 @@ export default function App(): JSX.Element {
           onBeaconEnter={handleBeaconEnter}
           onBeaconExit={handleBeaconExit}
           inputMode={isMobile ? "touch" : "keyboard"}
+          onAirplaneMoveStart={handleAirplaneMoveStart}
         />
       </Canvas>
 

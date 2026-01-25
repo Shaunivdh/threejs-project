@@ -8,11 +8,12 @@ import * as THREE from "three";
 
 type AirplaneProps = JSX.IntrinsicElements["group"] & {
   inputMode?: "keyboard" | "touch";
+  onMoveStart?: () => void;
 };
 
 const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
-  { inputMode = "keyboard", ...props },
-  ref
+  { inputMode = "keyboard", onMoveStart, ...props },
+  ref,
 ) {
   const root = useNormalizedGLTF("/models/paper_airplane.glb", {
     targetHeight: 0.05,
@@ -62,6 +63,8 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
   const restPosRef = useRef(new THREE.Vector3(0, 0.75, 0));
   const restRotRef = useRef(new THREE.Euler(0, 0, 0));
   const didInitRef = useRef(false);
+
+  const movedOnceRef = useRef(false);
 
   useEffect(() => {
     if (inputMode !== "keyboard") return;
@@ -141,25 +144,25 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
 
     if (!didInitRef.current) {
       const px = Array.isArray(props.position)
-        ? props.position[0] ?? 0
+        ? (props.position[0] ?? 0)
         : g.position.x;
       const py = Array.isArray(props.position)
-        ? props.position[1] ?? 0.75
+        ? (props.position[1] ?? 0.75)
         : g.position.y;
       const pz = Array.isArray(props.position)
-        ? props.position[2] ?? 0
+        ? (props.position[2] ?? 0)
         : g.position.z;
 
       restPosRef.current.set(px, py, pz);
 
       const rx = Array.isArray(props.rotation)
-        ? props.rotation[0] ?? 0
+        ? (props.rotation[0] ?? 0)
         : g.rotation.x;
       const ry = Array.isArray(props.rotation)
-        ? props.rotation[1] ?? 0
+        ? (props.rotation[1] ?? 0)
         : g.rotation.y;
       const rz = Array.isArray(props.rotation)
-        ? props.rotation[2] ?? 0
+        ? (props.rotation[2] ?? 0)
         : g.rotation.z;
 
       restRotRef.current.set(rx, ry, rz);
@@ -241,13 +244,18 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
     const len = velocity.current.length();
     if (len > MAX_VEL) velocity.current.multiplyScalar(MAX_VEL / len);
 
+    const speedSq = velocity.current.lengthSq();
+    const hasInput = Math.abs(inputX) + Math.abs(inputZ) > 0.001;
+    if (!movedOnceRef.current && hasInput && speedSq > 0.00001) {
+      movedOnceRef.current = true;
+      onMoveStart?.();
+    }
+
     g.position.x += velocity.current.x;
     g.position.z += velocity.current.z;
 
     g.position.x = THREE.MathUtils.clamp(g.position.x, MIN_X, MAX_X);
     g.position.z = THREE.MathUtils.clamp(g.position.z, MIN_Z, MAX_Z);
-
-    const speedSq = velocity.current.lengthSq();
 
     const steer =
       inputMode === "keyboard"
@@ -265,12 +273,12 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
       v.rotation.z = THREE.MathUtils.lerp(
         v.rotation.z,
         steer * BANK_MAX,
-        BANK_LERP
+        BANK_LERP,
       );
       v.rotation.x = THREE.MathUtils.lerp(
         v.rotation.x,
         -velocity.current.z * PITCH_STRENGTH,
-        PITCH_LERP
+        PITCH_LERP,
       );
     } else {
       v.rotation.z = THREE.MathUtils.lerp(v.rotation.z, 0, 0.1);
