@@ -180,27 +180,30 @@ export default function App(): JSX.Element {
       <div className="popup__intro">
         <p>Explore my interactive portfolio.</p>
 
-        <ul>
-          <li>
-            🖱 <strong>Drag</strong> to rotate (desktop)
-          </li>
-          <li>
-            🔍 <strong>Scroll</strong> to zoom (desktop)
-          </li>
-          <li>
-            ⌨️ <strong>WASD</strong> or <strong>Arrow keys</strong> to move
-            (desktop)
-          </li>
-          <li>
-            📱 <strong>Touch</strong> &amp; <strong>drag</strong> to fly
-            (mobile)
-          </li>
-        </ul>
+        {isMobile ? (
+          <ul>
+            <li>
+              📱 <strong>Touch</strong> &amp; <strong>drag</strong> to fly
+            </li>
+          </ul>
+        ) : (
+          <ul>
+            <li>
+              🖱 <strong>Drag</strong> to rotate
+            </li>
+            <li>
+              🔍 <strong>Scroll</strong> to zoom
+            </li>
+            <li>
+              ⌨️ <strong>WASD</strong> or <strong>Arrow keys</strong> to move
+            </li>
+          </ul>
+        )}
 
         <p>Look out for glowing beacons to discover more.</p>
       </div>
     ),
-    [],
+    [isMobile],
   );
 
   return (

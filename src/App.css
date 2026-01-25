@@ -475,3 +475,15 @@ canvas {
     margin-bottom: 10px;
   }
 }
+
+@media (max-width: 520px) {
+  .popup.popup--toast {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+
+    width: auto;
+    max-width: none;
+    transform: none;
+  }
+}
