@@ -49,7 +49,7 @@ canvas {
   width: 100vw;
   height: 100dvh;
   display: block;
-  z-index: 0;
+  z-index: 1;
 }
 
 .r3f-canvas canvas {
@@ -86,7 +86,8 @@ canvas {
   backdrop-filter: blur(18px) saturate(180%);
   -webkit-backdrop-filter: blur(18px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.32);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
@@ -118,9 +119,13 @@ canvas {
   text-decoration: none;
   background: rgba(255, 255, 255, 0.18);
   border: 1px solid rgba(255, 255, 255, 0.28);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08),
+  box-shadow:
+    0 6px 14px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.45);
-  transition: transform 140ms ease, background 140ms ease, box-shadow 140ms ease;
+  transition:
+    transform 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease;
 }
 
 .hud__icon img {
@@ -132,7 +137,8 @@ canvas {
 .hud__icon:hover {
   transform: translateY(-1px);
   background: rgba(255, 255, 255, 0.28);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12),
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
@@ -154,7 +160,8 @@ canvas {
   max-width: min(360px, calc(100vw - 32px));
   padding: 14px 16px;
   border-radius: 18px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14),
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.14),
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
@@ -178,7 +185,8 @@ canvas {
   border-color: rgba(255, 255, 255, 0.34);
   backdrop-filter: blur(22px) saturate(180%);
   -webkit-backdrop-filter: blur(22px) saturate(180%);
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.28),
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.55);
   display: flex;
   flex-direction: column;
@@ -235,15 +243,20 @@ canvas {
   border: 1px solid rgba(255, 255, 255, 0.28);
   backdrop-filter: blur(18px) saturate(180%);
   -webkit-backdrop-filter: blur(18px) saturate(180%);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08),
+  box-shadow:
+    0 6px 14px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.45);
-  transition: transform 140ms ease, background 140ms ease, box-shadow 140ms ease;
+  transition:
+    transform 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease;
 }
 
 .popup__close:hover {
   transform: translateY(-1px);
   background: rgba(255, 255, 255, 0.26);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12),
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
@@ -268,5 +281,56 @@ canvas {
   .hud__icon img {
     width: 17px;
     height: 17px;
+  }
+}
+.clouds {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.clouds__bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 45vh;
+  width: 100%;
+  background-repeat: repeat-x;
+  background-position: 0 0;
+  background-size: auto 100%;
+}
+
+.clouds__bg--far {
+  top: 2vh;
+  opacity: 0.85;
+  animation: drift-bg 45s linear infinite;
+}
+
+.clouds__bg--mid {
+  top: 10vh;
+  opacity: 0.75;
+  animation: drift-bg 35s linear infinite;
+}
+
+.clouds__bg--near {
+  top: 18vh;
+  opacity: 0.65;
+  animation: drift-bg 25s linear infinite;
+}
+
+@keyframes drift-bg {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: -2400px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clouds__bg {
+    animation: none;
   }
 }

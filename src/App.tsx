@@ -9,6 +9,7 @@ import React, {
 import { Canvas, type RootState } from "@react-three/fiber";
 import { NoToneMapping, PCFSoftShadowMap, SRGBColorSpace } from "three";
 import Scene from "./components/Scene";
+import { CloudOverlay } from "./components/CloudOverlay";
 import "./App.css";
 import linkedinIcon from "./assets/icons/linkedin.svg";
 import githubIcon from "./assets/icons/github.svg";
@@ -150,7 +151,7 @@ export default function App(): JSX.Element {
       if (beaconDismissed) return;
       setBeaconPopup({ open: true, title, message });
     },
-    [beaconDismissed]
+    [beaconDismissed],
   );
 
   const handleBeaconExit = useCallback(() => {
@@ -205,11 +206,14 @@ export default function App(): JSX.Element {
         <p>Look out for glowing beacons to discover more.</p>
       </div>
     ),
-    []
+    [],
   );
 
   return (
     <div className="app">
+      {/* Lightweight DOM clouds behind the transparent WebGL canvas */}
+      <CloudOverlay />
+
       <Canvas
         dpr={Math.min(window.devicePixelRatio, 2)}
         className="r3f-canvas"
@@ -222,9 +226,10 @@ export default function App(): JSX.Element {
           depth: true,
         }}
         camera={{ position: [5.2, 4.4, 4.0], fov: 38, near: 0.1, far: 80 }}
-        onCreated={({ gl }) => {
-          gl.setClearColor(0x000000, 0);
-          gl.clearDepth();
+        onCreated={(state) => {
+          handleCanvasCreated(state);
+          state.gl.setClearColor(0x000000, 0);
+          state.gl.clearDepth();
         }}
       >
         <Scene

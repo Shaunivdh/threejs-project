@@ -36,7 +36,6 @@ import GrassPatches from "./GrassPatch";
 import Airplane from "./waypoints/Airplane";
 import Montsera from "./brighton/Montsera";
 import FlightWaypoints from "./waypoints/FlightWaypoints";
-import CloudBackground from "./experience/CloudBackground";
 import Plant from "./Plant";
 import Daisy from "./Daisy";
 import Rose from "./Rose";
@@ -95,13 +94,13 @@ export default function Scene({
     desiredCam.current.set(
       baseCam.current.x + dx * (parallax.current.x * frameBoost),
       baseCam.current.y + dy * (parallax.current.y * frameBoost),
-      baseCam.current.z + dz * (parallax.current.z * frameBoost)
+      baseCam.current.z + dz * (parallax.current.z * frameBoost),
     );
 
     desiredLook.current.set(
       baseLook.current.x + dx * (lookParallax.current.x * frameBoost),
       baseLook.current.y + dy * (lookParallax.current.y * frameBoost),
-      baseLook.current.z + dz * (lookParallax.current.z * frameBoost)
+      baseLook.current.z + dz * (lookParallax.current.z * frameBoost),
     );
 
     const currentDist = camera.position.distanceTo(smoothedLook.current);
@@ -143,7 +142,6 @@ export default function Scene({
       <ambientLight intensity={0.12} color="#ffffff" />
 
       <Environment preset="sunset" environmentIntensity={0.38} />
-      <CloudBackground />
       <Suspense fallback={null}>
         <FlightWaypoints
           airplaneRef={airplaneRef}
