@@ -14,8 +14,13 @@ import "./App.css";
 import linkedinIcon from "./assets/icons/linkedin.svg";
 import githubIcon from "./assets/icons/github.svg";
 import mailIcon from "./assets/icons/mail.svg";
+import ContactForm from "./components/forms/ContactForm";
 
-const TopMenu = memo(function TopMenu(): JSX.Element {
+const TopMenu = memo(function TopMenu({
+  onEmailClick,
+}: {
+  onEmailClick: () => void;
+}): JSX.Element {
   return (
     <div className="hud" aria-label="Social links">
       <div className="hud__actions" aria-label="Social links">
@@ -41,14 +46,15 @@ const TopMenu = memo(function TopMenu(): JSX.Element {
           <img src={githubIcon} alt="" aria-hidden="true" />
         </a>
 
-        <a
-          href="mailto:youremail@example.com"
-          className="hud__icon"
+        <button
+          type="button"
+          className="hud__icon hud__icon--button"
           aria-label="Email"
           title="Email"
+          onClick={onEmailClick}
         >
           <img src={mailIcon} alt="" aria-hidden="true" />
-        </a>
+        </button>
       </div>
     </div>
   );
@@ -69,7 +75,7 @@ const Popup = memo(function Popup({
 }: PopupProps): JSX.Element {
   if (variant === "modal") {
     return (
-      <div className="popup-overlay">
+      <div className="popup-overlay" role="dialog" aria-modal="true">
         <div className="popup popup--modal">
           {title && <div className="popup__title">{title}</div>}
           <div className="popup__message">{message}</div>
@@ -104,21 +110,14 @@ const Popup = memo(function Popup({
   );
 });
 
-type BeaconPopupState = {
-  open: boolean;
-  title: string;
-  message: string;
-};
-
+type BeaconPopupState = { open: boolean; title: string; message: string };
 const EMPTY_BEACON: BeaconPopupState = { open: false, title: "", message: "" };
-
-type BeaconPayload = {
-  title: string;
-  message: string;
-};
+type BeaconPayload = { title: string; message: string };
 
 export default function App(): JSX.Element {
   const isDev = import.meta.env.DEV;
+
+  const [contactOpen, setContactOpen] = useState(false); // <-- NEW
 
   const [showTipPopup, setShowTipPopup] = useState(true);
   const [beaconPopup, setBeaconPopup] =
@@ -131,20 +130,16 @@ export default function App(): JSX.Element {
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.code === "KeyO") setUseOrbit((v) => !v);
+      if (e.code === "Escape") setContactOpen(false);
     };
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [isDev]);
 
-  const follow = useMemo(() => {
-    if (!isDev) return true;
-    return !useOrbit;
-  }, [isDev, useOrbit]);
+  const follow = useMemo(() => (!isDev ? true : !useOrbit), [isDev, useOrbit]);
 
-  const handleTipClose = useCallback(() => {
-    setShowTipPopup(false);
-  }, []);
+  const handleTipClose = useCallback(() => setShowTipPopup(false), []);
 
   const handleBeaconEnter = useCallback(
     ({ title, message }: BeaconPayload) => {
@@ -166,7 +161,6 @@ export default function App(): JSX.Element {
 
   const handleCanvasCreated = useCallback((state: RootState) => {
     const { gl, scene } = state;
-
     scene.background = null;
 
     gl.shadowMap.enabled = true;
@@ -211,7 +205,6 @@ export default function App(): JSX.Element {
 
   return (
     <div className="app">
-      {/* Lightweight DOM clouds behind the transparent WebGL canvas */}
       <CloudOverlay />
 
       <Canvas
@@ -240,7 +233,7 @@ export default function App(): JSX.Element {
         />
       </Canvas>
 
-      <TopMenu />
+      <TopMenu onEmailClick={() => setContactOpen(true)} />
 
       {showTipPopup && (
         <Popup
@@ -257,6 +250,15 @@ export default function App(): JSX.Element {
           title={beaconPopup.title}
           message={beaconPopup.message}
           onClose={handleBeaconClose}
+        />
+      )}
+
+      {contactOpen && (
+        <Popup
+          variant="modal"
+          title="Send me a message"
+          message={<ContactForm onClose={() => setContactOpen(false)} />}
+          onClose={() => setContactOpen(false)}
         />
       )}
     </div>
