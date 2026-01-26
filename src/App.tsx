@@ -1,5 +1,6 @@
 import React, {
   memo,
+  Suspense,
   useCallback,
   useEffect,
   useMemo,
@@ -15,6 +16,7 @@ import linkedinIcon from "./assets/icons/linkedin.svg";
 import githubIcon from "./assets/icons/github.svg";
 import mailIcon from "./assets/icons/mail.svg";
 import ContactForm from "./components/forms/ContactForm";
+import SceneLoader from "./components/SceneLoader";
 
 const TopMenu = memo(function TopMenu({
   onEmailClick,
@@ -236,13 +238,15 @@ export default function App(): JSX.Element {
           state.gl.clearDepth();
         }}
       >
-        <Scene
-          follow={follow}
-          onBeaconEnter={handleBeaconEnter}
-          onBeaconExit={handleBeaconExit}
-          inputMode={isMobile ? "touch" : "keyboard"}
-          onAirplaneMoveStart={handleAirplaneMoveStart}
-        />
+        <Suspense fallback={<SceneLoader />}>
+          <Scene
+            follow={follow}
+            onBeaconEnter={handleBeaconEnter}
+            onBeaconExit={handleBeaconExit}
+            inputMode={isMobile ? "touch" : "keyboard"}
+            onAirplaneMoveStart={handleAirplaneMoveStart}
+          />{" "}
+        </Suspense>
       </Canvas>
 
       <TopMenu onEmailClick={() => setContactOpen(true)} />

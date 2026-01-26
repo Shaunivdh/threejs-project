@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { Environment } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
@@ -151,146 +151,145 @@ export default function Scene({
       <ambientLight intensity={0.12} color="#ffffff" />
 
       <Environment preset="sunset" environmentIntensity={0.38} />
-      <Suspense fallback={null}>
-        <FlightWaypoints
-          airplaneRef={airplaneRef}
-          onBeaconEnter={onBeaconEnter}
-          onBeaconExit={onBeaconExit}
-        />
 
-        <Platform />
+      <FlightWaypoints
+        airplaneRef={airplaneRef}
+        onBeaconEnter={onBeaconEnter}
+        onBeaconExit={onBeaconExit}
+      />
 
-        <Cattail position={[-3, 0.1, -0.9]} rotation={[0, 0.7, 0]} />
-        <Tree position={[-4, 1.8, -2]} rotation={[0, Math.PI / 4, 0]} />
-        <Tree position={[-3.5, 1.8, -2.5]} />
-        <Tulip position={[-2.1, 0, -2.8]} />
-        <Tulip position={[-1.9, 0, -2.4]} />
-        <Tulip position={[-2.5, 0, -2.4]} />
-        <Tulip position={[-2.8, 0, -0.4]} />
-        <Grass position={[-4, -0.15, -0.2]} />
-        <Grass position={[1, -0.15, 2.8]} />
-        <Grass position={[3.2, -0.15, 1.2]} />
-        <Bike position={[-1.5, -0.15, -3]} rotation={[-0.4, 0, 0]} />
+      <Platform />
 
-        <Windmill position={[-2.6, -0.15, -1.5]} rotation={[0, 0.9, 0]} />
+      <Cattail position={[-3, 0.1, -0.9]} rotation={[0, 0.7, 0]} />
+      <Tree position={[-4, 1.8, -2]} rotation={[0, Math.PI / 4, 0]} />
+      <Tree position={[-3.5, 1.8, -2.5]} />
+      <Tulip position={[-2.1, 0, -2.8]} />
+      <Tulip position={[-1.9, 0, -2.4]} />
+      <Tulip position={[-2.5, 0, -2.4]} />
+      <Tulip position={[-2.8, 0, -0.4]} />
+      <Grass position={[-4, -0.15, -0.2]} />
+      <Grass position={[1, -0.15, 2.8]} />
+      <Grass position={[3.2, -0.15, 1.2]} />
+      <Bike position={[-1.5, -0.15, -3]} rotation={[-0.4, 0, 0]} />
 
-        <Menu position={[-0.9, 0.25, 2.9]} rotation={[0, 1.7, 0]} />
-        <FireHydrant position={[-3.2, -0.15, 3.1]} rotation={[0, -1.5, 0]} />
-        <Bench position={[-0.9, 0.1, 2.9]} rotation={[0, 0, 0]} />
-        <Postbox position={[-3.1, 0.45, 1.2]} rotation={[0, 1.5, 0]} />
+      <Windmill position={[-2.6, -0.15, -1.5]} rotation={[0, 0.9, 0]} />
 
-        <LoungeChair position={[2.6, 0.1, 2]} rotation={[0, 2.4, 0]} />
-        <Pots position={[1.7, -0.15, 3.5]} rotation={[0, 1.5, 0]} />
-        <Coffee position={[3.2, 0.43, 1.8]} rotation={[0, 0.5, 0]} />
-        <PalmTree position={[3.9, 0, 1.2]} rotation={[0, 1.5, 0]} />
-        <Books position={[3.2, 0.1, 1.8]} rotation={[0, 2, 0]} />
+      <Menu position={[-0.9, 0.25, 2.9]} rotation={[0, 1.7, 0]} />
+      <FireHydrant position={[-3.2, -0.15, 3.1]} rotation={[0, -1.5, 0]} />
+      <Bench position={[-0.9, 0.1, 2.9]} rotation={[0, 0, 0]} />
+      <Postbox position={[-3.1, 0.45, 1.2]} rotation={[0, 1.5, 0]} />
 
-        <Laptop position={[2.72, 0.52, -2.9]} rotation={[0, 4.7, 0]} />
-        <Corkboard position={[3.65, -0.15, -3.2]} rotation={[-0.4, 0, 0]} />
-        <Desk position={[2.5, 0.25, -3]} />
-        <Seagull position={[2.1, -0.15, -1.2]} rotation={[0, 0.5, 0]} />
-        <Montsera position={[2, 0.52, -3]} rotation={[0, -1.5, 0]} />
+      <LoungeChair position={[2.6, 0.1, 2]} rotation={[0, 2.4, 0]} />
+      <Pots position={[1.7, -0.15, 3.5]} rotation={[0, 1.5, 0]} />
+      <Coffee position={[3.2, 0.43, 1.8]} rotation={[0, 0.5, 0]} />
+      <PalmTree position={[3.9, 0, 1.2]} rotation={[0, 1.5, 0]} />
+      <Books position={[3.2, 0.1, 1.8]} rotation={[0, 2, 0]} />
 
-        <Plant position={[-3.9, -0.15, 1.7]} rotation={[0, 1.2, 0]} />
-        <Daisy position={[-2.7, -0.15, 0.5]} />
-        <Daisy position={[1, -0.15, 1.8]} />
-        <Daisy position={[1.7, -0.15, -1.7]} />
-        <Rose position={[-2, 0.15, 1]} />
-        <Rose position={[3.2, 0.15, 1]} />
-        <Rose position={[-2, 0.15, 1]} />
+      <Laptop position={[2.72, 0.52, -2.9]} rotation={[0, 4.7, 0]} />
+      <Corkboard position={[3.65, -0.15, -3.2]} rotation={[-0.4, 0, 0]} />
+      <Desk position={[2.5, 0.25, -3]} />
+      <Seagull position={[2.1, -0.15, -1.2]} rotation={[0, 0.5, 0]} />
+      <Montsera position={[2, 0.52, -3]} rotation={[0, -1.5, 0]} />
 
-        <RoseBush position={[-3.8, -0.31, 0.3]} />
-        <RoseBush position={[1.2, -0.31, 3.2]} />
-        <RoseBush position={[3.7, -0.31, -1.7]} />
-        <Marigold position={[-0.8, -0.15, 2]} />
-        <Marigold position={[0.1, -0.15, -0.3]} />
+      <Plant position={[-3.9, -0.15, 1.7]} rotation={[0, 1.2, 0]} />
+      <Daisy position={[-2.7, -0.15, 0.5]} />
+      <Daisy position={[1, -0.15, 1.8]} />
+      <Daisy position={[1.7, -0.15, -1.7]} />
+      <Rose position={[-2, 0.15, 1]} />
+      <Rose position={[3.2, 0.15, 1]} />
+      <Rose position={[-2, 0.15, 1]} />
 
-        <GrassPatches
-          patches={[
-            {
-              key: "grass1",
-              position: [1.6, -0.15, -0.4],
-              rotation: [0, -Math.PI / 2.25, 0],
-              count: 10,
-              radius: 0.6,
-              scaleRange: [0.85, 1.2],
-              rotationJitter: Math.PI * 1.2,
-            },
-            {
-              key: "grass2",
-              position: [-1.1, -0.15, -2.5],
-              rotation: [0, -Math.PI / 1.25, 0],
-              count: 12,
-              radius: 0.8,
-              scaleRange: [0.8, 0.8],
-              rotationJitter: Math.PI * 1.2,
-            },
-            {
-              key: "grass3",
-              position: [-2.3, -0.15, 2.2],
-              rotation: [0, -Math.PI / 2.25, 0],
-              count: 18,
-              radius: 0.9,
-              scaleRange: [0.8, 0.8],
-              rotationJitter: Math.PI * 1.2,
-            },
-            {
-              key: "grass4",
-              position: [3.4, -0.15, 3],
-              rotation: [0, -Math.PI / 2.25, 0],
-              count: 18,
-              radius: 0.5,
-              scaleRange: [0.8, 0.8],
-              rotationJitter: Math.PI * 1.2,
-            },
-            {
-              key: "grass5",
-              position: [3.4, -0.15, -0.7],
-              rotation: [0, -Math.PI / 2.25, 0],
-              count: 11,
-              radius: 0.2,
-              scaleRange: [0.8, 0.8],
-              rotationJitter: Math.PI * 1.2,
-            },
-          ]}
-        />
+      <RoseBush position={[-3.8, -0.31, 0.3]} />
+      <RoseBush position={[1.2, -0.31, 3.2]} />
+      <RoseBush position={[3.7, -0.31, -1.7]} />
+      <Marigold position={[-0.8, -0.15, 2]} />
+      <Marigold position={[0.1, -0.15, -0.3]} />
 
-        <Airplane
-          ref={airplaneRef}
-          position={[-1.1, 0.75, -0.6]}
+      <GrassPatches
+        patches={[
+          {
+            key: "grass1",
+            position: [1.6, -0.15, -0.4],
+            rotation: [0, -Math.PI / 2.25, 0],
+            count: 10,
+            radius: 0.6,
+            scaleRange: [0.85, 1.2],
+            rotationJitter: Math.PI * 1.2,
+          },
+          {
+            key: "grass2",
+            position: [-1.1, -0.15, -2.5],
+            rotation: [0, -Math.PI / 1.25, 0],
+            count: 12,
+            radius: 0.8,
+            scaleRange: [0.8, 0.8],
+            rotationJitter: Math.PI * 1.2,
+          },
+          {
+            key: "grass3",
+            position: [-2.3, -0.15, 2.2],
+            rotation: [0, -Math.PI / 2.25, 0],
+            count: 18,
+            radius: 0.9,
+            scaleRange: [0.8, 0.8],
+            rotationJitter: Math.PI * 1.2,
+          },
+          {
+            key: "grass4",
+            position: [3.4, -0.15, 3],
+            rotation: [0, -Math.PI / 2.25, 0],
+            count: 18,
+            radius: 0.5,
+            scaleRange: [0.8, 0.8],
+            rotationJitter: Math.PI * 1.2,
+          },
+          {
+            key: "grass5",
+            position: [3.4, -0.15, -0.7],
+            rotation: [0, -Math.PI / 2.25, 0],
+            count: 11,
+            radius: 0.2,
+            scaleRange: [0.8, 0.8],
+            rotationJitter: Math.PI * 1.2,
+          },
+        ]}
+      />
+
+      <Airplane
+        ref={airplaneRef}
+        position={[-1.1, 0.75, -0.6]}
+        rotation={[0, 0, 0]}
+        inputMode={inputMode}
+        onMoveStart={onAirplaneMoveStart}
+      />
+      <group position={[-0.9, -0.17, 0.9]} rotation={[0, 0.9, 0]}>
+        <SceneText
+          text="FRONTEND DEVELOPER"
+          scale={0.4}
+          position={[0.82, 0, 0.29]}
           rotation={[0, 0, 0]}
-          inputMode={inputMode}
-          onMoveStart={onAirplaneMoveStart}
         />
-        <group position={[-0.9, -0.17, 0.9]} rotation={[0, 0.9, 0]}>
-          <SceneText
-            text="FRONTEND DEVELOPER"
-            scale={0.4}
-            position={[0.82, 0, 0.29]}
-            rotation={[0, 0, 0]}
-          />
 
-          <SceneText text="SHAUNI" position={[0, 0, 0]} rotation={[0, 0, 0]} />
-        </group>
+        <SceneText text="SHAUNI" position={[0, 0, 0]} rotation={[0, 0, 0]} />
+      </group>
 
-        <Fence position={[-3, -0.15, -3.4]} />
-        <Fence position={[-1.8, -0.15, -3.4]} />
-        <Fence position={[1.8, -0.15, -3.4]} />
-        <Fence position={[3, -0.15, -3.4]} />
+      <Fence position={[-3, -0.15, -3.4]} />
+      <Fence position={[-1.8, -0.15, -3.4]} />
+      <Fence position={[1.8, -0.15, -3.4]} />
+      <Fence position={[3, -0.15, -3.4]} />
 
-        <Fence position={[4.2, -0.15, -2.2]} rotation={[0, 4.7, 0]} />
-        <Fence position={[4.2, -0.15, 0.16]} rotation={[0, 4.7, 0]} />
-        <Fence position={[4.2, -0.15, 2.49]} rotation={[0, 4.7, 0]} />
+      <Fence position={[4.2, -0.15, -2.2]} rotation={[0, 4.7, 0]} />
+      <Fence position={[4.2, -0.15, 0.16]} rotation={[0, 4.7, 0]} />
+      <Fence position={[4.2, -0.15, 2.49]} rotation={[0, 4.7, 0]} />
 
-        <Fence position={[-4.2, -0.15, 2.49]} rotation={[0, 4.7, 0]} />
-        <Fence position={[-4.2, -0.15, -2.2]} rotation={[0, 4.7, 0]} />
-        <Fence position={[-4.2, -0.15, 0.16]} rotation={[0, 4.7, 0]} />
+      <Fence position={[-4.2, -0.15, 2.49]} rotation={[0, 4.7, 0]} />
+      <Fence position={[-4.2, -0.15, -2.2]} rotation={[0, 4.7, 0]} />
+      <Fence position={[-4.2, -0.15, 0.16]} rotation={[0, 4.7, 0]} />
 
-        <Fence position={[3, -0.15, 3.7]} />
-        <Fence position={[-2.85, -0.15, 3.7]} />
-        <Fence position={[-0.5, -0.15, 3.7]} />
-        <Fence position={[1.81, -0.15, 3.7]} />
-      </Suspense>
+      <Fence position={[3, -0.15, 3.7]} />
+      <Fence position={[-2.85, -0.15, 3.7]} />
+      <Fence position={[-0.5, -0.15, 3.7]} />
+      <Fence position={[1.81, -0.15, 3.7]} />
 
       <EffectComposer multisampling={isMobile ? 0 : 2}>
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
