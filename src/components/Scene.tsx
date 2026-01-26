@@ -1,4 +1,4 @@
-import { Suspense, useRef } from "react";
+import { Suspense, useMemo, useRef } from "react";
 import { Environment } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
@@ -72,6 +72,9 @@ export default function Scene({
   const lookParallax = useRef(new THREE.Vector3(0.35, 0.12, 0.35));
   const stiffness = 0.06;
 
+  const tmpDir = useRef(new THREE.Vector3());
+  const tmpCam = useRef(new THREE.Vector3());
+
   useFrame(({ camera, size }, dt) => {
     if (!follow) return;
 
@@ -106,19 +109,23 @@ export default function Scene({
     );
 
     const currentDist = camera.position.distanceTo(smoothedLook.current);
-    const dir = desiredCam.current.clone().sub(desiredLook.current).normalize();
-    const zoomAwareCam = desiredLook.current
-      .clone()
-      .add(dir.multiplyScalar(currentDist));
+
+    tmpDir.current
+      .copy(desiredCam.current)
+      .sub(desiredLook.current)
+      .normalize();
+    tmpCam.current
+      .copy(desiredLook.current)
+      .addScaledVector(tmpDir.current, currentDist);
 
     const k = 1 - Math.pow(1 - stiffness, dt * 60);
-    camera.position.lerp(zoomAwareCam, k);
+    camera.position.lerp(tmpCam.current, k);
 
     smoothedLook.current.lerp(desiredLook.current, k);
     camera.lookAt(smoothedLook.current);
   });
 
-  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+  const isMobile = useMemo(() => /Mobi|Android/i.test(navigator.userAgent), []);
 
   return (
     <>
@@ -126,8 +133,8 @@ export default function Scene({
         castShadow
         position={[-10, 18, -10]}
         intensity={2.05}
-        shadow-mapSize-width={4096}
-        shadow-mapSize-height={4096}
+        shadow-mapSize-width={isMobile ? 2048 : 4096}
+        shadow-mapSize-height={isMobile ? 2048 : 4096}
         shadow-camera-near={5}
         shadow-camera-far={35}
         shadow-camera-left={-6}
@@ -285,7 +292,7 @@ export default function Scene({
         <Fence position={[1.81, -0.15, 3.7]} />
       </Suspense>
 
-      <EffectComposer multisampling={2}>
+      <EffectComposer multisampling={isMobile ? 0 : 2}>
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
         <HueSaturation saturation={0.02} hue={0.0} />
         <BrightnessContrast brightness={-0.03} contrast={0.18} />
