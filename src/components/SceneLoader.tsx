@@ -18,8 +18,6 @@ export default function SceneLoader() {
           alignItems: "center",
           justifyContent: "center",
           gap: "12px",
-          fontFamily:
-            'system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"',
         }}
       >
         <div
