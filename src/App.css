@@ -12,6 +12,7 @@ body,
     #d6b3c2 62%,
     #8fa2c9 100%
   );
+  background-color: #fff2dc;
 }
 
 :root {
@@ -19,7 +20,7 @@ body,
   line-height: 1.5;
   font-weight: 400;
   color: rgb(18, 18, 18);
-  background-color: transparent;
+  background-color: #fff2dc;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

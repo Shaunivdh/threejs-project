@@ -257,7 +257,7 @@ export default function Scene({
         />
         <group position={[-0.9, -0.17, 0.9]} rotation={[0, 0.9, 0]}>
           <SceneText
-            text="FULL STACK DEVELOPER"
+            text="FRONTEND DEVELOPER"
             scale={0.4}
             position={[0.82, 0, 0.29]}
             rotation={[0, 0, 0]}
