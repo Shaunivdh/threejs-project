@@ -217,11 +217,7 @@ export default function App(): JSX.Element {
       <CloudOverlay />
 
       <Canvas
-        dpr={
-          isMobile
-            ? Math.min(window.devicePixelRatio, 1.5)
-            : Math.min(window.devicePixelRatio, 2)
-        }
+        dpr={Math.min(window.devicePixelRatio, 2)}
         className="r3f-canvas"
         shadows
         gl={{
