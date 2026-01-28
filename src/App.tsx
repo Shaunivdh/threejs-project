@@ -221,11 +221,9 @@ export default function App(): JSX.Element {
         className="r3f-canvas"
         shadows
         gl={{
-          antialias: true,
+          antialias: false,
           alpha: true,
-          premultipliedAlpha: false,
-          powerPreference: "high-performance",
-          depth: true,
+          premultipliedAlpha: true,
         }}
         camera={{ position: [5.2, 4.4, 4.0], fov: 38, near: 0.1, far: 80 }}
         onCreated={(state) => {
