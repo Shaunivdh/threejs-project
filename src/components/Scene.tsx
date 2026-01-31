@@ -166,6 +166,9 @@ export default function Scene({
       <Tulip position={[-1.9, 0, -2.4]} />
       <Tulip position={[-2.5, 0, -2.4]} />
       <Tulip position={[-2.8, 0, -0.4]} />
+      <Tulip position={[0.5, 0, -3]} />
+      <Tulip position={[0.8, 0, -3]} />
+      <Grass position={[0.6, -0.15, -2]} />
       <Grass position={[-4, -0.15, -0.2]} />
       <Grass position={[1, -0.15, 2.8]} />
       <Grass position={[3.2, -0.15, 1.2]} />
@@ -274,6 +277,7 @@ export default function Scene({
 
       <Fence position={[-3, -0.15, -3.4]} />
       <Fence position={[-1.8, -0.15, -3.4]} />
+      <Fence position={[-0.58, -0.15, -3.4]} />
       <Fence position={[1.8, -0.15, -3.4]} />
       <Fence position={[3, -0.15, -3.4]} />
 
