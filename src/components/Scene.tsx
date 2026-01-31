@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Environment } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
@@ -49,6 +49,7 @@ export type SceneProps = {
   onBeaconExit?: () => void;
   inputMode?: "keyboard" | "touch";
   onAirplaneMoveStart?: () => void;
+  onReady?: () => void;
 };
 
 export default function Scene({
@@ -57,6 +58,7 @@ export default function Scene({
   onBeaconExit,
   inputMode = "keyboard",
   onAirplaneMoveStart,
+  onReady,
 }: SceneProps) {
   const airplaneRef = useRef<THREE.Group>(null!);
 
@@ -119,6 +121,10 @@ export default function Scene({
   });
 
   const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
+  useEffect(() => {
+    onReady?.();
+  }, [onReady]);
 
   return (
     <>

@@ -121,7 +121,9 @@ export default function App(): JSX.Element {
 
   const [contactOpen, setContactOpen] = useState(false); // <-- NEW
 
-  const [showTipPopup, setShowTipPopup] = useState(true);
+  const [sceneReady, setSceneReady] = useState(false); // <-- NEW
+  const [showTipPopup, setShowTipPopup] = useState(false); // <-- CHANGED
+
   const [beaconPopup, setBeaconPopup] =
     useState<BeaconPopupState>(EMPTY_BEACON);
   const [beaconDismissed, setBeaconDismissed] = useState(false);
@@ -212,6 +214,10 @@ export default function App(): JSX.Element {
     setShowTipPopup(false);
   }, []);
 
+  useEffect(() => {
+    if (sceneReady) setShowTipPopup(true);
+  }, [sceneReady]);
+
   return (
     <div className="app">
       <CloudOverlay />
@@ -239,13 +245,14 @@ export default function App(): JSX.Element {
             onBeaconExit={handleBeaconExit}
             inputMode={isMobile ? "touch" : "keyboard"}
             onAirplaneMoveStart={handleAirplaneMoveStart}
+            onReady={() => setSceneReady(true)}
           />{" "}
         </Suspense>
       </Canvas>
 
       <TopMenu onEmailClick={() => setContactOpen(true)} />
 
-      {showTipPopup && (
+      {sceneReady && showTipPopup && (
         <Popup
           variant="toast"
           title="Welcome to my garden 🌱"
