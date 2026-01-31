@@ -567,3 +567,64 @@ canvas {
     font-size: 0.9rem;
   }
 }
+
+.music {
+  display: grid;
+  place-items: center;
+}
+
+.music__btn {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  cursor: pointer;
+
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow:
+    0 6px 14px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+
+  transition:
+    transform 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.music__btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.28);
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.music__icon {
+  display: grid;
+  place-items: center;
+  color: rgb(18, 18, 18);
+}
+
+.music__dot {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  transform: translate(10px, 10px);
+  opacity: 0;
+  background: rgba(60, 210, 140, 0.95);
+  box-shadow: 0 0 0 3px rgba(60, 210, 140, 0.18);
+}
+
+.music__btn--on .music__dot {
+  opacity: 1;
+}
+
+@media (max-width: 520px) {
+  .music__btn {
+    width: 34px;
+    height: 34px;
+  }
+}

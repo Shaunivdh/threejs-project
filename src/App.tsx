@@ -17,6 +17,8 @@ import githubIcon from "./assets/icons/github.svg";
 import mailIcon from "./assets/icons/mail.svg";
 import ContactForm from "./components/forms/ContactForm";
 import SceneLoader from "./components/SceneLoader";
+import MusicPlayer from "./components/MusicPlayer";
+import trackUrl from "./assets/audio/misguided.mp3";
 
 const TopMenu = memo(function TopMenu({
   onEmailClick,
@@ -26,6 +28,8 @@ const TopMenu = memo(function TopMenu({
   return (
     <div className="hud" aria-label="Social links">
       <div className="hud__actions" aria-label="Social links">
+        <MusicPlayer src={trackUrl} />
+
         <a
           href="https://www.linkedin.com/in/shaunivanderhorst/"
           className="hud__icon"
