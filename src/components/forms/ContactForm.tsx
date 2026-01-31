@@ -56,7 +56,6 @@ export default function ContactForm({ onClose }: ContactFormProps) {
         Your email
         <input
           className="contact-form__input"
-          placeholder="name@example.com"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -68,7 +67,6 @@ export default function ContactForm({ onClose }: ContactFormProps) {
         Subject
         <input
           className="contact-form__input"
-          placeholder="What’s this about?"
           value={subject}
           onChange={(e) => setSubject(e.target.value)}
         />
@@ -78,7 +76,6 @@ export default function ContactForm({ onClose }: ContactFormProps) {
         Message
         <textarea
           className="contact-form__textarea"
-          placeholder="Your message..."
           rows={6}
           value={message}
           onChange={(e) => setMessage(e.target.value)}

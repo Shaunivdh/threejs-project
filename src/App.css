@@ -50,6 +50,18 @@ body,
   -moz-osx-font-smoothing: grayscale;
 }
 
+*,
+*::before,
+*::after {
+  font-family: "Inter", system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+input,
+textarea,
+button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 canvas {
   display: block;
   width: 100%;
@@ -515,5 +527,43 @@ canvas {
     width: auto;
     max-width: none;
     transform: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .contact-form {
+    max-width: 100%;
+    padding: 0 6px;
+  }
+
+  .contact-form__input,
+  .contact-form__textarea {
+    width: 92%;
+    margin: 0 auto;
+  }
+
+  .contact-form__label {
+    font-size: 0.85rem;
+    gap: 4px;
+  }
+
+  .contact-form__input,
+  .contact-form__textarea {
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+  }
+
+  .contact-form__textarea {
+    min-height: 80px;
+  }
+
+  .contact-form__actions {
+    margin-top: 2px;
+  }
+
+  .contact-form__btn {
+    padding: 8px 12px;
+    font-size: 0.9rem;
   }
 }
