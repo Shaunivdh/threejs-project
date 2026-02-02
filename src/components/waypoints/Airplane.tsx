@@ -217,6 +217,10 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
     const PITCH_STRENGTH = 0.16;
     const PITCH_LERP = 0.1;
 
+    const HOVER_AMP = 0.02;
+    const HOVER_FREQ = 1.2;
+    const HOVER_SPEED_BOOST = 0.02;
+
     let inputX = 0;
     let inputZ = 0;
 
@@ -292,8 +296,16 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
       Math.sin(timeRef.current * 1.5) * 0.08 +
       Math.min(speedSq * 30, 0.05);
 
-    v.position.y =
-      Math.sin(timeRef.current * 6.0) * 0.002 * Math.min(speedSq * 200, 1);
+    const speed01 = THREE.MathUtils.clamp(speedSq * 220, 0, 1);
+
+    const hover =
+      Math.sin(timeRef.current * HOVER_FREQ * Math.PI * 2) * HOVER_AMP;
+
+    const moveBob =
+      Math.sin(timeRef.current * 6.0) * 0.01 * speed01 +
+      Math.sin(timeRef.current * 3.5) * HOVER_SPEED_BOOST * speed01;
+
+    v.position.y = hover + moveBob;
   });
 
   return (
