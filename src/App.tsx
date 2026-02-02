@@ -71,6 +71,8 @@ interface PopupProps {
   message: React.ReactNode;
   onClose: () => void;
   variant?: "toast" | "modal";
+  isLeaving?: boolean;
+  onToastExited?: () => void;
 }
 
 const Popup = memo(function Popup({
@@ -78,6 +80,8 @@ const Popup = memo(function Popup({
   message,
   onClose,
   variant = "toast",
+  isLeaving = false,
+  onToastExited,
 }: PopupProps): JSX.Element {
   if (variant === "modal") {
     return (
@@ -99,7 +103,14 @@ const Popup = memo(function Popup({
   }
 
   return (
-    <div className="popup popup--toast" role="status" aria-live="polite">
+    <div
+      className={`popup popup--toast ${isLeaving ? "is-leaving" : ""}`}
+      role="status"
+      aria-live="polite"
+      onAnimationEnd={() => {
+        if (isLeaving) onToastExited?.();
+      }}
+    >
       <div className="popup__message">
         {title && <div className="popup__title">{title}</div>}
         <div>{message}</div>
@@ -123,10 +134,12 @@ type BeaconPayload = { title: string; message: string };
 export default function App(): JSX.Element {
   const isDev = import.meta.env.DEV;
 
-  const [contactOpen, setContactOpen] = useState(false); // <-- NEW
+  const [contactOpen, setContactOpen] = useState(false);
 
-  const [sceneReady, setSceneReady] = useState(false); // <-- NEW
-  const [showTipPopup, setShowTipPopup] = useState(false); // <-- CHANGED
+  const [sceneReady, setSceneReady] = useState(false);
+  const [showTipPopup, setShowTipPopup] = useState(false);
+
+  const [tipLeaving, setTipLeaving] = useState(false);
 
   const [beaconPopup, setBeaconPopup] =
     useState<BeaconPopupState>(EMPTY_BEACON);
@@ -147,7 +160,14 @@ export default function App(): JSX.Element {
 
   const follow = useMemo(() => (!isDev ? true : !useOrbit), [isDev, useOrbit]);
 
-  const handleTipClose = useCallback(() => setShowTipPopup(false), []);
+  const closeTip = useCallback(() => {
+    setShowTipPopup(false);
+    setTipLeaving(false);
+  }, []);
+
+  const requestTipClose = useCallback(() => {
+    setTipLeaving(true);
+  }, []);
 
   const handleBeaconEnter = useCallback(
     ({ title, message }: BeaconPayload) => {
@@ -215,11 +235,14 @@ export default function App(): JSX.Element {
   );
 
   const handleAirplaneMoveStart = useCallback(() => {
-    setShowTipPopup(false);
-  }, []);
+    requestTipClose();
+  }, [requestTipClose]);
 
   useEffect(() => {
-    if (sceneReady) setShowTipPopup(true);
+    if (sceneReady) {
+      setShowTipPopup(true);
+      setTipLeaving(false);
+    }
   }, [sceneReady]);
 
   return (
@@ -260,7 +283,9 @@ export default function App(): JSX.Element {
           variant="toast"
           title="Welcome to my garden 🌱"
           message={tipMessage}
-          onClose={handleTipClose}
+          onClose={requestTipClose}
+          isLeaving={tipLeaving}
+          onToastExited={closeTip}
         />
       )}
 
