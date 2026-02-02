@@ -6,7 +6,7 @@ import { useGLTF } from "@react-three/drei";
 import { useAutoShadows } from "../hooks/useAutoShadows";
 
 export default function Marigold(props: JSX.IntrinsicElements["group"]) {
-  const root = useNormalizedGLTF("/models/marigold.glb", {
+  const root = useNormalizedGLTF("/models/marigold.512.glb", {
     targetHeight: 0.5,
     sitOnGround: true,
   });
@@ -25,4 +25,4 @@ export default function Marigold(props: JSX.IntrinsicElements["group"]) {
   return <primitive object={root} {...props} />;
 }
 
-useGLTF.preload("/models/marigold.glb");
+useGLTF.preload("/models/marigold.512.glb");

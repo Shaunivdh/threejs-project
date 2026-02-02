@@ -4,7 +4,7 @@ import { useGLTF } from "@react-three/drei";
 import { useAutoShadows } from "../hooks/useAutoShadows";
 
 export default function Plant(props: JSX.IntrinsicElements["group"]) {
-  const root = useNormalizedGLTF("/models/plant.glb", {
+  const root = useNormalizedGLTF("/models/plant.512.glb", {
     targetHeight: 0.75,
     sitOnGround: true,
   });
@@ -12,4 +12,4 @@ export default function Plant(props: JSX.IntrinsicElements["group"]) {
   return <primitive object={root} {...props} />;
 }
 
-useGLTF.preload("/models/plant.glb");
+useGLTF.preload("/models/plant.512.glb");
