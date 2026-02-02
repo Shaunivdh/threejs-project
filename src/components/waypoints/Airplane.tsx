@@ -207,13 +207,13 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
       return;
     }
 
-    const SPEED = inputMode === "touch" ? 0.3 : 0.9;
+    const SPEED = inputMode === "touch" ? 0.55 : 0.9;
     const MAX_VEL = inputMode === "touch" ? 0.03 : 0.08;
+    const DAMPING = inputMode === "touch" ? 0.92 : 0.95;
 
     const TURN_LERP = 0.14;
     const BANK_MAX = 0.65;
     const BANK_LERP = 0.18;
-    const DAMPING = 0.95;
     const PITCH_STRENGTH = 0.16;
     const PITCH_LERP = 0.1;
 
