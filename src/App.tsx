@@ -254,8 +254,7 @@ export default function App(): JSX.Element {
         </Suspense>
       </Canvas>
 
-      <TopMenu onEmailClick={() => setContactOpen(true)} />
-
+      {sceneReady && <TopMenu onEmailClick={() => setContactOpen(true)} />}
       {sceneReady && showTipPopup && (
         <Popup
           variant="toast"
