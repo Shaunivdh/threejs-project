@@ -16,6 +16,9 @@ export type WaypointBeaconProps = {
 
   bounceHeight?: number;
   bounceSpeed?: number;
+  pulseSpeed?: number;
+  baseLightIntensity?: number;
+  pulseLightIntensity?: number;
 };
 
 export default function WaypointBeacon({
@@ -29,6 +32,9 @@ export default function WaypointBeacon({
   onExit,
   bounceHeight = 0.05,
   bounceSpeed = 3,
+  pulseSpeed = 2.5,
+  baseLightIntensity = 0.6,
+  pulseLightIntensity = 1.2,
 }: WaypointBeaconProps) {
   const [active, setActive] = useState(false);
 
@@ -37,6 +43,7 @@ export default function WaypointBeacon({
 
   const planeWorld = useRef(new THREE.Vector3());
   const groupRef = useRef<THREE.Group>(null);
+  const lightRef = useRef<THREE.PointLight>(null);
   const insideRef = useRef(false);
 
   useEffect(() => {
@@ -47,6 +54,8 @@ export default function WaypointBeacon({
   }, [targetPosition, beaconOffset]);
 
   useFrame(({ clock }) => {
+    const t = clock.getElapsedTime();
+
     const plane = airplaneRef.current;
 
     if (plane) {
@@ -67,10 +76,17 @@ export default function WaypointBeacon({
     if (g) {
       g.position.set(
         beacon.current.x,
-        beacon.current.y +
-          Math.sin(clock.getElapsedTime() * bounceSpeed) * bounceHeight,
-        beacon.current.z
+        beacon.current.y + Math.sin(t * bounceSpeed) * bounceHeight,
+        beacon.current.z,
       );
+    }
+    const light = lightRef.current;
+    if (light) {
+      const pulse =
+        baseLightIntensity +
+        Math.sin(t * pulseSpeed) * pulseLightIntensity * 0.5;
+
+      light.intensity = active ? pulse * 1.6 : pulse;
     }
   });
 
@@ -78,14 +94,21 @@ export default function WaypointBeacon({
     <group>
       <group ref={groupRef}>
         <mesh>
-          <sphereGeometry args={[0.12, 32, 32]} />
+          <sphereGeometry args={[0.1, 32, 32]} />
           <meshStandardMaterial
             color={active ? "orange" : "white"}
             emissive={active ? "orange" : "white"}
-            emissiveIntensity={1.8}
-            roughness={0.6}
+            emissiveIntensity={2}
+            roughness={0.5}
           />
         </mesh>
+        <pointLight
+          ref={lightRef}
+          color={active ? "orange" : "white"}
+          intensity={baseLightIntensity}
+          distance={active ? 6 : 4}
+          decay={2}
+        />
       </group>
     </group>
   );
