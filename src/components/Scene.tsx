@@ -69,6 +69,9 @@ export default function Scene({
   const desiredLook = useRef(new THREE.Vector3());
   const smoothedLook = useRef(new THREE.Vector3());
 
+  const baseDist = useRef(0);
+  const desiredDist = useRef(0);
+
   const center = useRef(new THREE.Vector3(0, 0.8, 0));
   const parallax = useRef(new THREE.Vector3(0.22, 0.08, 0.18));
   const lookParallax = useRef(new THREE.Vector3(0.35, 0.12, 0.35));
@@ -85,6 +88,10 @@ export default function Scene({
       baseLook.current.copy(center.current);
       desiredCam.current.copy(baseCam.current);
       smoothedLook.current.copy(baseLook.current);
+
+      baseDist.current = camera.position.distanceTo(baseLook.current);
+      desiredDist.current = baseDist.current;
+
       inited.current = true;
     }
 
@@ -107,11 +114,33 @@ export default function Scene({
       baseLook.current.z + dz * (lookParallax.current.z * frameBoost),
     );
 
-    const currentDist = camera.position.distanceTo(smoothedLook.current);
+    const rightStart = 1.2;
+    const rightRange = 2.0;
+    const bottomStart = 0.4;
+    const bottomRange = 1.2;
+
+    const rightT = THREE.MathUtils.clamp((dx - rightStart) / rightRange, 0, 1);
+    const bottomT = THREE.MathUtils.clamp(
+      (-dy - bottomStart) / bottomRange,
+      0,
+      1,
+    );
+
+    const edgeT = THREE.MathUtils.clamp(0.75 * rightT + 0.55 * bottomT, 0, 1);
+
+    const maxZoomOut = 1.35;
+
+    desiredDist.current = THREE.MathUtils.lerp(
+      baseDist.current,
+      baseDist.current * maxZoomOut,
+      edgeT,
+    );
+
     const dir = desiredCam.current.clone().sub(desiredLook.current).normalize();
+
     const zoomAwareCam = desiredLook.current
       .clone()
-      .add(dir.multiplyScalar(currentDist));
+      .add(dir.multiplyScalar(desiredDist.current));
 
     const k = 1 - Math.pow(1 - stiffness, dt * 60);
     camera.position.lerp(zoomAwareCam, k);
