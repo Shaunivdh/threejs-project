@@ -1,10 +1,10 @@
-import { useNormalizedGLTF } from "../../hooks/useNormalizedGLTF";
 import type { JSX } from "react";
-import { useGLTF } from "@react-three/drei";
-import { useAutoShadows } from "../../hooks/useAutoShadows";
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
+import { useNormalizedGLTF } from "../../hooks/useNormalizedGLTF";
+import { useAutoShadows } from "../../hooks/useAutoShadows";
 
 type AirplaneProps = JSX.IntrinsicElements["group"] & {
   inputMode?: "keyboard" | "touch";
@@ -40,7 +40,7 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
   }, [root]);
 
   const groupRef = useRef<THREE.Group>(null!);
-  useImperativeHandle(ref, () => groupRef.current, []);
+  useImperativeHandle(ref, () => groupRef.current);
 
   const visualRef = useRef<THREE.Group>(null!);
 
@@ -207,8 +207,9 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
       return;
     }
 
-    const SPEED = 0.9;
-    const MAX_VEL = 0.08;
+    const SPEED = inputMode === "touch" ? 0.3 : 0.9;
+    const MAX_VEL = inputMode === "touch" ? 0.03 : 0.08;
+
     const TURN_LERP = 0.14;
     const BANK_MAX = 0.65;
     const BANK_LERP = 0.18;
