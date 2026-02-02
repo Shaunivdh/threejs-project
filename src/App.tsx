@@ -26,7 +26,7 @@ const TopMenu = memo(function TopMenu({
   onEmailClick: () => void;
 }): JSX.Element {
   return (
-    <div className="hud" aria-label="Social links">
+    <div className="hud" aria-label="Navigation">
       <div className="hud__actions" aria-label="Social links">
         <MusicPlayer src={trackUrl} />
 

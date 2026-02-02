@@ -2,6 +2,7 @@ name: CI
 
 on:
   pull_request:
+    branches: [main]
   push:
     branches: [main]
 
@@ -10,14 +11,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
-      - name: Install
+      - name: Install dependencies
         run: npm ci
 
       - name: Lint
@@ -26,8 +29,8 @@ jobs:
       - name: Typecheck
         run: npm run typecheck --if-present
 
-      - name: Test
+      - name: Unit tests (Vitest)
         run: npm test
 
-      - name: Build
+      - name: Production build
         run: npm run build
