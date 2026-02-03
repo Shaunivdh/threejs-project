@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import type { Vector3Tuple } from "three";
@@ -38,6 +38,8 @@ export default function WaypointBeacon({
 }: WaypointBeaconProps) {
   const [active, setActive] = useState(false);
 
+  const [initialized, setInitialized] = useState(false);
+
   const target = useRef(new THREE.Vector3());
   const beacon = useRef(new THREE.Vector3());
 
@@ -46,11 +48,18 @@ export default function WaypointBeacon({
   const lightRef = useRef<THREE.PointLight>(null);
   const insideRef = useRef(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     target.current.set(...targetPosition);
+
     beacon.current
       .set(...targetPosition)
       .add(new THREE.Vector3(...beaconOffset));
+
+    if (groupRef.current) {
+      groupRef.current.position.copy(beacon.current);
+    }
+
+    setInitialized(true);
   }, [targetPosition, beaconOffset]);
 
   useFrame(({ clock }) => {
@@ -98,14 +107,15 @@ export default function WaypointBeacon({
           <meshStandardMaterial
             color={active ? "orange" : "white"}
             emissive={active ? "orange" : "white"}
-            emissiveIntensity={2}
+            emissiveIntensity={initialized ? 2 : 0}
             roughness={0.5}
           />
         </mesh>
+
         <pointLight
           ref={lightRef}
           color={active ? "orange" : "white"}
-          intensity={baseLightIntensity}
+          intensity={initialized ? baseLightIntensity : 0}
           distance={active ? 6 : 4}
           decay={2}
         />
