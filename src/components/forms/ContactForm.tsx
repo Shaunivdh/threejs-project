@@ -47,7 +47,7 @@ export default function ContactForm({ onClose }: ContactFormProps) {
   };
 
   if (sent) {
-    return <div className="contact-form__sent">Message sent 🌱</div>;
+    return <div>Message sent 🌱</div>;
   }
 
   return (

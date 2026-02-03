@@ -550,13 +550,6 @@ canvas {
   background: rgba(255, 255, 255, 0.14);
 }
 
-.contact-form__sent {
-  padding: 14px 16px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.32);
-}
-
 .popup--modal .popup__message {
   overflow: auto;
   padding-right: 6px;
