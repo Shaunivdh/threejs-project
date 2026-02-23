@@ -50,8 +50,6 @@ export type SceneProps = {
   inputMode?: "keyboard" | "touch";
   onAirplaneMoveStart?: () => void;
   onReady?: () => void;
-  iosSafeMode?: boolean;
-  iosSafariQuirkMode?: boolean;
 };
 
 export default function Scene({
@@ -61,8 +59,6 @@ export default function Scene({
   inputMode = "keyboard",
   onAirplaneMoveStart,
   onReady,
-  iosSafeMode = false,
-  iosSafariQuirkMode = false,
 }: SceneProps) {
   const airplaneRef = useRef<THREE.Group>(null!);
 
@@ -165,10 +161,8 @@ export default function Scene({
         castShadow
         position={[-10, 18, -10]}
         intensity={2.05}
-        shadow-mapSize-width={iosSafeMode ? 1024 : iosSafariQuirkMode ? 2048 : 4096}
-        shadow-mapSize-height={
-          iosSafeMode ? 1024 : iosSafariQuirkMode ? 2048 : 4096
-        }
+        shadow-mapSize-width={4096}
+        shadow-mapSize-height={4096}
         shadow-camera-near={5}
         shadow-camera-far={35}
         shadow-camera-left={-6}
@@ -329,22 +323,19 @@ export default function Scene({
       <Fence position={[-0.5, -0.15, 3.7]} />
       <Fence position={[1.81, -0.15, 3.7]} />
 
-      <EffectComposer multisampling={iosSafeMode || iosSafariQuirkMode ? 0 : 2}>
+      <EffectComposer multisampling={2}>
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
         <HueSaturation saturation={0.02} hue={0.0} />
         <BrightnessContrast brightness={-0.03} contrast={0.18} />
         <Bloom
-          mipmapBlur={!(iosSafeMode || iosSafariQuirkMode)}
-          intensity={iosSafeMode ? 0 : isMobile ? 0.18 : 0.12}
+          mipmapBlur
+          intensity={isMobile ? 0.18 : 0.12}
           luminanceThreshold={isMobile ? 0.65 : 0.78}
           luminanceSmoothing={isMobile ? 0.4 : 0.25}
-          levels={iosSafeMode ? 1 : iosSafariQuirkMode ? 5 : isMobile ? 6 : 8}
+          levels={isMobile ? 6 : 8}
         />
-        <Vignette
-          eskil={false}
-          offset={0.2}
-          darkness={iosSafeMode ? 0 : 0.55}
-        />
+
+        <Vignette eskil={false} offset={0.2} darkness={0.55} />
       </EffectComposer>
     </>
   );

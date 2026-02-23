@@ -77,21 +77,6 @@ canvas {
   background: transparent;
 }
 
-.app--ios-safe .clouds__bg {
-  animation: none;
-  opacity: 0.5;
-}
-
-.app--ios-safe .hud__actions,
-.app--ios-safe .popup--toast,
-.app--ios-safe .popup--modal,
-.app--ios-safe .contact-form__input,
-.app--ios-safe .contact-form__textarea,
-.app--ios-safe .contact-form__btn {
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-
 @supports (height: 100dvh) {
   .app {
     height: 100dvh;

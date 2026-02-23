@@ -133,25 +133,8 @@ type BeaconPopupState = { open: boolean; title: string; message: string };
 const EMPTY_BEACON: BeaconPopupState = { open: false, title: "", message: "" };
 type BeaconPayload = { title: string; message: string };
 
-function detectIOSSafari(): boolean {
-  const ua = navigator.userAgent;
-  const isIOSDevice =
-    /iPhone|iPad|iPod/i.test(ua) ||
-    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-  const isWebKitSafari =
-    /Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS/i.test(ua);
-  return isIOSDevice && isWebKitSafari;
-}
-
-function shouldUseIosSafeProfile(): boolean {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("iosSafe") === "1";
-}
-
 export default function App(): JSX.Element {
   const isDev = import.meta.env.DEV;
-  const iosSafeMode = useMemo(() => shouldUseIosSafeProfile(), []);
-  const iosSafariQuirkMode = useMemo(() => detectIOSSafari(), []);
 
   const [contactOpen, setContactOpen] = useState(false);
 
@@ -265,21 +248,17 @@ export default function App(): JSX.Element {
   }, [sceneReady]);
 
   return (
-    <div className={`app ${iosSafeMode ? "app--ios-safe" : ""}`.trim()}>
+    <div className="app">
       <CloudOverlay />
 
       <Canvas
-        dpr={iosSafeMode ? 1 : Math.min(window.devicePixelRatio, 2)}
+        dpr={Math.min(window.devicePixelRatio, 2)}
         className="r3f-canvas"
         shadows
         gl={{
           antialias: false,
           alpha: true,
-          premultipliedAlpha: !(iosSafeMode || iosSafariQuirkMode),
-          powerPreference:
-            iosSafeMode || iosSafariQuirkMode
-              ? "low-power"
-              : "high-performance",
+          premultipliedAlpha: true,
         }}
         camera={{ position: [5.2, 4.4, 4.0], fov: 38, near: 0.1, far: 80 }}
         onCreated={(state) => {
@@ -296,8 +275,6 @@ export default function App(): JSX.Element {
             inputMode={isMobile ? "touch" : "keyboard"}
             onAirplaneMoveStart={handleAirplaneMoveStart}
             onReady={() => setSceneReady(true)}
-            iosSafeMode={iosSafeMode}
-            iosSafariQuirkMode={iosSafariQuirkMode}
           />{" "}
         </Suspense>
       </Canvas>
