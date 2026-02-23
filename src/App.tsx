@@ -71,6 +71,7 @@ interface PopupProps {
   message: React.ReactNode;
   onClose: () => void;
   variant?: "toast" | "modal";
+  className?: string;
   isLeaving?: boolean;
   onToastExited?: () => void;
 }
@@ -80,13 +81,14 @@ const Popup = memo(function Popup({
   message,
   onClose,
   variant = "toast",
+  className = "",
   isLeaving = false,
   onToastExited,
 }: PopupProps): JSX.Element {
   if (variant === "modal") {
     return (
       <div className="popup-overlay" role="dialog" aria-modal="true">
-        <div className="popup popup--modal">
+        <div className={`popup popup--modal ${className}`.trim()}>
           {title && <div className="popup__title">{title}</div>}
           <div className="popup__message">{message}</div>
           <button
@@ -292,6 +294,7 @@ export default function App(): JSX.Element {
       {beaconPopup.open && (
         <Popup
           variant="modal"
+          className="popup--beacon"
           title={beaconPopup.title}
           message={beaconPopup.message}
           onClose={handleBeaconClose}

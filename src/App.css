@@ -247,11 +247,25 @@ canvas {
   flex-direction: column;
 }
 
+.popup--modal.popup--beacon {
+  width: fit-content;
+  height: auto;
+  min-width: min(320px, calc(100vw - 32px));
+  max-width: min(640px, calc(100vw - 32px));
+  max-height: min(72vh, 620px);
+}
+
 @media (max-width: 1024px) {
   .popup--modal {
     width: min(78vw, 720px);
     max-height: 75vh;
     padding: 22px 22px;
+  }
+
+  .popup--modal.popup--beacon {
+    min-width: min(280px, calc(100vw - 32px));
+    max-width: min(560px, calc(100vw - 32px));
+    max-height: 78vh;
   }
 }
 
@@ -260,6 +274,15 @@ canvas {
     width: 80vw;
     height: 50vh;
     padding: 16px 16px;
+  }
+
+  .popup--modal.popup--beacon {
+    width: auto;
+    height: auto;
+    min-width: min(240px, calc(100vw - 40px));
+    max-width: calc(100vw - 40px);
+    max-height: 76vh;
+    margin-inline: 20px;
   }
 }
 
@@ -291,11 +314,17 @@ canvas {
 }
 
 .popup__message {
+  white-space: pre-line;
   font-size: 1rem;
   line-height: 1.6;
   color: rgb(18, 18, 18);
   overflow: auto;
   flex: 1;
+}
+
+.popup--modal.popup--beacon .popup__message {
+  flex: 0 1 auto;
+  overflow: auto;
 }
 
 .popup__close {
