@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type JSX,
 } from "react";
@@ -133,8 +134,54 @@ type BeaconPopupState = { open: boolean; title: string; message: string };
 const EMPTY_BEACON: BeaconPopupState = { open: false, title: "", message: "" };
 type BeaconPayload = { title: string; message: string };
 
+type RendererPrecision = "highp" | "mediump" | "lowp";
+
+type RenderDiagnostics = {
+  noPost: boolean;
+  shadowMapSize?: number;
+  precision?: RendererPrecision;
+  composerMultisampling?: number;
+  noMipmapBlur: boolean;
+  logWebgl: boolean;
+};
+
+function parseDiagnosticsFromQuery(): RenderDiagnostics {
+  const params = new URLSearchParams(window.location.search);
+
+  const precisionRaw = params.get("precision");
+  const precision =
+    precisionRaw === "highp" ||
+    precisionRaw === "mediump" ||
+    precisionRaw === "lowp"
+      ? precisionRaw
+      : undefined;
+
+  const shadowRaw = Number(params.get("shadow"));
+  const shadowMapSize =
+    Number.isFinite(shadowRaw) && shadowRaw >= 256 && shadowRaw <= 4096
+      ? Math.round(shadowRaw)
+      : undefined;
+
+  const msaaRaw = Number(params.get("msaa"));
+  const composerMultisampling =
+    Number.isFinite(msaaRaw) && msaaRaw >= 0 && msaaRaw <= 8
+      ? Math.round(msaaRaw)
+      : undefined;
+
+  return {
+    noPost: params.get("noPost") === "1",
+    shadowMapSize,
+    precision,
+    composerMultisampling,
+    noMipmapBlur: params.get("noMipmapBlur") === "1",
+    logWebgl: params.get("logWebgl") === "1",
+  };
+}
+
 export default function App(): JSX.Element {
   const isDev = import.meta.env.DEV;
+  const diagnostics = useMemo(() => parseDiagnosticsFromQuery(), []);
+  const webglListenerCleanupRef = useRef<(() => void) | null>(null);
 
   const [contactOpen, setContactOpen] = useState(false);
 
@@ -201,6 +248,48 @@ export default function App(): JSX.Element {
     gl.outputColorSpace = SRGBColorSpace;
 
     gl.setClearColor(0xffffff, 0);
+
+    const canvas = gl.domElement;
+    const onContextLost = (event: Event) => {
+      (event as WebGLContextEvent).preventDefault();
+      console.error("[WebGL] context lost", {
+        when: new Date().toISOString(),
+        href: window.location.href,
+        renderer: gl.capabilities.isWebGL2 ? "webgl2" : "webgl1",
+      });
+    };
+    const onContextRestored = () => {
+      console.warn("[WebGL] context restored", {
+        when: new Date().toISOString(),
+        href: window.location.href,
+      });
+    };
+
+    canvas.addEventListener("webglcontextlost", onContextLost, false);
+    canvas.addEventListener("webglcontextrestored", onContextRestored, false);
+    webglListenerCleanupRef.current?.();
+    webglListenerCleanupRef.current = () => {
+      canvas.removeEventListener("webglcontextlost", onContextLost, false);
+      canvas.removeEventListener("webglcontextrestored", onContextRestored, false);
+    };
+
+    if (diagnostics.logWebgl) {
+      console.info("[WebGL] diagnostics", {
+        dpr: Math.min(window.devicePixelRatio, 2),
+        precision: diagnostics.precision ?? "highp(default)",
+        noPost: diagnostics.noPost,
+        shadowMapSize: diagnostics.shadowMapSize ?? 4096,
+        msaa: diagnostics.composerMultisampling ?? 2,
+        noMipmapBlur: diagnostics.noMipmapBlur,
+      });
+    }
+  }, [diagnostics]);
+
+  useEffect(() => {
+    return () => {
+      webglListenerCleanupRef.current?.();
+      webglListenerCleanupRef.current = null;
+    };
   }, []);
 
   const isMobile = useMemo(() => /Mobi|Android/i.test(navigator.userAgent), []);
@@ -259,6 +348,7 @@ export default function App(): JSX.Element {
           antialias: false,
           alpha: true,
           premultipliedAlpha: true,
+          precision: diagnostics.precision,
         }}
         camera={{ position: [5.2, 4.4, 4.0], fov: 38, near: 0.1, far: 80 }}
         onCreated={(state) => {
@@ -275,6 +365,7 @@ export default function App(): JSX.Element {
             inputMode={isMobile ? "touch" : "keyboard"}
             onAirplaneMoveStart={handleAirplaneMoveStart}
             onReady={() => setSceneReady(true)}
+            diagnostics={diagnostics}
           />{" "}
         </Suspense>
       </Canvas>
