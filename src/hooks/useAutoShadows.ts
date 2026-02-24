@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from "react";
-import type { Object3D } from "three";
+import type { Mesh, Object3D } from "three";
 
 type Options = {
   cast?: boolean;               
@@ -17,12 +17,13 @@ export function useAutoShadows(
   useLayoutEffect(() => {
     if (!root || applied.current) return;
 
-    root.traverse((obj: any) => {
-      if (!obj.isMesh) return;
-      if (filter && !filter(obj)) return;
+    root.traverse((obj: Object3D) => {
+      if (!("isMesh" in obj) || !obj.isMesh) return;
+      const mesh = obj as Mesh;
+      if (filter && !filter(mesh)) return;
 
-      obj.castShadow = cast;
-      obj.receiveShadow = receive;
+      mesh.castShadow = cast;
+      mesh.receiveShadow = receive;
     });
 
     applied.current = true; 

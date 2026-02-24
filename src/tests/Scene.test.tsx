@@ -1,36 +1,46 @@
 import React from "react";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import type { ComponentPropsWithoutRef } from "react";
+import { Group } from "three";
 
-const mock2d = {
+const mock2d: Partial<CanvasRenderingContext2D> = {
   createRadialGradient: () => ({ addColorStop: vi.fn() }),
   fillRect: vi.fn(),
   clearRect: vi.fn(),
 };
 
 vi.stubGlobal("HTMLCanvasElement", HTMLCanvasElement);
-HTMLCanvasElement.prototype.getContext = vi.fn((type: string) => {
-  if (type === "2d") return mock2d as any;
+const getContextMock: HTMLCanvasElement["getContext"] = ((type: string) => {
+  if (type === "2d") return mock2d as CanvasRenderingContext2D;
   return null;
-});
+}) as HTMLCanvasElement["getContext"];
+
+HTMLCanvasElement.prototype.getContext = vi.fn(getContextMock) as HTMLCanvasElement["getContext"];
 
 vi.mock("@react-three/fiber", () => ({
   useFrame: vi.fn(),
 }));
 
 vi.mock("@react-three/drei", () => {
-  const useGLTF: any = () => ({ scene: null, nodes: {}, materials: {} });
+  type UseGLTFMock = {
+    (): { scene: Group; nodes: Record<string, unknown>; materials: Record<string, unknown> };
+    preload: ReturnType<typeof vi.fn>;
+  };
+
+  const useGLTF = (() => ({ scene: new Group(), nodes: {}, materials: {} })) as UseGLTFMock;
   useGLTF.preload = vi.fn();
 
   return {
     Environment: () => null,
     ContactShadows: () => null,
+    Text3D: ({ children }: React.PropsWithChildren) => <>{children}</>,
     useGLTF,
   };
 });
 
 vi.mock("@react-three/postprocessing", () => ({
-  EffectComposer: ({ children }: any) => <>{children}</>,
+  EffectComposer: ({ children }: React.PropsWithChildren) => <>{children}</>,
   Bloom: () => null,
   Vignette: () => null,
   HueSaturation: () => null,
@@ -43,13 +53,21 @@ vi.mock("@react-three/postprocessing", () => ({
 vi.mock("../components/waypoints/FlightWaypoints", () => ({
   default: () => null,
 }));
+vi.mock("../components/SceneText", () => ({
+  default: () => null,
+}));
 
 vi.mock("../components/Platform", () => ({
   default: () => <group data-testid="platform" />,
 }));
 
 vi.mock("../components/Airplane", () => ({
-  default: React.forwardRef((props: any, ref: any) => (
+  default: React.forwardRef<SVGGElement, ComponentPropsWithoutRef<"group">>((props, ref) => (
+    <group ref={ref} data-testid="airplane" {...props} />
+  )),
+}));
+vi.mock("../components/waypoints/Airplane", () => ({
+  default: React.forwardRef<SVGGElement, ComponentPropsWithoutRef<"group">>((props, ref) => (
     <group ref={ref} data-testid="airplane" {...props} />
   )),
 }));
