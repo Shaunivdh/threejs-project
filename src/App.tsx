@@ -134,6 +134,48 @@ type BeaconPopupState = { open: boolean; title: string; message: string };
 const EMPTY_BEACON: BeaconPopupState = { open: false, title: "", message: "" };
 type BeaconPayload = { title: string; message: string };
 
+const BEACON_LINKS: Record<string, string> = {
+  codeop: "https://codeop.tech",
+  bluecrest: "https://bluecrest.com",
+};
+
+function renderBeaconMessage(message: string): React.ReactNode {
+  const paragraphs = message.split("\n\n");
+
+  return paragraphs.map((paragraph, paragraphIndex) => {
+    const lines = paragraph.split("\n");
+
+    return (
+      <p key={`paragraph-${paragraphIndex}`}>
+        {lines.map((line, lineIndex) => {
+          const segments = line.split(/(CodeOp|Bluecrest)/g);
+          return (
+            <React.Fragment key={`line-${paragraphIndex}-${lineIndex}`}>
+              {segments.map((segment, segmentIndex) => {
+                const href = BEACON_LINKS[segment.toLowerCase()];
+                if (!href) return segment;
+
+                return (
+                  <a
+                    key={`segment-${paragraphIndex}-${lineIndex}-${segmentIndex}`}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="popup__message-link"
+                  >
+                    {segment}
+                  </a>
+                );
+              })}
+              {lineIndex < lines.length - 1 && <br />}
+            </React.Fragment>
+          );
+        })}
+      </p>
+    );
+  });
+}
+
 type RendererPrecision = "highp" | "mediump" | "lowp";
 
 type RenderDiagnostics = {
@@ -236,54 +278,61 @@ export default function App(): JSX.Element {
     setBeaconDismissed(true);
   }, []);
 
-  const handleCanvasCreated = useCallback((state: RootState) => {
-    const { gl, scene } = state;
-    scene.background = null;
+  const handleCanvasCreated = useCallback(
+    (state: RootState) => {
+      const { gl, scene } = state;
+      scene.background = null;
 
-    gl.shadowMap.enabled = true;
-    gl.shadowMap.type = PCFSoftShadowMap;
+      gl.shadowMap.enabled = true;
+      gl.shadowMap.type = PCFSoftShadowMap;
 
-    gl.toneMapping = NoToneMapping;
-    gl.toneMappingExposure = 1.0;
-    gl.outputColorSpace = SRGBColorSpace;
+      gl.toneMapping = NoToneMapping;
+      gl.toneMappingExposure = 1.0;
+      gl.outputColorSpace = SRGBColorSpace;
 
-    gl.setClearColor(0xffffff, 0);
+      gl.setClearColor(0xffffff, 0);
 
-    const canvas = gl.domElement;
-    const onContextLost = (event: Event) => {
-      (event as WebGLContextEvent).preventDefault();
-      console.error("[WebGL] context lost", {
-        when: new Date().toISOString(),
-        href: window.location.href,
-        renderer: gl.capabilities.isWebGL2 ? "webgl2" : "webgl1",
-      });
-    };
-    const onContextRestored = () => {
-      console.warn("[WebGL] context restored", {
-        when: new Date().toISOString(),
-        href: window.location.href,
-      });
-    };
+      const canvas = gl.domElement;
+      const onContextLost = (event: Event) => {
+        (event as WebGLContextEvent).preventDefault();
+        console.error("[WebGL] context lost", {
+          when: new Date().toISOString(),
+          href: window.location.href,
+          renderer: gl.capabilities.isWebGL2 ? "webgl2" : "webgl1",
+        });
+      };
+      const onContextRestored = () => {
+        console.warn("[WebGL] context restored", {
+          when: new Date().toISOString(),
+          href: window.location.href,
+        });
+      };
 
-    canvas.addEventListener("webglcontextlost", onContextLost, false);
-    canvas.addEventListener("webglcontextrestored", onContextRestored, false);
-    webglListenerCleanupRef.current?.();
-    webglListenerCleanupRef.current = () => {
-      canvas.removeEventListener("webglcontextlost", onContextLost, false);
-      canvas.removeEventListener("webglcontextrestored", onContextRestored, false);
-    };
+      canvas.addEventListener("webglcontextlost", onContextLost, false);
+      canvas.addEventListener("webglcontextrestored", onContextRestored, false);
+      webglListenerCleanupRef.current?.();
+      webglListenerCleanupRef.current = () => {
+        canvas.removeEventListener("webglcontextlost", onContextLost, false);
+        canvas.removeEventListener(
+          "webglcontextrestored",
+          onContextRestored,
+          false,
+        );
+      };
 
-    if (diagnostics.logWebgl) {
-      console.info("[WebGL] diagnostics", {
-        dpr: Math.min(window.devicePixelRatio, 2),
-        precision: diagnostics.precision ?? "highp(default)",
-        noPost: diagnostics.noPost,
-        shadowMapSize: diagnostics.shadowMapSize ?? 4096,
-        msaa: diagnostics.composerMultisampling ?? 2,
-        noMipmapBlur: diagnostics.noMipmapBlur,
-      });
-    }
-  }, [diagnostics]);
+      if (diagnostics.logWebgl) {
+        console.info("[WebGL] diagnostics", {
+          dpr: Math.min(window.devicePixelRatio, 2),
+          precision: diagnostics.precision ?? "highp(default)",
+          noPost: diagnostics.noPost,
+          shadowMapSize: diagnostics.shadowMapSize ?? 4096,
+          msaa: diagnostics.composerMultisampling ?? 2,
+          noMipmapBlur: diagnostics.noMipmapBlur,
+        });
+      }
+    },
+    [diagnostics],
+  );
 
   useEffect(() => {
     return () => {
@@ -297,26 +346,14 @@ export default function App(): JSX.Element {
   const tipMessage = useMemo(
     () => (
       <div className="popup__intro">
-        <p>Explore my interactive portfolio.</p>
-
         {isMobile ? (
-          <ul>
-            <li>
-              📱 <strong>Touch</strong> &amp; <strong>drag</strong> to fly
-            </li>
-          </ul>
+          <div className="popup__intro-primary">
+            📱 <strong>Touch</strong> &amp; <strong>drag</strong> to fly
+          </div>
         ) : (
-          <ul>
-            <li>
-              🖱 <strong>Drag</strong> to rotate
-            </li>
-            <li>
-              🔍 <strong>Scroll</strong> to zoom
-            </li>
-            <li>
-              ⌨️ <strong>WASD</strong> or <strong>Arrow keys</strong> to move
-            </li>
-          </ul>
+          <div className="popup__intro-primary">
+            ⌨️ <strong>Use WASD</strong> or <strong>Arrow keys</strong> to fly
+          </div>
         )}
 
         <p>Look out for glowing beacons to discover more.</p>
@@ -374,7 +411,7 @@ export default function App(): JSX.Element {
       {sceneReady && showTipPopup && (
         <Popup
           variant="toast"
-          title="Welcome to my garden 🌱"
+          title="Take flight. Explore at your own pace 🌱"
           message={tipMessage}
           onClose={requestTipClose}
           isLeaving={tipLeaving}
@@ -387,7 +424,7 @@ export default function App(): JSX.Element {
           variant="modal"
           className="popup--beacon"
           title={beaconPopup.title}
-          message={beaconPopup.message}
+          message={renderBeaconMessage(beaconPopup.message)}
           onClose={handleBeaconClose}
         />
       )}
@@ -395,7 +432,8 @@ export default function App(): JSX.Element {
       {contactOpen && (
         <Popup
           variant="modal"
-          title="Send me a message"
+          className="popup--contact"
+          title="Send me a message 💬"
           message={<ContactForm onClose={() => setContactOpen(false)} />}
           onClose={() => setContactOpen(false)}
         />

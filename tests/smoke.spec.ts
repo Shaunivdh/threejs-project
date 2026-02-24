@@ -42,12 +42,12 @@ await dialog.getByRole("button", { name: "Close" }).click();
 
     await page.goto("/", { waitUntil: "domcontentloaded" });
 
-    await expect(page.getByText("Welcome to my garden 🌱")).toBeVisible({
+    await expect(page.getByText("Take flight. Explore at your own pace.  🌱")).toBeVisible({
       timeout: 60_000,
     });
 
     await page.getByRole("button", { name: "Close" }).click();
-    await expect(page.getByText("Welcome to my garden 🌱")).toBeHidden({
+    await expect(page.getByText("Take flight. Explore at your own pace.  🌱")).toBeHidden({
       timeout: 10_000,
     });
   });

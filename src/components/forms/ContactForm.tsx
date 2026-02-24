@@ -6,6 +6,7 @@ interface ContactFormProps {
 }
 
 export default function ContactForm({ onClose }: ContactFormProps) {
+  const MAX_MESSAGE_LENGTH = 200;
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
@@ -47,7 +48,7 @@ export default function ContactForm({ onClose }: ContactFormProps) {
   };
 
   if (sent) {
-    return <div>Message sent 🌱</div>;
+    return <div>Message sent, I’ll be in touch shortly 🌱</div>;
   }
 
   return (
@@ -76,9 +77,10 @@ export default function ContactForm({ onClose }: ContactFormProps) {
         Message
         <textarea
           className="contact-form__textarea"
-          rows={6}
+          rows={4}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          maxLength={MAX_MESSAGE_LENGTH}
         />
       </label>
 

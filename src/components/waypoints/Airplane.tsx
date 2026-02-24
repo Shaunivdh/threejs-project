@@ -15,6 +15,19 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
   { inputMode = "keyboard", onMoveStart, ...props },
   ref,
 ) {
+  const isEditingText = () => {
+    const active = document.activeElement;
+    if (!active || !(active instanceof HTMLElement)) return false;
+
+    const tag = active.tagName;
+    return (
+      active.isContentEditable ||
+      tag === "INPUT" ||
+      tag === "TEXTAREA" ||
+      tag === "SELECT"
+    );
+  };
+
   const root = useNormalizedGLTF("/models/paper_airplane.glb", {
     targetHeight: 0.05,
     sitOnGround: true,
@@ -225,6 +238,10 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
     let inputZ = 0;
 
     if (inputMode === "keyboard") {
+      if (isEditingText()) {
+        keysPressed.current.clear();
+      }
+
       const kp = keysPressed.current;
       if (kp.has("w") || kp.has("arrowup")) inputZ -= 1;
       if (kp.has("s") || kp.has("arrowdown")) inputZ += 1;

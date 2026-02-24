@@ -322,9 +322,35 @@ canvas {
   flex: 1;
 }
 
+.popup__intro {
+  display: grid;
+  gap: 10px;
+}
+
+.popup--toast .popup__intro-primary {
+  font-size: 1.08rem;
+  line-height: 1.32;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.popup__intro p {
+  margin: 0;
+  color: rgba(18, 18, 18, 0.86);
+}
+
 .popup--modal.popup--beacon .popup__message {
   flex: 0 1 auto;
   overflow: auto;
+}
+
+.popup__message-link {
+  color: #0b4f8a;
+  text-underline-offset: 2px;
+}
+
+.popup__message-link:hover {
+  color: #083a66;
 }
 
 .popup__close {
@@ -477,7 +503,9 @@ canvas {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  max-width: 720px;
+  width: 100%;
+  max-width: 560px;
+  box-sizing: border-box;
 }
 
 .contact-form__label {
@@ -491,6 +519,7 @@ canvas {
 .contact-form__input,
 .contact-form__textarea {
   width: 100%;
+  box-sizing: border-box;
   border-radius: 14px;
   padding: 12px 12px;
   font-size: 1rem;
@@ -511,8 +540,10 @@ canvas {
 }
 
 .contact-form__textarea {
-  resize: vertical;
+  resize: none;
+  height: 130px;
   min-height: 130px;
+  overflow-y: auto;
 }
 
 .contact-form__input:focus,
@@ -534,9 +565,11 @@ canvas {
 
 .contact-form__actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 4px;
+  box-sizing: border-box;
 }
 
 .contact-form__btn {
@@ -589,6 +622,11 @@ canvas {
   margin-bottom: 10px;
 }
 
+.popup--modal .popup__title {
+  padding-right: 44px;
+  overflow-wrap: anywhere;
+}
+
 @media (max-width: 520px) {
   .popup.popup--toast {
     left: 16px;
@@ -597,6 +635,23 @@ canvas {
     width: auto;
     max-width: none;
     transform: none;
+  }
+
+  .popup--toast .popup__message {
+    line-height: 1.45;
+  }
+
+  .popup--toast .popup__intro-primary {
+    font-size: 1.16rem;
+    line-height: 1.28;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+
+  .popup--toast .popup__intro p {
+    font-size: 0.92rem;
+    line-height: 1.4;
+    color: rgba(18, 18, 18, 0.78);
   }
 }
 
@@ -613,13 +668,13 @@ canvas {
 @media (max-width: 520px) {
   .contact-form {
     max-width: 100%;
-    padding: 0 6px;
+    padding: 0;
   }
 
   .contact-form__input,
   .contact-form__textarea {
-    width: 92%;
-    margin: 0 auto;
+    width: 100%;
+    margin: 0;
   }
 
   .contact-form__label {
@@ -635,6 +690,7 @@ canvas {
   }
 
   .contact-form__textarea {
+    height: 80px;
     min-height: 80px;
   }
 
@@ -705,4 +761,36 @@ canvas {
     width: 34px;
     height: 34px;
   }
+}
+
+.popup--modal.popup--contact .popup__title {
+  padding-left: 6px;
+  font-family: inherit;
+}
+
+.popup--modal.popup--contact {
+  width: min(560px, calc(100vw - 32px));
+  height: auto;
+  max-height: min(88vh, 760px);
+}
+
+@media (max-width: 520px) {
+  .popup--modal.popup--contact {
+    width: min(360px, calc(100vw - 24px));
+  }
+}
+
+.popup--modal.popup--contact .popup__message {
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 0;
+  box-sizing: border-box;
+}
+
+.popup--modal.popup--contact .contact-form,
+.popup--modal.popup--contact .contact-form__label,
+.popup--modal.popup--contact .contact-form__input,
+.popup--modal.popup--contact .contact-form__textarea,
+.popup--modal.popup--contact .contact-form__btn {
+  font-family: inherit;
 }
