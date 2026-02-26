@@ -16,7 +16,9 @@ const getContextMock: HTMLCanvasElement["getContext"] = ((type: string) => {
   return null;
 }) as HTMLCanvasElement["getContext"];
 
-HTMLCanvasElement.prototype.getContext = vi.fn(getContextMock) as HTMLCanvasElement["getContext"];
+HTMLCanvasElement.prototype.getContext = vi.fn(
+  getContextMock,
+) as HTMLCanvasElement["getContext"];
 
 vi.mock("@react-three/fiber", () => ({
   useFrame: vi.fn(),
@@ -24,11 +26,19 @@ vi.mock("@react-three/fiber", () => ({
 
 vi.mock("@react-three/drei", () => {
   type UseGLTFMock = {
-    (): { scene: Group; nodes: Record<string, unknown>; materials: Record<string, unknown> };
+    (): {
+      scene: Group;
+      nodes: Record<string, unknown>;
+      materials: Record<string, unknown>;
+    };
     preload: ReturnType<typeof vi.fn>;
   };
 
-  const useGLTF = (() => ({ scene: new Group(), nodes: {}, materials: {} })) as UseGLTFMock;
+  const useGLTF = (() => ({
+    scene: new Group(),
+    nodes: {},
+    materials: {},
+  })) as UseGLTFMock;
   useGLTF.preload = vi.fn();
 
   return {
@@ -40,7 +50,9 @@ vi.mock("@react-three/drei", () => {
 });
 
 vi.mock("@react-three/postprocessing", () => ({
-  EffectComposer: ({ children }: React.PropsWithChildren) => <>{children}</>,
+  EffectComposer: ({ children }: React.PropsWithChildren) => (
+    <group data-testid="effect-composer">{children}</group>
+  ),
   Bloom: () => null,
   Vignette: () => null,
   HueSaturation: () => null,
@@ -62,14 +74,14 @@ vi.mock("../components/Platform", () => ({
 }));
 
 vi.mock("../components/Airplane", () => ({
-  default: React.forwardRef<SVGGElement, ComponentPropsWithoutRef<"group">>((props, ref) => (
-    <group ref={ref} data-testid="airplane" {...props} />
-  )),
+  default: React.forwardRef<SVGGElement, ComponentPropsWithoutRef<"group">>(
+    (props, ref) => <group ref={ref} data-testid="airplane" {...props} />,
+  ),
 }));
 vi.mock("../components/waypoints/Airplane", () => ({
-  default: React.forwardRef<SVGGElement, ComponentPropsWithoutRef<"group">>((props, ref) => (
-    <group ref={ref} data-testid="airplane" {...props} />
-  )),
+  default: React.forwardRef<SVGGElement, ComponentPropsWithoutRef<"group">>(
+    (props, ref) => <group ref={ref} data-testid="airplane" {...props} />,
+  ),
 }));
 
 vi.mock("../components/Tree", () => ({ default: () => null }));
@@ -106,5 +118,15 @@ describe("<Scene />", () => {
   it("loads the Airplane", () => {
     render(<Scene />);
     expect(screen.getByTestId("airplane")).toBeTruthy();
+  });
+
+  it("enables postprocessing by default", () => {
+    render(<Scene />);
+    expect(screen.getByTestId("effect-composer")).toBeTruthy();
+  });
+
+  it("disables postprocessing when requested", () => {
+    render(<Scene disablePostprocessing />);
+    expect(screen.queryByTestId("effect-composer")).toBeNull();
   });
 });
