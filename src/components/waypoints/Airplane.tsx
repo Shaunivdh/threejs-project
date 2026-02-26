@@ -1,5 +1,10 @@
 import type { JSX } from "react";
-import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import { useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
@@ -8,11 +13,12 @@ import { useAutoShadows } from "../../hooks/useAutoShadows";
 
 type AirplaneProps = JSX.IntrinsicElements["group"] & {
   inputMode?: "keyboard" | "touch";
+  isTablet?: boolean;
   onMoveStart?: () => void;
 };
 
 const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
-  { inputMode = "keyboard", onMoveStart, ...props },
+  { inputMode = "keyboard", isTablet = false, onMoveStart, ...props },
   ref,
 ) {
   const isEditingText = () => {
@@ -220,8 +226,10 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
       return;
     }
 
-    const SPEED = inputMode === "touch" ? 0.55 : 0.9;
-    const MAX_VEL = inputMode === "touch" ? 0.03 : 0.08;
+    const isTabletTouch = inputMode === "touch" && isTablet;
+    const touchDragBoost = isTabletTouch ? 1.5 : 1;
+    const SPEED = inputMode === "touch" ? 0.55 * touchDragBoost : 0.9;
+    const MAX_VEL = inputMode === "touch" ? 0.03 * touchDragBoost : 0.08;
     const DAMPING = inputMode === "touch" ? 0.92 : 0.95;
 
     const TURN_LERP = 0.14;

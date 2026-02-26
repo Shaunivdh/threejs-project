@@ -48,6 +48,7 @@ export type SceneProps = {
   onBeaconEnter?: (payload: { title: string; message: string }) => void;
   onBeaconExit?: () => void;
   inputMode?: "keyboard" | "touch";
+  isTablet?: boolean;
   onAirplaneMoveStart?: () => void;
   onReady?: () => void;
   disablePostprocessing?: boolean;
@@ -58,6 +59,7 @@ export default function Scene({
   onBeaconEnter,
   onBeaconExit,
   inputMode = "keyboard",
+  isTablet = false,
   onAirplaneMoveStart,
   onReady,
   disablePostprocessing = false,
@@ -293,6 +295,7 @@ export default function Scene({
         position={[-1.1, 0.75, -0.6]}
         rotation={[0, 0, 0]}
         inputMode={inputMode}
+        isTablet={isTablet}
         onMoveStart={onAirplaneMoveStart}
       />
       <group position={[-0.9, -0.17, 0.9]} rotation={[0, 0.9, 0]}>

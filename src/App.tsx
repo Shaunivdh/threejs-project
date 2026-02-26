@@ -178,13 +178,15 @@ function renderBeaconMessage(message: string): React.ReactNode {
 
 export default function App(): JSX.Element {
   const isDev = import.meta.env.DEV;
+  const isTablet = useMemo(() => {
+    const ua = navigator.userAgent;
+    return /iPad|Tablet|PlayBook|Silk|Kindle|Android(?!.*Mobile)/i.test(ua);
+  }, []);
   const isMobileOrTablet = useMemo(() => {
     const ua = navigator.userAgent;
     const isMobileUA = /Mobi|Android/i.test(ua);
-    const isTabletUA =
-      /iPad|Tablet|PlayBook|Silk|Kindle|Android(?!.*Mobile)/i.test(ua);
-    return isMobileUA || isTabletUA;
-  }, []);
+    return isMobileUA || isTablet;
+  }, [isTablet]);
   const usesTouchControls = useMemo(() => {
     const ua = navigator.userAgent;
     const hasTouchPoints = navigator.maxTouchPoints > 0;
@@ -357,6 +359,7 @@ export default function App(): JSX.Element {
             onBeaconEnter={handleBeaconEnter}
             onBeaconExit={handleBeaconExit}
             inputMode={usesTouchControls ? "touch" : "keyboard"}
+            isTablet={isTablet}
             onAirplaneMoveStart={handleAirplaneMoveStart}
             onReady={() => setSceneReady(true)}
             disablePostprocessing={isMobileOrTablet}
