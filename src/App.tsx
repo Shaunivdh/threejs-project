@@ -1,6 +1,8 @@
 import React, {
+  lazy,
   memo,
   Suspense,
+  startTransition,
   useCallback,
   useEffect,
   useMemo,
@@ -10,16 +12,16 @@ import React, {
 } from "react";
 import { Canvas, type RootState } from "@react-three/fiber";
 import { NoToneMapping, PCFSoftShadowMap, SRGBColorSpace } from "three";
-import Scene from "./components/Scene";
 import { CloudOverlay } from "./components/CloudOverlay";
 import "./App.css";
 import linkedinIcon from "./assets/icons/linkedin.svg";
 import githubIcon from "./assets/icons/github.svg";
 import mailIcon from "./assets/icons/mail.svg";
-import ContactForm from "./components/forms/ContactForm";
 import SceneLoader from "./components/SceneLoader";
 import MusicPlayer from "./components/MusicPlayer";
-import trackUrl from "./assets/audio/misguided.mp3";
+
+const Scene = lazy(() => import("./components/Scene"));
+const ContactForm = lazy(() => import("./components/forms/ContactForm"));
 
 const TopMenu = memo(function TopMenu({
   onEmailClick,
@@ -29,7 +31,7 @@ const TopMenu = memo(function TopMenu({
   return (
     <div className="hud" aria-label="Navigation">
       <div className="hud__actions" aria-label="Social links">
-        <MusicPlayer src={trackUrl} />
+        <MusicPlayer />
 
         <a
           href="https://www.linkedin.com/in/shaunivanderhorst/"
@@ -253,6 +255,7 @@ export default function App(): JSX.Element {
   const webglListenerCleanupRef = useRef<(() => void) | null>(null);
 
   const [contactOpen, setContactOpen] = useState(false);
+  const [shouldRenderScene, setShouldRenderScene] = useState(false);
 
   const [sceneReady, setSceneReady] = useState(false);
   const [showTipPopup, setShowTipPopup] = useState(false);
@@ -354,6 +357,16 @@ export default function App(): JSX.Element {
     };
   }, []);
 
+  useEffect(() => {
+    const rafId = window.requestAnimationFrame(() => {
+      startTransition(() => {
+        setShouldRenderScene(true);
+      });
+    });
+
+    return () => window.cancelAnimationFrame(rafId);
+  }, []);
+
   const tipMessage = useMemo(
     () => (
       <div className="popup__intro">
@@ -388,35 +401,37 @@ export default function App(): JSX.Element {
     <div className="app">
       <CloudOverlay />
 
-      <Canvas
-        dpr={Math.min(window.devicePixelRatio, 2)}
-        className="r3f-canvas"
-        shadows
-        gl={{
-          antialias: false,
-          alpha: true,
-          premultipliedAlpha: true,
-        }}
-        camera={{ position: [5.2, 4.4, 4.0], fov: 38, near: 0.1, far: 80 }}
-        onCreated={(state) => {
-          handleCanvasCreated(state);
-          state.gl.setClearColor(0x000000, 0);
-          state.gl.clearDepth();
-        }}
-      >
-        <Suspense fallback={<SceneLoader />}>
-          <Scene
-            follow={follow}
-            onBeaconEnter={handleBeaconEnter}
-            onBeaconExit={handleBeaconExit}
-            inputMode={usesTouchControls ? "touch" : "keyboard"}
-            isTablet={isTablet}
-            onAirplaneMoveStart={handleAirplaneMoveStart}
-            onReady={() => setSceneReady(true)}
-            disablePostprocessing={isMobileOrTablet}
-          />{" "}
-        </Suspense>
-      </Canvas>
+      {shouldRenderScene ? (
+        <Canvas
+          dpr={Math.min(window.devicePixelRatio, 2)}
+          className="r3f-canvas"
+          shadows
+          gl={{
+            antialias: false,
+            alpha: true,
+            premultipliedAlpha: true,
+          }}
+          camera={{ position: [5.2, 4.4, 4.0], fov: 38, near: 0.1, far: 80 }}
+          onCreated={(state) => {
+            handleCanvasCreated(state);
+            state.gl.setClearColor(0x000000, 0);
+            state.gl.clearDepth();
+          }}
+        >
+          <Suspense fallback={<SceneLoader />}>
+            <Scene
+              follow={follow}
+              onBeaconEnter={handleBeaconEnter}
+              onBeaconExit={handleBeaconExit}
+              inputMode={usesTouchControls ? "touch" : "keyboard"}
+              isTablet={isTablet}
+              onAirplaneMoveStart={handleAirplaneMoveStart}
+              onReady={() => setSceneReady(true)}
+              disablePostprocessing={isMobileOrTablet}
+            />
+          </Suspense>
+        </Canvas>
+      ) : null}
 
       {sceneReady && <TopMenu onEmailClick={() => setContactOpen(true)} />}
       {sceneReady && showTipPopup && (
@@ -445,7 +460,11 @@ export default function App(): JSX.Element {
           variant="modal"
           className="popup--contact"
           title="Send me a message 💬"
-          message={<ContactForm onClose={() => setContactOpen(false)} />}
+          message={
+            <Suspense fallback={<div>Loading contact form…</div>}>
+              <ContactForm onClose={() => setContactOpen(false)} />
+            </Suspense>
+          }
           onClose={() => setContactOpen(false)}
         />
       )}

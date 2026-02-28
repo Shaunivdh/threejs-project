@@ -1,9 +1,5 @@
 import { memo, useRef, useState } from "react";
 
-type Props = {
-  src: string;
-};
-
 function Icon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24">
@@ -33,9 +29,20 @@ function Icon() {
   );
 }
 
-export default memo(function MusicPlayer({ src }: Props) {
+export default memo(function MusicPlayer() {
   const audio = useRef<HTMLAudioElement>(null);
+  const srcPromiseRef = useRef<Promise<string> | null>(null);
   const [playing, setPlaying] = useState(false);
+
+  const loadSrc = async () => {
+    if (!srcPromiseRef.current) {
+      srcPromiseRef.current = import("../assets/audio/misguided.mp3").then(
+        (module) => module.default,
+      );
+    }
+
+    return srcPromiseRef.current;
+  };
 
   const toggle = async () => {
     if (!audio.current) return;
@@ -44,6 +51,9 @@ export default memo(function MusicPlayer({ src }: Props) {
       audio.current.pause();
       setPlaying(false);
     } else {
+      if (!audio.current.src) {
+        audio.current.src = await loadSrc();
+      }
       audio.current.loop = true;
       await audio.current.play();
       setPlaying(true);
@@ -63,8 +73,7 @@ export default memo(function MusicPlayer({ src }: Props) {
         </span>
         <span className="music__dot" />
       </button>
-
-      <audio ref={audio} src={src} />
+      <audio ref={audio} preload="none" />
     </div>
   );
 });
