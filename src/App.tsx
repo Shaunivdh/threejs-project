@@ -21,6 +21,8 @@ import SceneLoader from "./components/SceneLoader";
 import MusicPlayer from "./components/MusicPlayer";
 import trackUrl from "./assets/audio/misguided.mp3";
 
+type RendererPrecision = "highp" | "mediump" | "lowp";
+
 const TopMenu = memo(function TopMenu({
   onEmailClick,
 }: {
@@ -178,6 +180,46 @@ function renderBeaconMessage(message: string): React.ReactNode {
 
 export default function App(): JSX.Element {
   const isDev = import.meta.env.DEV;
+  const diagnostics = useMemo(() => {
+    const params = new URLSearchParams(window.location.search);
+    const logWebgl = params.get("logWebgl") === "1";
+    const noPost = params.get("noPost") === "1";
+    const noMipmapBlur = params.get("noMipmapBlur") === "1";
+
+    const msaaValue = Number.parseInt(params.get("msaa") ?? "", 10);
+    const composerMultisampling = Number.isFinite(msaaValue)
+      ? Math.max(0, msaaValue)
+      : 2;
+
+    const shadowValue = Number.parseInt(params.get("shadow") ?? "", 10);
+    const shadowMapSize = Number.isFinite(shadowValue) ? shadowValue : 4096;
+
+    const precisionParam = params.get("precision");
+    const precision =
+      precisionParam === "lowp" ||
+      precisionParam === "mediump" ||
+      precisionParam === "highp"
+        ? (precisionParam as RendererPrecision)
+        : undefined;
+
+    const diagnosticMode =
+      logWebgl ||
+      noPost ||
+      noMipmapBlur ||
+      params.has("msaa") ||
+      params.has("shadow") ||
+      params.has("precision");
+
+    return {
+      logWebgl,
+      noPost,
+      noMipmapBlur,
+      composerMultisampling,
+      shadowMapSize,
+      precision,
+      diagnosticMode,
+    };
+  }, []);
   const isTablet = useMemo(() => {
     const ua = navigator.userAgent;
     return /iPad|Tablet|PlayBook|Silk|Kindle|Android(?!.*Mobile)/i.test(ua);
@@ -254,47 +296,62 @@ export default function App(): JSX.Element {
     setBeaconDismissed(true);
   }, []);
 
-  const handleCanvasCreated = useCallback((state: RootState) => {
-    const { gl, scene } = state;
-    scene.background = null;
+  const handleCanvasCreated = useCallback(
+    (state: RootState) => {
+      const { gl, scene } = state;
+      scene.background = null;
 
-    gl.shadowMap.enabled = true;
-    gl.shadowMap.type = PCFSoftShadowMap;
+      gl.shadowMap.enabled = true;
+      gl.shadowMap.type = PCFSoftShadowMap;
 
-    gl.toneMapping = NoToneMapping;
-    gl.toneMappingExposure = 1.0;
-    gl.outputColorSpace = SRGBColorSpace;
+      gl.toneMapping = NoToneMapping;
+      gl.toneMappingExposure = 1.0;
+      gl.outputColorSpace = SRGBColorSpace;
 
-    gl.setClearColor(0xffffff, 0);
+      gl.setClearColor(0xffffff, 0);
 
-    const canvas = gl.domElement;
-    const onContextLost = (event: Event) => {
-      (event as WebGLContextEvent).preventDefault();
-      console.error("[WebGL] context lost", {
-        when: new Date().toISOString(),
-        href: window.location.href,
-        renderer: gl.capabilities.isWebGL2 ? "webgl2" : "webgl1",
-      });
-    };
-    const onContextRestored = () => {
-      console.warn("[WebGL] context restored", {
-        when: new Date().toISOString(),
-        href: window.location.href,
-      });
-    };
+      const canvas = gl.domElement;
+      const onContextLost = (event: Event) => {
+        (event as WebGLContextEvent).preventDefault();
+        console.error("[WebGL] context lost", {
+          when: new Date().toISOString(),
+          href: window.location.href,
+          renderer: gl.capabilities.isWebGL2 ? "webgl2" : "webgl1",
+        });
+      };
+      const onContextRestored = () => {
+        console.warn("[WebGL] context restored", {
+          when: new Date().toISOString(),
+          href: window.location.href,
+        });
+      };
 
-    canvas.addEventListener("webglcontextlost", onContextLost, false);
-    canvas.addEventListener("webglcontextrestored", onContextRestored, false);
-    webglListenerCleanupRef.current?.();
-    webglListenerCleanupRef.current = () => {
-      canvas.removeEventListener("webglcontextlost", onContextLost, false);
-      canvas.removeEventListener(
-        "webglcontextrestored",
-        onContextRestored,
-        false,
-      );
-    };
-  }, []);
+      canvas.addEventListener("webglcontextlost", onContextLost, false);
+      canvas.addEventListener("webglcontextrestored", onContextRestored, false);
+      webglListenerCleanupRef.current?.();
+      webglListenerCleanupRef.current = () => {
+        canvas.removeEventListener("webglcontextlost", onContextLost, false);
+        canvas.removeEventListener(
+          "webglcontextrestored",
+          onContextRestored,
+          false,
+        );
+      };
+      if (diagnostics.logWebgl) {
+        console.info("[WebGL] diagnostics", {
+          href: window.location.href,
+          renderer: gl.capabilities.isWebGL2 ? "webgl2" : "webgl1",
+          precision: gl.capabilities.precision,
+          maxPrecision: gl.capabilities.getMaxPrecision,
+          maxSamples: gl.capabilities.maxSamples,
+          maxTextureSize: gl.capabilities.maxTextureSize,
+          devicePixelRatio: window.devicePixelRatio,
+          diagnostics,
+        });
+      }
+    },
+    [diagnostics],
+  );
 
   useEffect(() => {
     return () => {
@@ -345,6 +402,9 @@ export default function App(): JSX.Element {
           antialias: false,
           alpha: true,
           premultipliedAlpha: true,
+          ...(diagnostics.precision
+            ? { precision: diagnostics.precision }
+            : {}),
         }}
         camera={{ position: [5.2, 4.4, 4.0], fov: 38, near: 0.1, far: 80 }}
         onCreated={(state) => {
@@ -362,7 +422,13 @@ export default function App(): JSX.Element {
             isTablet={isTablet}
             onAirplaneMoveStart={handleAirplaneMoveStart}
             onReady={() => setSceneReady(true)}
-            disablePostprocessing={isMobileOrTablet}
+            disablePostprocessing={
+              diagnostics.noPost ||
+              (!diagnostics.diagnosticMode && isMobileOrTablet)
+            }
+            disableMipmapBlur={diagnostics.noMipmapBlur}
+            composerMultisampling={diagnostics.composerMultisampling}
+            shadowMapSize={diagnostics.shadowMapSize}
           />{" "}
         </Suspense>
       </Canvas>

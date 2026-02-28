@@ -52,6 +52,9 @@ export type SceneProps = {
   onAirplaneMoveStart?: () => void;
   onReady?: () => void;
   disablePostprocessing?: boolean;
+  disableMipmapBlur?: boolean;
+  composerMultisampling?: number;
+  shadowMapSize?: number;
 };
 
 export default function Scene({
@@ -63,6 +66,9 @@ export default function Scene({
   onAirplaneMoveStart,
   onReady,
   disablePostprocessing = false,
+  disableMipmapBlur = false,
+  composerMultisampling = 2,
+  shadowMapSize = 4096,
 }: SceneProps) {
   const airplaneRef = useRef<THREE.Group>(null!);
 
@@ -165,8 +171,8 @@ export default function Scene({
         castShadow
         position={[-10, 18, -10]}
         intensity={2.05}
-        shadow-mapSize-width={4096}
-        shadow-mapSize-height={4096}
+        shadow-mapSize-width={shadowMapSize}
+        shadow-mapSize-height={shadowMapSize}
         shadow-camera-near={5}
         shadow-camera-far={35}
         shadow-camera-left={-6}
@@ -329,12 +335,12 @@ export default function Scene({
       <Fence position={[1.81, -0.15, 3.7]} />
 
       {!disablePostprocessing && (
-        <EffectComposer multisampling={2}>
+        <EffectComposer multisampling={composerMultisampling}>
           <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
           <HueSaturation saturation={0.02} hue={0.0} />
           <BrightnessContrast brightness={-0.03} contrast={0.18} />
           <Bloom
-            mipmapBlur
+            mipmapBlur={!disableMipmapBlur}
             intensity={isMobile ? 0.18 : 0.12}
             luminanceThreshold={isMobile ? 0.65 : 0.78}
             luminanceSmoothing={isMobile ? 0.4 : 0.25}
