@@ -136,8 +136,32 @@ type BeaconPayload = { title: string; message: string };
 
 const BEACON_LINKS: Record<string, string> = {
   codeop: "https://codeop.tech",
-  bluecrest: "https://bluecrest.com",
+  bluecrest: "https://bluecrestwellness.com",
 };
+
+function renderBeaconTextSegment(
+  text: string,
+  keyPrefix: string,
+): React.ReactNode[] {
+  const segments = text.split(/(CodeOp|Bluecrest)/g);
+
+  return segments.map((segment, segmentIndex) => {
+    const href = BEACON_LINKS[segment.toLowerCase()];
+    if (!href) return segment;
+
+    return (
+      <a
+        key={`${keyPrefix}-${segmentIndex}`}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="popup__message-link"
+      >
+        {segment}
+      </a>
+    );
+  });
+}
 
 function renderBeaconMessage(message: string): React.ReactNode {
   const paragraphs = message.split("\n\n");
@@ -148,25 +172,52 @@ function renderBeaconMessage(message: string): React.ReactNode {
     return (
       <p key={`paragraph-${paragraphIndex}`}>
         {lines.map((line, lineIndex) => {
-          const segments = line.split(/(CodeOp|Bluecrest)/g);
+          const markdownLinkPattern = /\[([^[\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+          const fragments: React.ReactNode[] = [];
+          let lastIndex = 0;
+          let match: RegExpExecArray | null;
+
+          while ((match = markdownLinkPattern.exec(line)) !== null) {
+            const [fullMatch, label, href] = match;
+            const leadingText = line.slice(lastIndex, match.index);
+
+            if (leadingText) {
+              fragments.push(
+                ...renderBeaconTextSegment(
+                  leadingText,
+                  `text-${paragraphIndex}-${lineIndex}-${lastIndex}`,
+                ),
+              );
+            }
+
+            fragments.push(
+              <a
+                key={`markdown-${paragraphIndex}-${lineIndex}-${match.index}`}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="popup__message-link"
+              >
+                {label}
+              </a>,
+            );
+
+            lastIndex = match.index + fullMatch.length;
+          }
+
+          const trailingText = line.slice(lastIndex);
+          if (trailingText) {
+            fragments.push(
+              ...renderBeaconTextSegment(
+                trailingText,
+                `text-${paragraphIndex}-${lineIndex}-${lastIndex}`,
+              ),
+            );
+          }
+
           return (
             <React.Fragment key={`line-${paragraphIndex}-${lineIndex}`}>
-              {segments.map((segment, segmentIndex) => {
-                const href = BEACON_LINKS[segment.toLowerCase()];
-                if (!href) return segment;
-
-                return (
-                  <a
-                    key={`segment-${paragraphIndex}-${lineIndex}-${segmentIndex}`}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="popup__message-link"
-                  >
-                    {segment}
-                  </a>
-                );
-              })}
+              {fragments}
               {lineIndex < lines.length - 1 && <br />}
             </React.Fragment>
           );
@@ -254,50 +305,47 @@ export default function App(): JSX.Element {
     setBeaconDismissed(true);
   }, []);
 
-  const handleCanvasCreated = useCallback(
-    (state: RootState) => {
-      const { gl, scene } = state;
-      scene.background = null;
+  const handleCanvasCreated = useCallback((state: RootState) => {
+    const { gl, scene } = state;
+    scene.background = null;
 
-      gl.shadowMap.enabled = true;
-      gl.shadowMap.type = PCFSoftShadowMap;
+    gl.shadowMap.enabled = true;
+    gl.shadowMap.type = PCFSoftShadowMap;
 
-      gl.toneMapping = NoToneMapping;
-      gl.toneMappingExposure = 1.0;
-      gl.outputColorSpace = SRGBColorSpace;
+    gl.toneMapping = NoToneMapping;
+    gl.toneMappingExposure = 1.0;
+    gl.outputColorSpace = SRGBColorSpace;
 
-      gl.setClearColor(0xffffff, 0);
+    gl.setClearColor(0xffffff, 0);
 
-      const canvas = gl.domElement;
-      const onContextLost = (event: Event) => {
-        (event as WebGLContextEvent).preventDefault();
-        console.error("[WebGL] context lost", {
-          when: new Date().toISOString(),
-          href: window.location.href,
-          renderer: gl.capabilities.isWebGL2 ? "webgl2" : "webgl1",
-        });
-      };
-      const onContextRestored = () => {
-        console.warn("[WebGL] context restored", {
-          when: new Date().toISOString(),
-          href: window.location.href,
-        });
-      };
+    const canvas = gl.domElement;
+    const onContextLost = (event: Event) => {
+      (event as WebGLContextEvent).preventDefault();
+      console.error("[WebGL] context lost", {
+        when: new Date().toISOString(),
+        href: window.location.href,
+        renderer: gl.capabilities.isWebGL2 ? "webgl2" : "webgl1",
+      });
+    };
+    const onContextRestored = () => {
+      console.warn("[WebGL] context restored", {
+        when: new Date().toISOString(),
+        href: window.location.href,
+      });
+    };
 
-      canvas.addEventListener("webglcontextlost", onContextLost, false);
-      canvas.addEventListener("webglcontextrestored", onContextRestored, false);
-      webglListenerCleanupRef.current?.();
-      webglListenerCleanupRef.current = () => {
-        canvas.removeEventListener("webglcontextlost", onContextLost, false);
-        canvas.removeEventListener(
-          "webglcontextrestored",
-          onContextRestored,
-          false,
-        );
-      };
-    },
-    [],
-  );
+    canvas.addEventListener("webglcontextlost", onContextLost, false);
+    canvas.addEventListener("webglcontextrestored", onContextRestored, false);
+    webglListenerCleanupRef.current?.();
+    webglListenerCleanupRef.current = () => {
+      canvas.removeEventListener("webglcontextlost", onContextLost, false);
+      canvas.removeEventListener(
+        "webglcontextrestored",
+        onContextRestored,
+        false,
+      );
+    };
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -374,7 +422,7 @@ export default function App(): JSX.Element {
       {sceneReady && showTipPopup && (
         <Popup
           variant="toast"
-          title="Take flight. Explore at your own pace 🌱"
+          title="Welcome to my portfolio! Explore at your own pace 😎 🧘‍♂️🌱"
           message={tipMessage}
           onClose={requestTipClose}
           isLeaving={tipLeaving}
