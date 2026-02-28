@@ -120,7 +120,7 @@ export default function Grass(props: JSX.IntrinsicElements["group"]) {
 
     const tmpScale = new THREE.Vector3();
 
-    root.traverse((obj) => {
+    root.traverse((obj: THREE.Object3D) => {
       if (!(obj instanceof THREE.Mesh)) return;
 
       const mesh = obj as THREE.Mesh;

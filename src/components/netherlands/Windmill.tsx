@@ -18,7 +18,7 @@ export default function Windmill(props: JSX.IntrinsicElements["group"]) {
     const b = root.getObjectByName("Windmill_Meshblades");
     if (!b) {
       console.warn("Blades not found. Available objects:");
-      root.traverse((o) => o.name && console.log(o.name));
+      root.traverse((o: THREE.Object3D) => o.name && console.log(o.name));
     }
     return b as THREE.Object3D | null;
   }, [root]);
