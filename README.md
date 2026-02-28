@@ -135,6 +135,8 @@ Static assets live under src/assets/, including icon SVGs and the bundled audio 
 ### 🌴 GLTF Optimization
 npx @gltf-transform/cli resize public/models/codeop/palm_tree.glb public/models/codeop/palm_tree.512.glb --width 512 --height 512
 
-### 🎵 Music Credit
+---
+
+## 🎵 Music Credit
 Music from #Uppbeat 
 https://uppbeat.io/t/walz/misguided
