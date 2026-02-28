@@ -10,6 +10,7 @@ export type WaypointDefinition = {
   targetPosition: Vector3Tuple;
   beaconOffset: Vector3Tuple;
   triggerRadius: number;
+  exitRadius?: number;
 };
 
 const WAYPOINTS: WaypointDefinition[] = [
@@ -44,7 +45,7 @@ const WAYPOINTS: WaypointDefinition[] = [
     id: "laptop",
     title: "By the Sea, Building Things 💻🌊",
     message:
-      "Now I am based in Hove, UK, working remotely with Bluecrest as a Frontend React Engineer.\n\nI contribute to features used daily at scale, focusing on architecture, performance, and long-term maintainability. I think beyond individual components, looking at how systems fit together and how decisions age over time.\n\nI enjoy taking ownership, raising standards, and helping shape thoughtful, resilient products.\n\nI hope you enjoyed the journey ✈️\nThanks for exploring.",
+      "Now I am based in Hove, UK, working at Bluecrest as a Frontend React Engineer.\n\nI contribute to features used daily at scale, focusing on architecture, performance, and long-term maintainability. I think beyond individual components, looking at how systems fit together and how decisions age over time.\n\nI enjoy taking ownership, raising standards, and helping shape thoughtful, resilient products.\n\nI hope you enjoyed the journey ✈️\nThanks for exploring.",
     targetPosition: [2.72, 0.52, -2.9],
     beaconOffset: [0, 1, 0],
     triggerRadius: 1.2,
@@ -76,6 +77,7 @@ export default function FlightWaypoints({
           targetPosition={wp.targetPosition}
           beaconOffset={wp.beaconOffset}
           triggerRadius={wp.triggerRadius}
+          exitRadius={wp.exitRadius}
           onEnter={onBeaconEnter}
           onExit={onBeaconExit}
         />

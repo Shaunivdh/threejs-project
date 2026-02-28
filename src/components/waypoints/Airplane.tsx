@@ -1,10 +1,5 @@
 import type { JSX } from "react";
-import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
@@ -226,10 +221,8 @@ const Airplane = forwardRef<THREE.Group, AirplaneProps>(function Airplane(
       return;
     }
 
-    const isTabletTouch = inputMode === "touch" && isTablet;
-    const touchDragBoost = isTabletTouch ? 1.5 : 1;
-    const SPEED = inputMode === "touch" ? 0.55 * touchDragBoost : 0.9;
-    const MAX_VEL = inputMode === "touch" ? 0.03 * touchDragBoost : 0.08;
+    const SPEED = inputMode === "touch" ? (isTablet ? 0.7 : 0.495) : 0.9;
+    const MAX_VEL = inputMode === "touch" ? (isTablet ? 0.042 : 0.027) : 0.08;
     const DAMPING = inputMode === "touch" ? 0.92 : 0.95;
 
     const TURN_LERP = 0.14;

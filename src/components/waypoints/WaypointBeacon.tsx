@@ -10,6 +10,7 @@ export type WaypointBeaconProps = {
   targetPosition: Vector3Tuple;
   beaconOffset?: Vector3Tuple;
   triggerRadius?: number;
+  exitRadius?: number;
 
   onEnter?: (payload: { title: string; message: string }) => void;
   onExit?: () => void;
@@ -28,6 +29,7 @@ export default function WaypointBeacon({
   targetPosition,
   beaconOffset = [0, 2, 0],
   triggerRadius = 1.2,
+  exitRadius = triggerRadius * 1.4,
   onEnter,
   onExit,
   bounceHeight = 0.05,
@@ -70,8 +72,9 @@ export default function WaypointBeacon({
     if (plane) {
       plane.getWorldPosition(planeWorld.current);
 
+      const activeRadius = insideRef.current ? exitRadius : triggerRadius;
       const inside =
-        planeWorld.current.distanceTo(target.current) <= triggerRadius;
+        planeWorld.current.distanceTo(target.current) <= activeRadius;
 
       if (inside !== insideRef.current) {
         insideRef.current = inside;
